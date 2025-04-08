@@ -21,7 +21,11 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'inicio',
+  },  {
+    path: 'menu',
+    loadComponent: () => import('./menu/menu.page').then( m => m.MenuPage)
   }
+
 
 
 ];

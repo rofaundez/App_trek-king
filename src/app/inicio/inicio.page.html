@@ -1,59 +1,104 @@
 <ion-content class="ion-padding">
   <div class="form-container">
-    <h1 class="title">Registro</h1>
+    <h1 class="title">Trek-King</h1>
     
-    <form (ngSubmit)="register()">
+    <!-- Formulario de registro con validación -->
+    <form (ngSubmit)="register()" #registerForm="ngForm">
       <ion-list class="form-list">
-        <ion-item>
-          <ion-label position="floating">Correo Electrónico</ion-label>
+        <!-- Campo de correo electrónico con validación -->
+        <ion-item class="custom-input">
           <ion-input
             type="email" 
             [(ngModel)]="email" 
             name="email"
             required
-            placeholder="Ingrese su correo electrónico">
+            email
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+            #emailInput="ngModel"
+            (ionFocus)="currentField = 'email'"
+            (ionBlur)="currentField = ''"
+            label="Ingrese su correo electrónico"
+            labelPlacement="floating"
+            placeholder="ej: ro.faundezo@duocuc.cl"
+            [class.valid-input]="emailInput.valid && emailInput.touched"
+            [class.invalid-input]="emailInput.invalid && emailInput.touched">
           </ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="emailInput.invalid && emailInput.touched && currentField === 'email'">
+          <small class="error-message">porfavor, ingrese un correo válido</small>
+        </ion-text>
 
-        <ion-item>
-          <ion-label position="floating">Nombre de Usuario</ion-label>
+        <!-- Campo de nombre con validación de solo letras -->
+        <ion-item class="custom-input">
           <ion-input 
             type="text" 
-            [(ngModel)]="username" 
-            name="username"
+            [(ngModel)]="nombre" 
+            name="nombre"
             required
-            placeholder="Ingrese su nombre de usuario">
+            pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"
+            #nombreInput="ngModel"
+            (ionFocus)="currentField = 'nombre'"
+            (ionBlur)="currentField = ''"
+            label="Ingrese su nombre de usuario"
+            labelPlacement="floating"
+            placeholder="ej: Rodrigo faundez"
+            [class.valid-input]="nombreInput.valid && nombreInput.touched"
+            [class.invalid-input]="nombreInput.invalid && nombreInput.touched">
           </ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="nombreInput.invalid && nombreInput.touched && currentField === 'nombre'">
+          <small class="error-message">El campo no puede estar vacio ni contener numeros o signos especiales</small>
+        </ion-text>
 
-        <ion-item>
-          <ion-label position="floating">Contraseña</ion-label>
+        <!-- Campo de contraseña -->
+        <ion-item class="custom-input">
           <ion-input 
             type="password" 
             [(ngModel)]="password" 
             name="password"
             required
-            placeholder="Ingrese su contraseña">
+            minlength="8"
+            #passwordInput="ngModel"
+            (ionFocus)="currentField = 'password'"
+            (ionBlur)="currentField = ''"
+            label="Ingrese su contraseña"
+            labelPlacement="floating"
+            placeholder="ej: 12345678"
+            [class.valid-input]="passwordInput.valid && passwordInput.touched"
+            [class.invalid-input]="passwordInput.invalid && passwordInput.touched">
           </ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="passwordInput.invalid && passwordInput.touched && currentField === 'password'">
+          <small class="error-message">La contraseña debe tener al menos 8 caracteres</small>
+        </ion-text>
 
-        <ion-item>
-          <ion-label position="floating">Repetir contraseña</ion-label>
+        <!-- Campo de confirmación de contraseña -->
+        <ion-item class="custom-input">
           <ion-input 
             type="password" 
             [(ngModel)]="confirmPassword" 
             name="confirmPassword"
             required
-            placeholder="Repita su contraseña">
+            #confirmPasswordInput="ngModel"
+            (ionFocus)="currentField = 'confirmPassword'"
+            (ionBlur)="currentField = ''"
+            label="Repita su contraseña"
+            labelPlacement="floating"
+            placeholder="************"
+            [class.valid-input]="confirmPasswordInput.touched && validateConfirmPassword(password, confirmPassword)"
+            [class.invalid-input]="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword)">
           </ion-input>
         </ion-item>
+        <ion-text color="danger" *ngIf="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword) && currentField === 'confirmPassword'">
+          <small class="error-message">Las contraseñas no coinciden</small>
+        </ion-text>
       </ion-list>
 
+      <!-- Botones de acción -->
       <div class="button-container">
-        <ion-button expand="block" type="submit" class="register-button">
+        <ion-button expand="block" type="submit" class="register-button" [disabled]="!registerForm.valid">
           Registrarse
         </ion-button>
-
         <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
           ¿Olvidaste tu contraseña?
         </ion-button>
