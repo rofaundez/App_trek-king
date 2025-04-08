@@ -96,7 +96,8 @@
 
       <!-- Botones de acción -->
       <div class="button-container">
-        <ion-button expand="block" type="submit" class="register-button" [disabled]="!registerForm.valid">
+        <ion-button expand="block" type="submit" class="register-button" 
+          [disabled]="!registerForm.valid || !validateConfirmPassword(password, confirmPassword)">
           Registrarse
         </ion-button>
         <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
