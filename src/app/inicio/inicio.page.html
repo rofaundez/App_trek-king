@@ -82,11 +82,12 @@
             #confirmPasswordInput="ngModel"
             (ionFocus)="currentField = 'confirmPassword'"
             (ionBlur)="currentField = ''"
-            label="Repita su contraseña"
+            [label]="'Repita su contraseña'"
+            [class.valid-label]="validateConfirmPassword(password, confirmPassword) && confirmPassword !== ''"
             labelPlacement="floating"
             placeholder="************"
-            [class.valid-input]="confirmPasswordInput.touched && validateConfirmPassword(password, confirmPassword)"
-            [class.invalid-input]="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword)">
+            [class.valid-input]="confirmPasswordInput.touched && validateConfirmPassword(password, confirmPassword) && confirmPassword !== ''"
+            [class.invalid-input]="confirmPasswordInput.touched && (!validateConfirmPassword(password, confirmPassword) || confirmPassword === '')">
           </ion-input>
         </ion-item>
         <ion-text color="danger" *ngIf="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword) && currentField === 'confirmPassword'">

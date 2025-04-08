@@ -93,4 +93,37 @@ ion-input {
     opacity: 1;
     transition: opacity 0.2s ease;
   }
+
+  &.valid-input {
+    --highlight-color: var(--ion-color-success);
+    color: var(--ion-color-success);
+  }
+
+  &.invalid-input {
+    --highlight-color: var(--ion-color-danger);
+    color: var(--ion-color-danger);
+  }
+}
+
+.valid-label {
+  --color: var(--ion-color-success) !important;
+}
+
+// Estilos específicos para el campo de confirmar contraseña
+ion-input[name="confirmPassword"] {
+  &.valid-input {
+    --highlight-color: var(--ion-color-success);
+    color: var(--ion-color-success);
+    &::part(native) {
+      color: var(--ion-color-success);
+    }
+  }
+
+  &.invalid-input {
+    --highlight-color: var(--ion-color-danger);
+    color: var(--ion-color-danger);
+    &::part(native) {
+      color: var(--ion-color-danger);
+    }
+  }
 }
