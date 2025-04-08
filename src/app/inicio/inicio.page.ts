@@ -1,25 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar,IonButton, IonLabel, IonItem, IonList } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonLabel, IonItem, IonList],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule
+  ]
 })
 export class InicioPage implements OnInit {
+  email: string = '';
+  username: string = '';
+  password: string = '';
+  confirmPassword: string = '';
 
-  email = '';
-  password = '';
-  username = '';
+  constructor() { }
 
-  comparar(contraseña1 = "string", contraseña2 = "string"){
-    if(contraseña1 === contraseña2){
-      return true
-    }
+  ngOnInit() {
+    // Clear all form fields on page initialization
+    this.email = '';
+    this.username = '';
+    this.password = '';
+    this.confirmPassword = '';
+  }
+
+  compararContraseña(contraseña1 : string, contraseña2 : string) : boolean {
+    return contraseña1 === contraseña2 && contraseña1.length >= 8;
   }
 
   register() {
@@ -29,9 +41,6 @@ export class InicioPage implements OnInit {
   forgotPassword() {
     // Aquí iría la lógica para redirigir a la página de "Olvidé mi contraseña"
     console.log('Olvidé mi contraseña');
-  }
-
-  ngOnInit() {
   }
 
 }

@@ -13,6 +13,15 @@ export const routes: Routes = [
     path: 'header',
     loadComponent: () => import('./header/header.component').then((m) => m.HeaderComponent),
   },
+  {
+     path: '',
+    redirectTo: 'inicio',
+    pathMatch: 'full', 
+  },
+  {
+    path: '**',
+    redirectTo: 'inicio',
+  }
 
 
 ];
