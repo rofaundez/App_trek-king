@@ -1,0 +1,92 @@
+<ion-content>
+  <!-- Header with user info and search -->
+  <div class="header-container">
+    <div class="user-welcome">
+      <ion-avatar (click)="goToProfile()">
+        <img [src]="userPhoto" alt="User photo">
+      </ion-avatar>
+      <div class="welcome-text">
+        <h2>Welcome</h2>
+        <h3>{{userName}}</h3>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <ion-searchbar placeholder="Buscar rutas" 
+                   (ionInput)="onSearch($event)"
+                   [animated]="true"
+                   class="custom-searchbar">
+    </ion-searchbar>
+  </div>
+
+  <!-- Categories -->
+  <div class="categories-container">
+    <h3>Categorías</h3>
+    <div class="categories-grid">
+      <ion-button fill="clear" class="category-button">
+        <div class="category-content">
+          <ion-icon name="walk-outline"></ion-icon>
+          <span>Trekking</span>
+          <small>¡Qué es?</small>
+        </div>
+      </ion-button>
+      <ion-button fill="clear" class="category-button">
+        <div class="category-content">
+          <ion-icon name="people-outline"></ion-icon>
+          <span>¿Quienes somos?</span>
+        </div>
+      </ion-button>
+      <ion-button fill="clear" class="category-button">
+        <div class="category-content">
+          <ion-icon name="help-circle-outline"></ion-icon>
+          <span>Preguntas frecuentes</span>
+        </div>
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Routes List -->
+  <div class="routes-container">
+    <h3>Rutas recomendadas!</h3>
+    <ion-list>
+      <ion-item *ngFor="let ruta of rutasRecomendadas">
+        <ion-thumbnail slot="start">
+          <img [src]="ruta.foto" [alt]="ruta.nombre">
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ruta.nombre}}</h2>
+          <p>{{ruta.localidad}}</p>
+          <p>{{ruta.descripcion}}</p>
+          <div class="rating">
+            <ion-icon name="walk-outline"></ion-icon>
+            <span>{{ruta.dificultad}}</span>
+          </div>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<!-- Bottom Navigation -->
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button>
+        <ion-icon name="home-outline"></ion-icon>
+        <small>Inicio</small>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="people-outline"></ion-icon>
+        <small>Grupos</small>
+      </ion-button>
+      <ion-button>
+        <ion-icon name="calendar-outline"></ion-icon>
+        <small>Agenda</small>
+      </ion-button>
+      <ion-button color="danger">
+        <ion-icon name="warning-outline"></ion-icon>
+        <small>SOS</small>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

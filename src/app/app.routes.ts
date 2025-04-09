@@ -22,6 +22,18 @@ export const routes: Routes = [
     loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
   },
   {
+    path: 'profile',
+    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
+  },
+  {
+    path: 'listado-usuario',
+    loadComponent: () => import('./listado-usuario/listado-usuario.page').then( m => m.ListadoUsuarioPage)
+  },
+  {
+    path: 'home',
+    loadComponent: () => import('./home/home.page').then(m => m.HomePage)
+  },
+  {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full', 
@@ -29,5 +41,9 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: 'login',
-  }
+  },
+
+
+
+
 ];

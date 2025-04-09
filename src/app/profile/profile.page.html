@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="profile-container">
+    <div class="avatar-container">
+      <ion-avatar class="profile-avatar">
+        <img [src]="userProfile.photo" alt="Profile photo">
+      </ion-avatar>
+      <ion-button *ngIf="isEditing" fill="clear" class="change-photo-btn">
+        <input type="file" (change)="onPhotoSelect($event)" accept="image/*">
+        <ion-icon name="camera"></ion-icon>
+      </ion-button>
+    </div>
+
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">Nombre</ion-label>
+        <ion-input [(ngModel)]="userProfile.nombre" [readonly]="!isEditing"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input [(ngModel)]="userProfile.email" [readonly]="!isEditing"></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <div class="button-container">
+      <ng-container *ngIf="!isEditing">
+        <ion-button expand="block" color="primary" (click)="toggleEdit()">
+          Editar Perfil
+        </ion-button>
+      </ng-container>
+
+      <ng-container *ngIf="isEditing">
+        <ion-button expand="block" color="success" (click)="updateProfile()">
+          Guardar Cambios
+        </ion-button>
+        <ion-button expand="block" color="medium" (click)="cancelEdit()">
+          Cancelar
+        </ion-button>
+      </ng-container>
+    </div>
+
+    <ion-list>
+      <ion-item button>
+        <ion-icon name="map-outline" slot="start"></ion-icon>
+        <ion-label>Mis Rutas Favoritas</ion-label>
+      </ion-item>
+
+      <ion-item button>
+        <ion-icon name="time-outline" slot="start"></ion-icon>
+        <ion-label>Historial de Rutas</ion-label>
+      </ion-item>
+
+      <ion-item button>
+        <ion-icon name="settings-outline" slot="start"></ion-icon>
+        <ion-label>Configuración</ion-label>
+      </ion-item>
+
+      <ion-item button color="danger">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        <ion-label>Cerrar Sesión</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

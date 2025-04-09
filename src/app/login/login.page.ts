@@ -34,13 +34,17 @@ export class LoginPage implements OnInit {
       const user = await this.dbService.getUserByEmail(this.email);
       
       if (user && user.password === this.password) {
+        // Store user email for later use
+        localStorage.setItem('userEmail', this.email);
+        
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
           duration: 2000,
           position: 'middle',
           color: 'success'
         });
-        toast.present();
+        await toast.present();
+        this.router.navigate(['/home']);
       } else {
         const toast = await this.toastController.create({
           message: 'Credenciales incorrectas',

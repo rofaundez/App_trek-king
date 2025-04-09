@@ -33,7 +33,6 @@
             type="password" 
             [(ngModel)]="password" 
             name="password"
-            required
             #passwordInput="ngModel"
             (ionFocus)="currentField = 'password'"
             (ionBlur)="currentField = ''"
@@ -51,7 +50,7 @@
 
       <!-- Botones de acción -->
       <div class="button-container">
-        <ion-button expand="block" type="submit" class="login-button" [disabled]="!loginForm.valid">
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="emailInput.invalid">
           Iniciar Sesión
         </ion-button>
         <!-- Add this after your login button -->
