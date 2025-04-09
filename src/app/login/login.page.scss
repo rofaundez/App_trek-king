@@ -1,0 +1,54 @@
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 24px;
+  color: var(--ion-color-primary);
+}
+
+.form-list {
+  background: transparent;
+  margin-bottom: 20px;
+
+  ion-item {
+    --background: transparent;
+    margin-bottom: 16px;
+    --border-color: var(--ion-color-medium);
+    --border-radius: 8px;
+    --padding-start: 0;
+  }
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+
+  .login-button {
+    margin-bottom: 10px;
+    --border-radius: 8px;
+    height: 48px;
+  }
+
+  .forgot-password {
+    font-size: 14px;
+  }
+}
+
+ion-input {
+  &.valid-input {
+    --highlight-color: var(--ion-color-success);
+    color: var(--ion-color-success);
+  }
+
+  &.invalid-input {
+    --highlight-color: var(--ion-color-danger);
+    color: var(--ion-color-danger);
+  }
+}

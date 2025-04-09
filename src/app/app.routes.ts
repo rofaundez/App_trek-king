@@ -14,18 +14,20 @@ export const routes: Routes = [
     loadComponent: () => import('./header/header.component').then((m) => m.HeaderComponent),
   },
   {
-     path: '',
+    path: 'menu',
+    loadComponent: () => import('./menu/menu.page').then( m => m.MenuPage)
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
+  },
+  {
+    path: '',
     redirectTo: 'inicio',
     pathMatch: 'full', 
   },
   {
     path: '**',
     redirectTo: 'inicio',
-  },  {
-    path: 'menu',
-    loadComponent: () => import('./menu/menu.page').then( m => m.MenuPage)
   }
-
-
-
 ];
