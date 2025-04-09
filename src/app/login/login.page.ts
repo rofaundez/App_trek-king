@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ export class LoginPage implements OnInit {
 
   constructor(
     private dbService: DatabaseService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -55,5 +57,9 @@ export class LoginPage implements OnInit {
 
   forgotPassword() {
     console.log('Olvidé mi contraseña');
+  }
+
+  goToRegister() {
+    this.router.navigate(['/registro']);
   }
 }

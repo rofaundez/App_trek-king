@@ -54,6 +54,10 @@
         <ion-button expand="block" type="submit" class="login-button" [disabled]="!loginForm.valid">
           Iniciar Sesión
         </ion-button>
+        <!-- Add this after your login button -->
+              <ion-button fill="clear" (click)="goToRegister()" class="register-link">
+                ¿No tienes cuenta? Regístrate
+              </ion-button>
         <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
           ¿Olvidaste tu contraseña?
         </ion-button>

@@ -39,6 +39,12 @@
   .forgot-password {
     font-size: 14px;
   }
+
+  .register-link {
+    margin-top: 10px;
+    width: 100%;
+    --color: var(--ion-color-medium);
+  }
 }
 
 ion-input {

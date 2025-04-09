@@ -8,9 +8,9 @@ import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 
 @Component({
-  selector: 'app-inicio',
-  templateUrl: './inicio.page.html',
-  styleUrls: ['./inicio.page.scss'],
+  selector: 'app-registro',
+  templateUrl: './registro.page.html',
+  styleUrls: ['./registro.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -18,7 +18,7 @@ import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
     IonicModule
   ]
 })
-export class InicioPage implements OnInit {
+export class RegistroPage implements OnInit {
   email: string = '';
   nombre: string = '';
   password: string = '';
