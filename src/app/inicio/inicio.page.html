@@ -53,7 +53,7 @@
         <!-- Campo de contraseña -->
         <ion-item class="custom-input">
           <ion-input 
-            type="password" 
+            [type]="showPassword ? 'text' : 'password'"
             [(ngModel)]="password" 
             name="password"
             required
@@ -67,15 +67,15 @@
             [class.valid-input]="passwordInput.valid && passwordInput.touched"
             [class.invalid-input]="passwordInput.invalid && passwordInput.touched">
           </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('password')">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-item>
-        <ion-text color="danger" *ngIf="passwordInput.invalid && passwordInput.touched && currentField === 'password'">
-          <small class="error-message">La contraseña debe tener al menos 8 caracteres</small>
-        </ion-text>
 
         <!-- Campo de confirmación de contraseña -->
         <ion-item class="custom-input">
           <ion-input 
-            type="password" 
+            [type]="showConfirmPassword ? 'text' : 'password'"
             [(ngModel)]="confirmPassword" 
             name="confirmPassword"
             required
@@ -88,21 +88,47 @@
             [class.valid-input]="confirmPasswordInput.touched && validateConfirmPassword(password, confirmPassword)"
             [class.invalid-input]="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword)">
           </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('confirmPassword')">
+            <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-item>
         <ion-text color="danger" *ngIf="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword) && currentField === 'confirmPassword'">
           <small class="error-message">Las contraseñas no coinciden</small>
         </ion-text>
-      </ion-list>
 
-      <!-- Botones de acción -->
-      <div class="button-container">
-        <ion-button expand="block" type="submit" class="register-button" [disabled]="!registerForm.valid">
-          Registrarse
-        </ion-button>
-        <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
-          ¿Olvidaste tu contraseña?
-        </ion-button>
-      </div>
+        <!-- Campo de Captcha -->
+        <ion-item class="custom-input">
+          <div class="captcha-container">
+            <div class="captcha-text">{{ captchaText }}</div>
+            <ion-button fill="clear" (click)="refreshCaptcha()">
+              <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item>
+        <ion-item class="custom-input">
+          <ion-input
+            type="text"
+            [(ngModel)]="userCaptcha"
+            name="captcha"
+            required
+            #captchaInput="ngModel"
+            label="Ingrese el código captcha"
+            labelPlacement="floating"
+            [class.valid-input]="captchaInput.valid && captchaInput.touched"
+            [class.invalid-input]="captchaInput.invalid && captchaInput.touched">
+          </ion-input>
+        </ion-item>
+
+        <!-- Botones de acción -->
+        <div class="button-container">
+          <ion-button expand="block" type="submit" class="register-button" [disabled]="!registerForm.valid">
+            Registrarse
+          </ion-button>
+          <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
+            ¿Olvidaste tu contraseña?
+          </ion-button>
+        </div>
+      </ion-list>
     </form>
   </div>
 </ion-content>

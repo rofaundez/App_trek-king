@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { User } from '../models/user.model';
+import { addIcons } from 'ionicons';
+import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-inicio',
@@ -22,11 +24,32 @@ export class InicioPage implements OnInit {
   password: string = '';
   confirmPassword: string = '';
   currentField: string = '';
-
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  captchaText: string = '';
+  userCaptcha: string = '';
+  
   constructor(
     private dbService: DatabaseService,
     private toastController: ToastController
-  ) { }
+  ) {
+    addIcons({ eyeOutline, eyeOffOutline });
+    this.generateCaptcha();
+  }
+
+  // Add these new methods
+  generateCaptcha() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    this.captchaText = '';
+    for (let i = 0; i < 6; i++) {
+      this.captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+  }
+
+  refreshCaptcha() {
+    this.generateCaptcha();
+    this.userCaptcha = '';
+  }
 
   ngOnInit() {
     // Set default values for form fields
@@ -44,18 +67,48 @@ export class InicioPage implements OnInit {
 
 
   async register() {
-    try {
-      const newUser: User = {
-        email: this.email,
-        nombre: this.nombre,
-        password: this.password,
-        role: 'user'
-      };
+    if (this.userCaptcha !== this.captchaText) {
+      const toast = await this.toastController.create({
+        message: 'El código captcha no coincide',
+        duration: 2000,
+        position: 'middle',
+        color: 'danger'
+      });
+      toast.present();
+      this.refreshCaptcha();
+      return;
+    }
 
-      const userId = await this.dbService.addUser(newUser);
-      console.log('Usuario registrado exitosamente:', userId);
-      
-      // Show success toast
+    try {
+      /* Commented email validation
+      const existingUserByEmail = await this.dbService.getUserByEmail(this.email);
+      if (existingUserByEmail) {
+        const toast = await this.toastController.create({
+          message: 'Este correo electrónico ya está registrado',
+          duration: 2000,
+          position: 'middle',
+          color: 'danger'
+        });
+        toast.present();
+        return;
+      }
+
+      // Verificar si el nombre de usuario ya existe
+      const allUsers = await this.dbService.getAllUsers();
+      const existingUserByName = allUsers.find(user => user.nombre.toLowerCase() === this.nombre.toLowerCase());
+      if (existingUserByName) {
+        const toast = await this.toastController.create({
+          message: 'Este nombre de usuario ya está en uso',
+          duration: 2000,
+          position: 'middle',
+          color: 'danger'
+        });
+        toast.present();
+        return;
+      }
+      */
+
+      // Show success message without saving user
       const toast = await this.toastController.create({
         message: 'Buena perro funciona',
         duration: 2000,
@@ -64,14 +117,21 @@ export class InicioPage implements OnInit {
       });
       toast.present();
 
-      // Clear form after successful registration
+      // Clear form after showing message
       this.email = '';
       this.nombre = '';
       this.password = '';
       this.confirmPassword = '';
       
     } catch (error) {
-      console.error('Error al registrar usuario:', error);
+      console.error('Error:', error);
+      const toast = await this.toastController.create({
+        message: 'Error al procesar el formulario',
+        duration: 2000,
+        position: 'middle',
+        color: 'danger'
+      });
+      toast.present();
     }
   }
   forgotPassword() {
@@ -79,6 +139,11 @@ export class InicioPage implements OnInit {
     console.log('Olvidé mi contraseña');
   }
 
-  
-
+  togglePasswordVisibility(field: 'password' | 'confirmPassword') {
+    if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  }
 }

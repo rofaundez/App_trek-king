@@ -94,3 +94,20 @@ ion-input {
     transition: opacity 0.2s ease;
   }
 }
+
+.captcha-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+
+  .captcha-text {
+    font-family: 'Courier New', monospace;
+    font-size: 20px;
+    letter-spacing: 3px;
+    font-weight: bold;
+    color: var(--ion-color-primary);
+    user-select: none;
+  }
+}
