@@ -80,7 +80,6 @@ export class InicioPage implements OnInit {
     }
 
     try {
-      /* Commented email validation
       const existingUserByEmail = await this.dbService.getUserByEmail(this.email);
       if (existingUserByEmail) {
         const toast = await this.toastController.create({
@@ -106,7 +105,7 @@ export class InicioPage implements OnInit {
         toast.present();
         return;
       }
-      */
+      
 
       // Show success message without saving user
       const toast = await this.toastController.create({
