@@ -1,29 +1,36 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private currentUser: User | null = null;
+  private authStateSubject = new BehaviorSubject<User | null>(null);
   private isAuthenticated = new BehaviorSubject<boolean>(false);
-  
-  constructor() {
-    this.checkAuthStatus();
-  }
+  authState$ = this.authStateSubject.asObservable();
 
-  checkAuthStatus() {
-    const userSession = localStorage.getItem('userSession');
-    if (userSession) {
+  constructor() {
+    // Check for existing session
+    const savedUser = localStorage.getItem('userSession');
+    if (savedUser) {
+      this.currentUser = JSON.parse(savedUser);
+      this.authStateSubject.next(this.currentUser);
       this.isAuthenticated.next(true);
     }
   }
 
-  login(user: any) {
+  async login(user: User) {
+    this.currentUser = user;
+    this.authStateSubject.next(user);
     localStorage.setItem('userSession', JSON.stringify(user));
     this.isAuthenticated.next(true);
   }
 
   logout() {
+    this.currentUser = null;
+    this.authStateSubject.next(null);
     localStorage.removeItem('userSession');
     this.isAuthenticated.next(false);
   }
@@ -32,8 +39,7 @@ export class AuthService {
     return this.isAuthenticated.asObservable();
   }
 
-  getCurrentUser() {
-    const userSession = localStorage.getItem('userSession');
-    return userSession ? JSON.parse(userSession) : null;
+  getCurrentUser(): User | null {
+    return this.currentUser;
   }
 }

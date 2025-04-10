@@ -24,19 +24,24 @@ export class HomePage implements OnInit {
     private dbService: DatabaseService,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {
+    // Subscribe to auth state changes
+    this.authService.authState$.subscribe(user => {
+      if (user) {
+        this.userName = user.nombre;
+      } else {
+        this.userName = 'Invitado';
+      }
+    });
+  }
 
-  async ngOnInit() {
-    // Get user data from auth service
+  ngOnInit() {
+    // Get initial user state
     const currentUser = this.authService.getCurrentUser();
-    this.userName = currentUser ? currentUser.nombre : 'Invitado';
-
-    // Load routes from database
-    try {
-      this.allRoutes = await this.dbService.getAllRoutes();
-      this.rutasRecomendadas = [...this.allRoutes];
-    } catch (error) {
-      console.error('Error loading routes:', error);
+    if (currentUser) {
+      this.userName = currentUser.nombre;
+    } else {
+      this.userName = 'Invitado';
     }
   }
 

@@ -16,6 +16,12 @@ import { RouterModule } from '@angular/router';
 })
 export class MyRoutesPage implements OnInit {
   myRoutes: Rutas[] = [];
+  userProfile: any = {
+    photo: 'assets/img/userLogo.png',
+    nombre: '',
+    email: ''
+  };
+  originalProfile: any;
 
   constructor(
     private dbService: DatabaseService,
@@ -24,13 +30,22 @@ export class MyRoutesPage implements OnInit {
   ) { }
 
   async ngOnInit() {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.userProfile = {
+        ...this.userProfile,
+        nombre: currentUser.nombre,
+        email: currentUser.email
+      };
+      this.originalProfile = { ...this.userProfile };
+    }
     await this.loadRoutes();
   }
 
   async loadRoutes() {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
-      this.myRoutes = await this.dbService.getRoutesByCreator(currentUser.id);
+      this.myRoutes = await this.dbService.getRoutesByCreator(currentUser.id||'');
     }
   }
 
