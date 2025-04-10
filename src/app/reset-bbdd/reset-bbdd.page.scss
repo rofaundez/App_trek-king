@@ -1,0 +1,24 @@
+.reset-container {
+  text-align: center;
+  padding: 20px;
+  
+  .warning-icon {
+    font-size: 64px;
+    color: var(--ion-color-danger);
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    color: var(--ion-color-danger);
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin-bottom: 32px;
+  }
+
+  .reset-button {
+    margin-top: 20px;
+  }
+}

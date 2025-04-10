@@ -1,0 +1,110 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/my-routes"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Nueva Ruta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="container">
+    <div class="header-container">
+      <h1>Crear Nueva Ruta</h1>
+      <p>Completa los detalles de tu ruta</p>
+    </div>
+
+    <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
+      <div class="form-container">
+        <div class="form-section">
+          <h3>Información Básica</h3>
+          <ion-item class="custom-input">
+            <ion-label position="floating">Nombre de la Ruta</ion-label>
+            <ion-input formControlName="nombre" type="text" placeholder="Ej: Cerro Santa Lucía"></ion-input>
+          </ion-item>
+
+          <ion-item class="custom-input">
+            <ion-label position="floating">Descripción</ion-label>
+            <ion-textarea 
+              formControlName="descripcion" 
+              rows="4"
+              placeholder="Describe la ruta, sus características y recomendaciones">
+            </ion-textarea>
+          </ion-item>
+
+          <ion-item class="custom-input">
+            <ion-label position="floating">Localidad</ion-label>
+            <ion-input formControlName="localidad" type="text" placeholder="Ej: Santiago, Chile"></ion-input>
+          </ion-item>
+
+          <ion-item class="custom-input">
+            <ion-label position="floating">Dificultad</ion-label>
+            <ion-select formControlName="dificultad" interface="action-sheet">
+              <ion-select-option value="Fácil">Fácil</ion-select-option>
+              <ion-select-option value="Moderada">Moderada</ion-select-option>
+              <ion-select-option value="Difícil">Difícil</ion-select-option>
+              <ion-select-option value="Muy Difícil">Muy Difícil</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+
+        <div class="form-section">
+          <h3>Imagen de la Ruta</h3>
+          <div class="image-upload">
+            <ion-button class="upload-button" (click)="fileInput.click()">
+              <ion-icon name="image-outline" slot="start"></ion-icon>
+              Seleccionar Imagen
+            </ion-button>
+            <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
+          </div>
+          <div class="image-preview" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Preview">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Ubicación</h3>
+          <div class="location-point">
+            <h4>Punto de Inicio</h4>
+            <ion-item class="custom-input">
+              <ion-label position="floating">Dirección</ion-label>
+              <ion-input formControlName="puntoInicioDireccion"></ion-input>
+            </ion-item>
+            <div class="coordinates-container">
+              <ion-item class="custom-input">
+                <ion-label position="floating">Latitud</ion-label>
+                <ion-input formControlName="puntoInicioLat" type="number"></ion-input>
+              </ion-item>
+              <ion-item class="custom-input">
+                <ion-label position="floating">Longitud</ion-label>
+                <ion-input formControlName="puntoInicioLng" type="number"></ion-input>
+              </ion-item>
+            </div>
+          </div>
+
+          <div class="location-point">
+            <h4>Punto de Término</h4>
+            <ion-item class="custom-input">
+              <ion-label position="floating">Dirección</ion-label>
+              <ion-input formControlName="puntoTerminoDireccion"></ion-input>
+            </ion-item>
+            <div class="coordinates-container">
+              <ion-item class="custom-input">
+                <ion-label position="floating">Latitud</ion-label>
+                <ion-input formControlName="puntoTerminoLat" type="number"></ion-input>
+              </ion-item>
+              <ion-item class="custom-input">
+                <ion-label position="floating">Longitud</ion-label>
+                <ion-input formControlName="puntoTerminoLng" type="number"></ion-input>
+              </ion-item>
+            </div>
+          </div>
+        </div>
+
+        <ion-button expand="block" type="submit" class="submit-button" [disabled]="!routeForm.valid || !selectedFile">
+          Crear Ruta
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>

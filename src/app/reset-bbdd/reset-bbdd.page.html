@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Reiniciar Base de Datos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="reset-container">
+    <ion-icon name="warning-outline" class="warning-icon"></ion-icon>
+    <h2>Reiniciar Base de Datos</h2>
+    <p>Esta acción eliminará todos los datos almacenados en la aplicación.</p>
+    <ion-button 
+      expand="block" 
+      color="danger" 
+      (click)="resetDatabase()"
+      class="reset-button">
+      <ion-icon name="refresh-outline" slot="start"></ion-icon>
+      Reiniciar Base de Datos
+    </ion-button>
+  </div>
+</ion-content>

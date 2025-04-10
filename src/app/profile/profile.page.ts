@@ -66,6 +66,10 @@ export class ProfilePage implements OnInit {
     }
   }
 
+  misRutas() {
+    this.router.navigate(['/my-routes']);
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

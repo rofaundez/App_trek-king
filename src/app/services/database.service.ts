@@ -186,52 +186,6 @@ export class DatabaseService {
       });
   }
 
-  async addInitialRoute() {
-      const rutaSantaLucia: Rutas = {
-        nombre: "Cerro Santa Lucia",
-        foto: "assets/cerro-santa-lucia.jpg",
-        descripcion: "cerro santa lucia :v",
-        dificultad: "Moderada",
-        puntosDescanso: [
-          {
-            nombre: "Terraza Neptuno",
-            ubicacion: {
-              lat: -33.4401,
-              lng: -70.6445
-            },
-            descripcion: "Mirador con fuente y área de descanso"
-          },
-          {
-            nombre: "Plaza Benjamín Vicuña Mackenna",
-            ubicacion: {
-              lat: -33.4399,
-              lng: -70.6447
-            },
-            descripcion: "Plaza con bancas y sombra"
-          }
-        ],
-        puntoInicio: {
-          lat: -33.4403,
-          lng: -70.6449,
-          direccion: "Entrada principal por calle Santa Lucía"
-        },
-        puntoTermino: {
-          lat: -33.4397,
-          lng: -70.6443,
-          direccion: "Castillo Hidalgo, cumbre del cerro"
-        },
-        localidad: "Santiago",
-        fechaCreacion: new Date(),
-        ultimaModificacion: new Date()
-      };
-    
-      try {
-        await this.addRoute(rutaSantaLucia);
-        console.log('Ruta del Cerro Santa Lucia agregada exitosamente');
-      } catch (error) {
-        console.error('Error al agregar la ruta:', error);
-      }
-  }
 
   async updateUser(id: string, userData: any): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -262,6 +216,105 @@ export class DatabaseService {
 
       request.onsuccess = () => resolve();
       request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Get route by ID
+  async getRouteById(id: string): Promise<Rutas | null> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const transaction = this.db.transaction('rutas', 'readonly');
+      const store = transaction.objectStore('rutas');
+      const request = store.get(id);
+
+      request.onsuccess = () => resolve(request.result || null);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Get routes by creator
+  async getRoutesByCreator(creatorId: string): Promise<Rutas[]> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const transaction = this.db.transaction('rutas', 'readonly');
+      const store = transaction.objectStore('rutas');
+      const request = store.getAll();
+
+      request.onsuccess = () => {
+        const routes = request.result.filter(route => route.creador.id === creatorId);
+        resolve(routes);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Update route
+  async updateRoute(id: string, routeData: Rutas): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const transaction = this.db.transaction('rutas', 'readwrite');
+      const store = transaction.objectStore('rutas');
+      const request = store.put({ ...routeData, id });
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Delete route
+  async deleteRoute(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const transaction = this.db.transaction('rutas', 'readwrite');
+      const store = transaction.objectStore('rutas');
+      const request = store.delete(id);
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  // Clear entire database
+  async clearDatabase(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const stores = ['users', 'autoridades', 'rutas'];
+      let completedStores = 0;
+
+      stores.forEach(storeName => {
+        const transaction = this.db!.transaction(storeName, 'readwrite');
+        const store = transaction.objectStore(storeName);
+        const request = store.clear();
+
+        request.onsuccess = () => {
+          completedStores++;
+          if (completedStores === stores.length) {
+            resolve();
+          }
+        };
+
+        request.onerror = () => reject(request.error);
+      });
     });
   }
 }

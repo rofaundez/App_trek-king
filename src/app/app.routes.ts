@@ -19,6 +19,10 @@ export const routes: Routes = [
     loadComponent: () => import('./menu/menu.page').then( m => m.MenuPage)
   },
   {
+    path: 'my-routes',
+    loadComponent: () => import('./my-routes/my-routes.page').then( m => m.MyRoutesPage)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
   },
@@ -26,6 +30,14 @@ export const routes: Routes = [
     path: 'profile',
     loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'create-route',
+    loadComponent: () => import('./create-route/create-route.page').then( m => m.CreateRoutePage)
+  },
+  {
+    path: 'rbd',
+    loadComponent: () => import('./reset-bbdd/reset-bbdd.page').then( m => m.ResetBbddPage)
   },
   {
     path: 'recover',
@@ -48,6 +60,12 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'home',
   },
+
+
+
+
+
+
 
 
 

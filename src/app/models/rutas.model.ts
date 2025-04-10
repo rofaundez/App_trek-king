@@ -4,6 +4,11 @@ export interface Rutas {
     foto: string;
     descripcion: string;
     dificultad: 'Fácil' | 'Moderada' | 'Difícil' | 'Muy Difícil';
+    creador: {
+        id: string;
+        nombre: string;
+        email: string;
+    };
     puntosDescanso: {
         nombre: string;
         ubicacion: {
