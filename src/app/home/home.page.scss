@@ -53,39 +53,54 @@
 
 /*botones filtros*/
 
-.contenedor_filtro{
-
-  overflow-x: auto; 
-  white-space: nowrap;
-  -webkit-overflow-scrolling: touch;
-
-  &::-webkit-scrollbar {
-    display: none; // Oculta la barra de scroll
+.contenedor_filtro {
+  cursor: grab;
+  user-select: none;
+  
+  &:active {
+    cursor: grabbing;
+  }
+  display: flex;
+  overflow-x: scroll;
+  padding: 10px 5px;
+  margin: 10px -20px;
+  scroll-behavior: smooth;
+  
+  .boton-filtro {
+    flex: 0 0 auto;
+    margin: 0 8px;
+    min-width: 120px;
+    
+    .imagen_filtro {
+      width: 80px;
+      height: 50px;
+      filter: invert(100%);
+      -webkit-filter: invert(100%);
+    }
+    
+    .nombre_filtro {
+      color: white;
+      font-size: 10px;
+      font-weight: 500;
+      text-align: center;
+      width: 100%;
+    }
   }
 
-    .boton-filtro{
-      background:#1a4c1400;
-      --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.603);
-      --border-radius: 12px;
-      text-align: start;
-      width: 160px;
+  /* Customize scrollbar */
+  &::-webkit-scrollbar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+  }
 
-        .imagen_filtro{
-          width: 80px;
-          height: 50px;
-          size: 100%  ;
-        }
-        .nombre_filtro{
-          color: white;
-          font-size: 10px;
-          font-weight: 500;
-          text-align: center; // Add this line
-          width: 100%; // Add this line
-        }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
 
-        
-        
-    }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 }
 
 /*rutas*/	
@@ -216,18 +231,23 @@
       width: 35px;
       height: 35px;
       object-fit: contain;
+      filter: invert(100%);
+      -webkit-filter: invert(100%);
     }
 
     .imagen_SOS_boton {
       width: 71px;
       height: 71px;
       object-fit: contain;
+
     }
 
     .imagen_usuarios_boton {
       width: 65px;
       height: 65px;
       object-fit: contain;
+      filter: invert(100%);
+      -webkit-filter: invert(100%);
     }
 
   }

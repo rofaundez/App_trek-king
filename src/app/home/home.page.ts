@@ -66,4 +66,32 @@ export class HomePage implements OnInit {
       );
     }
   }
+
+  isMouseDown = false;
+    startX: number = 0;
+    scrollLeft: number = 0;
+  
+    onMouseDown(e: MouseEvent) {
+      const filterContainer = e.currentTarget as HTMLElement;
+      this.isMouseDown = true;
+      this.startX = e.pageX - filterContainer.offsetLeft;
+      this.scrollLeft = filterContainer.scrollLeft;
+    }
+  
+    onMouseLeave() {
+      this.isMouseDown = false;
+    }
+  
+    onMouseUp() {
+      this.isMouseDown = false;
+    }
+  
+    onMouseMove(e: MouseEvent) {
+      if (!this.isMouseDown) return;
+      e.preventDefault();
+      const filterContainer = e.currentTarget as HTMLElement;
+      const x = e.pageX - filterContainer.offsetLeft;
+      const walk = (x - this.startX) * 2;
+      filterContainer.scrollLeft = this.scrollLeft - walk;
+    }
 }

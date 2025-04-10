@@ -18,8 +18,12 @@
     class="custom-searchbar">
     </ion-searchbar>
     
-    <div class="contenedor_filtro">
-
+    <div class="contenedor_filtro" 
+         (mousedown)="onMouseDown($event)"
+         (mouseleave)="onMouseLeave()"
+         (mouseup)="onMouseUp()"
+         (mousemove)="onMouseMove($event)">
+    
       <ion-button fill="clear" class="boton-filtro">  
         <img src="assets/img/montañaLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Montañas</span>
