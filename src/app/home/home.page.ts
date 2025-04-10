@@ -1,10 +1,10 @@
+import { DatabaseService } from './../services/database.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Rutas } from '../models/rutas.model';
 import { Router } from '@angular/router';
-import { DatabaseService } from '../services/database.service';
 
 @Component({
   selector: 'app-home',

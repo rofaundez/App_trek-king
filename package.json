@@ -25,7 +25,8 @@
     "@capacitor/core": "^7.2.0",
     "@ionic/angular": "^8.5.3",
     "@ionic/storage-angular": "^4.0.0",
-    "ionicons": "^7.0.0",
+    "@rdlabo/ionic-angular-collect-icons": "^1.4.1",
+    "ionicons": "^7.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
