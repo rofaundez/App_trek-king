@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,9 @@ export class LoginPage implements OnInit {
   password: string = '';
   currentField: string = '';
 
+  // Add to constructor
   constructor(
+    private authService: AuthService,
     private dbService: DatabaseService,
     private toastController: ToastController,
     private router: Router
@@ -34,9 +37,7 @@ export class LoginPage implements OnInit {
       const user = await this.dbService.getUserByEmail(this.email);
       
       if (user && user.password === this.password) {
-        // Store user email for later use
-        localStorage.setItem('userEmail', this.email);
-        
+        this.authService.login(user); // Store session
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
           duration: 2000,
@@ -60,7 +61,7 @@ export class LoginPage implements OnInit {
   }
 
   forgotPassword() {
-    console.log('Olvidé mi contraseña');
+    this.router.navigate(['/recover']);
   }
 
   goToRegister() {

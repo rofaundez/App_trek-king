@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
-import { DatabaseService } from '../services/database.service';
+import { IonicModule } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -12,83 +13,49 @@ import { DatabaseService } from '../services/database.service';
   imports: [IonicModule, CommonModule, FormsModule]
 })
 export class ProfilePage implements OnInit {
-  userProfile = {
-    id: '',
+  userProfile: any = {
+    photo: 'assets/img/userLogo.png',
     nombre: '',
-    email: '',
-    photo: 'assets/default-avatar.jpg'
+    email: ''
   };
-  isEditing = false;
-  tempProfile: any = {};
+  isEditing: boolean = false;
+  originalProfile: any;
 
   constructor(
-    private dbService: DatabaseService,
-    private toastController: ToastController
+    private authService: AuthService,
+    private router: Router
   ) { }
 
-  async ngOnInit() {
-    await this.loadUserProfile();
-  }
-
-  async loadUserProfile() {
-    try {
-      const userEmail = localStorage.getItem('userEmail');
-      if (userEmail) {
-        const user = await this.dbService.getUserByEmail(userEmail);
-        if (user) {
-          this.userProfile = {
-            id: user.id || '',
-            nombre: user.nombre,
-            email: user.email,
-            photo: user.img || 'assets/default-avatar.jpg'
-          };
-          console.log('User profile loaded:', this.userProfile);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading user profile:', error);
-      const toast = await this.toastController.create({
-        message: 'Error al cargar el perfil',
-        duration: 2000,
-        color: 'danger'
-      });
-      await toast.present();
+  ngOnInit() {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.userProfile = {
+        ...this.userProfile,
+        nombre: currentUser.nombre,
+        email: currentUser.email
+      };
+      this.originalProfile = { ...this.userProfile };
     }
   }
 
   toggleEdit() {
     this.isEditing = !this.isEditing;
     if (this.isEditing) {
-      this.tempProfile = { ...this.userProfile };
-    }
-  }
-
-  async updateProfile() {
-    try {
-      await this.dbService.updateUser(this.userProfile.id, this.userProfile);
-      const toast = await this.toastController.create({
-        message: 'Perfil actualizado exitosamente',
-        duration: 2000,
-        color: 'success'
-      });
-      toast.present();
-      this.isEditing = false;
-    } catch (error) {
-      const toast = await this.toastController.create({
-        message: 'Error al actualizar el perfil',
-        duration: 2000,
-        color: 'danger'
-      });
-      toast.present();
+      this.originalProfile = { ...this.userProfile };
     }
   }
 
   cancelEdit() {
-    this.userProfile = { ...this.tempProfile };
+    this.userProfile = { ...this.originalProfile };
     this.isEditing = false;
   }
 
-  async onPhotoSelect(event: any) {
+  async updateProfile() {
+    // Here you would implement the profile update logic
+    this.isEditing = false;
+  }
+
+  onPhotoSelect(event: any) {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -97,5 +64,10 @@ export class ProfilePage implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

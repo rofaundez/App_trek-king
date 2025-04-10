@@ -6,6 +6,7 @@ import { DatabaseService } from '../services/database.service';
 import { User } from '../models/user.model';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro',
@@ -26,30 +27,16 @@ export class RegistroPage implements OnInit {
   currentField: string = '';
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
-  captchaText: string = '';
-  userCaptcha: string = '';
+
   
   constructor(
     private dbService: DatabaseService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private router: Router  // Add this line
   ) {
     addIcons({ eyeOutline, eyeOffOutline });
-    this.generateCaptcha();
   }
 
-  // Add these new methods
-  generateCaptcha() {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
-    this.captchaText = '';
-    for (let i = 0; i < 6; i++) {
-      this.captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-  }
-
-  refreshCaptcha() {
-    this.generateCaptcha();
-    this.userCaptcha = '';
-  }
 
   ngOnInit() {
     // Set default values for form fields
@@ -67,15 +54,27 @@ export class RegistroPage implements OnInit {
 
 
   async register() {
-    if (this.userCaptcha !== this.captchaText) {
+    // Validate passwords match
+    if (this.password !== this.confirmPassword) {
       const toast = await this.toastController.create({
-        message: 'El código captcha no coincide',
+        message: 'Las contraseñas no coinciden',
         duration: 2000,
         position: 'middle',
         color: 'danger'
       });
       toast.present();
-      this.refreshCaptcha();
+      return;
+    }
+
+    // Validate password length
+    if (this.password.length < 8) {
+      const toast = await this.toastController.create({
+        message: 'La contraseña debe tener al menos 8 caracteres',
+        duration: 2000,
+        position: 'middle',
+        color: 'danger'
+      });
+      toast.present();
       return;
     }
 
@@ -92,40 +91,30 @@ export class RegistroPage implements OnInit {
         return;
       }
 
-      // Verificar si el nombre de usuario ya existe
-      const allUsers = await this.dbService.getAllUsers();
-      const existingUserByName = allUsers.find(user => user.nombre.toLowerCase() === this.nombre.toLowerCase());
-      if (existingUserByName) {
-        const toast = await this.toastController.create({
-          message: 'Este nombre de usuario ya está en uso',
-          duration: 2000,
-          position: 'middle',
-          color: 'danger'
-        });
-        toast.present();
-        return;
-      }
-      
+      // Create and save new user
+      const newUser = {
+        email: this.email,
+        nombre: this.nombre,
+        password: this.password
+      };
 
-      // Show success message without saving user
+      await this.dbService.addUser(newUser);
+
       const toast = await this.toastController.create({
-        message: 'Buena perro funciona',
+        message: 'Usuario registrado exitosamente',
         duration: 2000,
         position: 'middle',
         color: 'success'
       });
-      toast.present();
+      await toast.present();
 
-      // Clear form after showing message
-      this.email = '';
-      this.nombre = '';
-      this.password = '';
-      this.confirmPassword = '';
+      // Navigate to login
+      this.router.navigate(['/login']);
       
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error en el registro:', error);
       const toast = await this.toastController.create({
-        message: 'Error al procesar el formulario',
+        message: 'Error al registrar usuario',
         duration: 2000,
         position: 'middle',
         color: 'danger'
@@ -134,8 +123,11 @@ export class RegistroPage implements OnInit {
     }
   }
   forgotPassword() {
-    // Aquí iría la lógica para redirigir a la página de "Olvidé mi contraseña"
-    console.log('Olvidé mi contraseña');
+    this.router.navigate(['/recover']);
+  }
+
+  login() {
+    this.router.navigate(['/login']);
   }
 
   togglePasswordVisibility(field: 'password' | 'confirmPassword') {

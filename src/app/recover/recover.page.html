@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Recuperar Contraseña</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/login"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <h2>Recuperación de Contraseña</h2>
+    <p>Ingresa tu correo electrónico para recuperar tu contraseña</p>
+    
+    <form (ngSubmit)="verifyEmail()" #recoverForm="ngForm" *ngIf="!showPasswordReset">
+      <ion-list>
+        <ion-item>
+          <ion-input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            email
+            label="Correo electrónico"
+            labelPlacement="floating"
+            placeholder="ejemplo@correo.com">
+          </ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-button 
+        expand="block" 
+        type="submit" 
+        [disabled]="!recoverForm.valid"
+        class="ion-margin-top">
+        Verificar correo
+      </ion-button>
+    </form>
+
+    <form (ngSubmit)="updatePassword()" #passwordForm="ngForm" *ngIf="showPasswordReset">
+      <ion-list>
+        <ion-item>
+          <ion-input
+            type="password"
+            [(ngModel)]="newPassword"
+            name="newPassword"
+            required
+            minlength="8"
+            label="Nueva contraseña"
+            labelPlacement="floating"
+            placeholder="********">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            type="password"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            required
+            label="Confirmar contraseña"
+            labelPlacement="floating"
+            placeholder="********">
+          </ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-button 
+        expand="block" 
+        type="submit" 
+        [disabled]="!passwordForm.valid || newPassword !== confirmPassword"
+        class="ion-margin-top">
+        Actualizar contraseña
+      </ion-button>
+    </form>
+  </div>
+</ion-content>

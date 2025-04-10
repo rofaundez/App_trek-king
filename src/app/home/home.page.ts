@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Rutas } from '../models/rutas.model';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -17,26 +18,18 @@ export class HomePage implements OnInit {
   userName: string = '';
   userPhoto: string = 'assets/user-photo.jpg';
   rutasRecomendadas: Rutas[] = [];
-  allRoutes: Rutas[] = []; // To store all routes
+  allRoutes: Rutas[] = [];
 
   constructor(
     private dbService: DatabaseService,
+    private authService: AuthService,
     private router: Router
   ) { }
 
-  goToProfile() {
-    this.router.navigate(['/profile']);
-  }
-
   async ngOnInit() {
-    // Get logged in user name
-    const userEmail = localStorage.getItem('userEmail');
-    if (userEmail) {
-      const user = await this.dbService.getUserByEmail(userEmail);
-      if (user) {
-        this.userName = user.nombre;
-      }
-    }
+    // Get user data from auth service
+    const currentUser = this.authService.getCurrentUser();
+    this.userName = currentUser ? currentUser.nombre : 'Invitado';
 
     // Load routes from database
     try {
@@ -45,6 +38,20 @@ export class HomePage implements OnInit {
     } catch (error) {
       console.error('Error loading routes:', error);
     }
+  }
+
+  goToProfile() {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.router.navigate(['/login']);
+    } else {
+      this.router.navigate(['/profile']);
+    }
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   onSearch(event: any) {

@@ -1,0 +1,20 @@
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 20px;
+    color: var(--ion-color-primary);
+  }
+
+  p {
+    margin-bottom: 30px;
+    color: var(--ion-color-medium);
+  }
+
+  ion-button {
+    margin-top: 30px;
+  }
+}

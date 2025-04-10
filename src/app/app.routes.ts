@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -23,7 +24,12 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
+    loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'recover',
+    loadComponent: () => import('./recover/recover.page').then(m => m.RecoverPage)
   },
   {
     path: 'listado-usuario',
@@ -42,6 +48,7 @@ export const routes: Routes = [
     path: '**',
     redirectTo: 'home',
   },
+
 
 
 

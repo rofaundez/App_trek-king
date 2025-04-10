@@ -96,36 +96,17 @@
           <small class="error-message">Las contraseñas no coinciden</small>
         </ion-text>
 
-        <!-- Campo de Captcha -->
-        <ion-item class="custom-input">
-          <div class="captcha-container">
-            <div class="captcha-text">{{ captchaText }}</div>
-            <ion-button fill="clear" (click)="refreshCaptcha()">
-              <ion-icon name="refresh-outline" slot="icon-only"></ion-icon>
-            </ion-button>
-          </div>
-        </ion-item>
-        <ion-item class="custom-input">
-          <ion-input
-            type="text"
-            [(ngModel)]="userCaptcha"
-            name="captcha"
-            required
-            #captchaInput="ngModel"
-            label="Ingrese el código captcha"
-            labelPlacement="floating"
-            [class.valid-input]="captchaInput.valid && captchaInput.touched"
-            [class.invalid-input]="captchaInput.invalid && captchaInput.touched">
-          </ion-input>
-        </ion-item>
-
         <!-- Botones de acción -->
         <div class="button-container">
-          <ion-button expand="block" type="submit" class="register-button" [disabled]="!registerForm.valid">
+          <ion-button expand="block" type="submit" class="register-button" 
+            [disabled]="!registerForm.valid || !validateConfirmPassword(password, confirmPassword)">
             Registrarse
           </ion-button>
           <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
             ¿Olvidaste tu contraseña?
+          </ion-button>
+          <ion-button fill="clear" (click)="login()" class="forgot-password">
+            Inicia sesión
           </ion-button>
         </div>
       </ion-list>
