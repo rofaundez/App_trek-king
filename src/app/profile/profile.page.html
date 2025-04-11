@@ -1,7 +1,7 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Mi Perfil</ion-title>
-    <ion-buttons slot="start">
+<ion-header class="header-contain" style="color: red;">
+  <ion-toolbar class="perfil_contain" style="background-color: trasparent;">
+    <h3 class="perfil" style="background-color: trasparent;">Mi Perfil</h3>
+    <ion-buttons slot="start" style="background-color: trasparent;">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
@@ -20,8 +20,8 @@
     </div>
 
     <ion-list>
-      <ion-item>
-        <ion-label position="stacked">Nombre</ion-label>
+      <ion-item class="item_user">
+        <ion-label position="stacked" >Nombre</ion-label>
         <ion-input [(ngModel)]="userProfile.nombre" [readonly]="!isEditing"></ion-input>
       </ion-item>
 
@@ -31,9 +31,9 @@
       </ion-item>
     </ion-list>
 
-    <div class="button-container">
+    <div class="button-container" >
       <ng-container *ngIf="!isEditing">
-        <ion-button expand="block" color="primary" (click)="toggleEdit()">
+        <ion-button class="Editara_perfil" expand="block" color="primary" (click)="toggleEdit()">
           Editar Perfil
         </ion-button>
       </ng-container>

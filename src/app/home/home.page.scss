@@ -16,6 +16,10 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.459);
   }
+
+  ion-toolbar{
+    --background: transparent;
+  }
 }
 
 .user-welcome {
@@ -151,7 +155,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(83, 39, 9, 0.897);
+    background-color: rgba(94, 68, 55, 0.897);
     pointer-events: none;
   }
 
