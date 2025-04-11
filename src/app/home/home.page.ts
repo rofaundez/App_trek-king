@@ -16,10 +16,11 @@ import { AuthService } from '../services/auth.service';
 })
 export class HomePage implements OnInit {
   userName: string = '';
+  userLastName: string = '';
   userPhoto: string = 'assets/user-photo.jpg';
   rutasRecomendadas: Rutas[] = [];
   allRoutes: Rutas[] = [];
-
+  
   constructor(
     private dbService: DatabaseService,
     private authService: AuthService,
@@ -27,10 +28,14 @@ export class HomePage implements OnInit {
   ) {
     // Subscribe to auth state changes
     this.authService.authState$.subscribe(user => {
+      console.log('Auth state changed, user:', user); // Add this log
       if (user) {
         this.userName = user.nombre;
+        this.userLastName = user.apellido;
+        console.log('Setting name:', this.userName, 'lastname:', this.userLastName); // Add this log
       } else {
         this.userName = 'Invitado';
+        this.userLastName = 'Invitado';
       }
     });
   }
@@ -40,8 +45,10 @@ export class HomePage implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.userName = currentUser.nombre;
+      this.userLastName = currentUser.apellido;
     } else {
       this.userName = 'Invitado';
+      this.userLastName = 'Invitado';
     }
   }
 

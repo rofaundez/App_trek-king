@@ -45,7 +45,9 @@ export class MyRoutesPage implements OnInit {
   async loadRoutes() {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
-      this.myRoutes = await this.dbService.getRoutesByCreator(currentUser.id||'');
+      // Convert id to string if it exists, otherwise use empty string
+      const creatorId = currentUser.id ? currentUser.id.toString() : '';
+      this.myRoutes = await this.dbService.getRoutesByCreator(creatorId);
     }
   }
 

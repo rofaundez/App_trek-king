@@ -14,7 +14,7 @@ export class DatabaseService {
     this.initDB();
   }
 
-  private initDB(): void {
+  private async initDB(): Promise<void> {
     const request = indexedDB.open(this.dbName, 1);
 
     request.onerror = (event) => {
@@ -23,13 +23,13 @@ export class DatabaseService {
 
     request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
       const db = (event.target as IDBOpenDBRequest).result;
+      console.log('Creating stores...');
 
-      // Create Users store
       if (!db.objectStoreNames.contains('users')) {
         const userStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
         userStore.createIndex('email', 'email', { unique: true });
       }
-
+      
       // Create Autoridades store
       if (!db.objectStoreNames.contains('autoridades')) {
         const autoridadStore = db.createObjectStore('autoridades', { keyPath: 'id', autoIncrement: true });
@@ -43,8 +43,27 @@ export class DatabaseService {
       }
     };
 
-    request.onsuccess = (event) => {
+    request.onsuccess = async (event) => {
       this.db = (event.target as IDBOpenDBRequest).result;
+      console.log('Database opened successfully');
+      
+      // Check if default user exists
+      try {
+        const user = await this.getUserByEmail('jeremiasramos@gmail.com');
+        if (!user) {
+          // Add default user if it doesn't exist
+          const defaultUser = {
+            email: 'jeremiasramos@gmail.com',
+            password: '12344321',
+            nombre: 'Jeremias',
+            apellido: 'Ramos'  // Changed from apellido to userLastName
+          };
+          await this.addUser(defaultUser);
+          console.log('Default user added');
+        }
+      } catch (error) {
+        console.error('Error checking/adding default user:', error);
+      }
     };
   }
 
@@ -86,6 +105,7 @@ export class DatabaseService {
   async getUserByEmail(email: string): Promise<User | null> {
     return new Promise((resolve, reject) => {
       if (!this.db) {
+        console.error('Database not initialized');
         reject('Database not initialized');
         return;
       }
@@ -95,8 +115,14 @@ export class DatabaseService {
       const emailIndex = store.index('email');
       const request = emailIndex.get(email);
 
-      request.onsuccess = () => resolve(request.result || null);
-      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        console.log('User search result:', request.result);
+        resolve(request.result || null);
+      };
+      request.onerror = () => {
+        console.error('Error getting user:', request.error);
+        reject(request.error);
+      };
     });
   }
 

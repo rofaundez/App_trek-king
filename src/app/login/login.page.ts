@@ -34,10 +34,15 @@ export class LoginPage implements OnInit {
 
   async login() {
     try {
+      console.log('Attempting login with:', this.email, this.password);
+      
       const user = await this.dbService.getUserByEmail(this.email);
+      console.log('User found:', user);
       
       if (user && user.password === this.password) {
-        this.authService.login(user); // Store session
+        console.log('Login successful');
+        this.authService.login(user);
+        
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
           duration: 2000,
@@ -47,6 +52,7 @@ export class LoginPage implements OnInit {
         await toast.present();
         this.router.navigate(['/home']);
       } else {
+        console.log('Login failed - invalid credentials');
         const toast = await this.toastController.create({
           message: 'Credenciales incorrectas',
           duration: 2000,
@@ -56,7 +62,7 @@ export class LoginPage implements OnInit {
         toast.present();
       }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
+      console.error('Login error:', error);
     }
   }
 

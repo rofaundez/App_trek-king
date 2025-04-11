@@ -23,6 +23,7 @@ export class RegistroPage implements OnInit {
   email: string = '';
   nombre: string = '';
   password: string = '';
+  apellido: string = '';
   confirmPassword: string = '';
   currentField: string = '';
   showPassword: boolean = false;
@@ -41,9 +42,10 @@ export class RegistroPage implements OnInit {
   ngOnInit() {
     // Set default values for form fields
     this.email = 'jeremiasramos@gmail.com';
-    this.nombre = 'jere ramos';
+    this.nombre = 'Jeremias';
     this.password = '12344321';
     this.confirmPassword = '12344321';
+    this.apellido= 'Ramos';
   }
 
   // Rename the function to avoid conflict
@@ -95,7 +97,8 @@ export class RegistroPage implements OnInit {
       const newUser = {
         email: this.email,
         nombre: this.nombre,
-        password: this.password
+        password: this.password,
+        apellido: this.apellido,
       };
 
       await this.dbService.addUser(newUser);
