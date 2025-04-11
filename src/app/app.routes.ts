@@ -51,17 +51,14 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () => import('./home/home.page').then(m => m.HomePage)
   },
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full', 
-  },
-  {
-    path: '**',
-    redirectTo: 'login',
-  },
 
+  {path: '',
+  redirectTo: 'login',
+  pathMatch: 'full',},
 
+  {path: '**',
+    redirectTo: 'login',
+    pathMatch: 'full',}
 
 
 

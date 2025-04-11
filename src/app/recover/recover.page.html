@@ -1,20 +1,25 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Recuperar Contraseña</ion-title>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/login"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+
 
 <ion-content class="ion-padding">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
   <div class="form-container">
-    <h2>Recuperación de Contraseña</h2>
-    <p>Ingresa tu correo electrónico para recuperar tu contraseña</p>
+    <h1 class="title">Trek-King</h1>
+    <h2 class="subtitle">Recuperar Contraseña</h2>
+    
+    <!-- Show this message only before email verification -->
+    <p class="description" *ngIf="!showPasswordReset">
+      Ingresa tu correo electrónico para recuperar tu contraseña
+    </p>
+    
+    <!-- Show warning message only after email verification -->
+    <h2 class="Cuidado" *ngIf="showPasswordReset">
+      ¡Cuidado! No compartas tu contraseña
+    </h2>
     
     <form (ngSubmit)="verifyEmail()" #recoverForm="ngForm" *ngIf="!showPasswordReset">
-      <ion-list>
-        <ion-item>
+      <ion-list class="form-list">
+        <ion-item class="custom-input">
           <ion-input
             type="email"
             [(ngModel)]="email"
@@ -23,54 +28,53 @@
             email
             label="Correo electrónico"
             labelPlacement="floating"
-            placeholder="ejemplo@correo.com">
+            placeholder="ejemplo@correo.com"
+            #emailInput="ngModel"
+            [class.valid-input]="emailInput.valid && emailInput.touched"
+            [class.invalid-input]="emailInput.invalid && emailInput.touched">
           </ion-input>
         </ion-item>
       </ion-list>
 
-      <ion-button 
-        expand="block" 
-        type="submit" 
-        [disabled]="!recoverForm.valid"
-        class="ion-margin-top">
-        Verificar correo
-      </ion-button>
+      <div class="button-container">
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="recover-button"
+          [disabled]="!recoverForm.valid">
+          Recuperar contraseña
+        </ion-button>
+        
+        <ion-button fill="clear" (click)="goToLogin()" class="login-link">
+          Volver al inicio de sesión
+        </ion-button>
+      </div>
     </form>
 
-    <form (ngSubmit)="updatePassword()" #passwordForm="ngForm" *ngIf="showPasswordReset">
-      <ion-list>
-        <ion-item>
+    <div *ngIf="showPasswordReset" class="password-display">
+      <ion-list class="form-list">
+        <ion-item class="custom-input">
           <ion-input
-            type="password"
-            [(ngModel)]="newPassword"
-            name="newPassword"
-            required
-            minlength="8"
-            label="Nueva contraseña"
-            labelPlacement="floating"
-            placeholder="********">
+            [type]="showPassword ? 'text' : 'password'"
+            [value]="userPassword"
+            readonly
+            label="Tu contraseña"
+            labelPlacement="floating">
           </ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input
-            type="password"
-            [(ngModel)]="confirmPassword"
-            name="confirmPassword"
-            required
-            label="Confirmar contraseña"
-            labelPlacement="floating"
-            placeholder="********">
-          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()" class="eye-button">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-item>
       </ion-list>
 
-      <ion-button 
-        expand="block" 
-        type="submit" 
-        [disabled]="!passwordForm.valid || newPassword !== confirmPassword"
-        class="ion-margin-top">
-        Actualizar contraseña
-      </ion-button>
-    </form>
+      <div class="button-container">
+        <ion-button 
+          expand="block" 
+          (click)="goToLogin()" 
+          class="recover-button">
+          Ir a iniciar sesión
+        </ion-button>
+      </div>
+    </div>
   </div>
 </ion-content>

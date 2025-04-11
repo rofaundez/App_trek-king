@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 
@@ -14,16 +16,35 @@ import { DatabaseService } from '../services/database.service';
 })
 export class RecoverPage {
   email: string = '';
-  newPassword: string = '';
-  confirmPassword: string = '';
   showPasswordReset: boolean = false;
   foundUser: any = null;
+  userPassword: string = '';
+  showPassword: boolean = false;
 
   constructor(
     private dbService: DatabaseService,
     private toastController: ToastController,
     private router: Router
-  ) { }
+  ) { 
+    addIcons({ eyeOutline, eyeOffOutline });
+  }
+
+  // Add this new method
+  ionViewWillEnter() {
+    this.email = '';
+    this.showPasswordReset = false;
+    this.foundUser = null;
+    this.userPassword = '';
+    this.showPassword = false;
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  goToLogin() {
+    this.router.navigate(['/login']); 
+  }
 
   async verifyEmail() {
     try {
@@ -31,6 +52,7 @@ export class RecoverPage {
       
       if (user) {
         this.foundUser = user;
+        this.userPassword = user.password;
         this.showPasswordReset = true;
       } else {
         const toast = await this.toastController.create({
@@ -45,56 +67,6 @@ export class RecoverPage {
       console.error('Error:', error);
       const toast = await this.toastController.create({
         message: 'Error al procesar la solicitud',
-        duration: 3000,
-        position: 'middle',
-        color: 'danger'
-      });
-      await toast.present();
-    }
-  }
-
-  async updatePassword() {
-    if (this.newPassword !== this.confirmPassword) {
-      const toast = await this.toastController.create({
-        message: 'Las contraseñas no coinciden',
-        duration: 3000,
-        position: 'middle',
-        color: 'danger'
-      });
-      await toast.present();
-      return;
-    }
-
-    try {
-      if (!this.foundUser || !this.foundUser.id) {
-        throw new Error('Usuario no encontrado');
-      }
-
-      // Update user with new password
-      await this.dbService.updateUser(this.foundUser.id, {
-        ...this.foundUser,
-        password: this.newPassword
-      });
-
-      const toast = await this.toastController.create({
-        message: 'Contraseña actualizada exitosamente',
-        duration: 3000,
-        position: 'middle',
-        color: 'success'
-      });
-      await toast.present();
-
-      // Clear sensitive data
-      this.email = '';
-      this.newPassword = '';
-      this.confirmPassword = '';
-      this.foundUser = null;
-      
-      this.router.navigate(['/login']);
-    } catch (error) {
-      console.error('Error al actualizar:', error);
-      const toast = await this.toastController.create({
-        message: 'Error al actualizar la contraseña',
         duration: 3000,
         position: 'middle',
         color: 'danger'
