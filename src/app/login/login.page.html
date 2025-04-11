@@ -1,4 +1,7 @@
 <ion-content class="ion-padding">
+  <!-- Agregar importación de fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
   <div class="form-container">
     <h1 class="title">Trek-King</h1>
     
@@ -33,13 +36,14 @@
             type="password" 
             [(ngModel)]="password" 
             name="password"
+            required
             #passwordInput="ngModel"
             (ionFocus)="currentField = 'password'"
             (ionBlur)="currentField = ''"
             label="Contraseña"
             labelPlacement="floating"
             placeholder="************"
-            [class.valid-input]="passwordInput.valid && passwordInput.touched"
+            [class.valid-input]="passwordInput.valid && passwordInput.touched && passwordInput.value.length >= 8"
             [class.invalid-input]="passwordInput.invalid && passwordInput.touched">
           </ion-input>
         </ion-item>
@@ -48,15 +52,15 @@
         </ion-text>
       </ion-list>
 
-      <!-- Botones de acción -->
       <div class="button-container">
-        <ion-button expand="block" type="submit" class="login-button" [disabled]="emailInput.invalid">
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="loginForm.invalid">
           Iniciar Sesión
         </ion-button>
-        <!-- Add this after your login button -->
-              <ion-button fill="clear" (click)="goToRegister()" class="register-link">
-                ¿No tienes cuenta? Regístrate
-              </ion-button>
+        
+        <ion-button fill="clear" (click)="goToRegister()" class="register-link">
+          ¿No tienes cuenta? Regístrate
+        </ion-button>
+        
         <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
           ¿Olvidaste tu contraseña?
         </ion-button>

@@ -6,61 +6,54 @@
         <img src="assets/img/userLogo.png">
       </ion-avatar>
       <div class="welcome-text">
-        <h2>Welcome</h2>
+        <h2>Bienvenido!</h2>
         <h3>{{userName || "no hay usuario"}}</h3>
       </div>
     </div>
 
-    <!-- Search bar --> 
-    <ion-searchbar placeholder="Buscar rutas" 
-    (ionInput)="onSearch($event)"
-    [animated]="true"
-    class="custom-searchbar">
+    <!-- Search bar -->
+    <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
     </ion-searchbar>
-    
-    <div class="contenedor_filtro" 
-         (mousedown)="onMouseDown($event)"
-         (mouseleave)="onMouseLeave()"
-         (mouseup)="onMouseUp()"
-         (mousemove)="onMouseMove($event)">
-    
-      <ion-button fill="clear" class="boton-filtro">  
+
+    <div class="contenedor_filtro">
+
+      <ion-button fill="clear" class="boton-filtro">
         <img src="assets/img/montañaLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Montañas</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">  
+      <ion-button fill="clear" class="boton-filtro">
         <img src="assets/img/nieveLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Nieve</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro"> 
-        <img src="assets/img/playaLogo.png" class="imagen_filtro"> 
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/playaLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Playas</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">  
-        <img src="assets/img/bosquesLogo.png" class="imagen_filtro">  
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/bosquesLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Lagos</span>
       </ion-button>
 
       <ion-button fill="clear" class="boton-filtro">
-        <img src="assets/img/rioLogo.png" class="imagen_filtro">  
+        <img src="assets/img/rioLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Rios</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">  
+      <ion-button fill="clear" class="boton-filtro">
         <img src="assets/img/bosquesLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Parques</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">  
+      <ion-button fill="clear" class="boton-filtro">
         <img src="assets/img/cascadaLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Cascadas</span>
       </ion-button>
 
     </div>
-      
+
 
   </div>
 
@@ -154,8 +147,8 @@
           <img src="assets/img/casaLogo.png" class="imagen_casa_boton">
         </ion-button>
       </ion-col>
-      
-      <ion-col size="4" class="ion-text-center" >
+
+      <ion-col size="4" class="ion-text-center">
         <ion-button fill="clear" class="footer-button">
           <img src="assets/img/alarmaLogo.png" class="imagen_SOS_boton">
         </ion-button>
