@@ -6,13 +6,14 @@ import { IonicModule } from '@ionic/angular';
 import { Rutas } from '../models/rutas.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { FooterComponent } from '../components/footer/footer.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, FooterComponent]
 })
 export class HomePage implements OnInit {
   userName: string = '';
