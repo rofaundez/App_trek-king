@@ -7,30 +7,31 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
   private currentUser: User | null = null;
-  private authStateSubject = new BehaviorSubject<User | null>(null);
+  private userSubject = new BehaviorSubject<User | null>(null);
+  public user$ = this.userSubject.asObservable();
   private isAuthenticated = new BehaviorSubject<boolean>(false);
-  authState$ = this.authStateSubject.asObservable();
+  authState$ = this.isAuthenticated.asObservable();
 
   constructor() {
     // Check for existing session
     const savedUser = localStorage.getItem('userSession');
     if (savedUser) {
       this.currentUser = JSON.parse(savedUser);
-      this.authStateSubject.next(this.currentUser);
+      this.userSubject.next(this.currentUser);
       this.isAuthenticated.next(true);
     }
   }
 
   async login(user: User) {
     this.currentUser = user;
-    this.authStateSubject.next(user);
+    this.userSubject.next(user);
     localStorage.setItem('userSession', JSON.stringify(user));
     this.isAuthenticated.next(true);
   }
 
   logout() {
     this.currentUser = null;
-    this.authStateSubject.next(null);
+    this.userSubject.next(null);
     localStorage.removeItem('userSession');
     this.isAuthenticated.next(false);
   }
@@ -41,5 +42,11 @@ export class AuthService {
 
   getCurrentUser(): User | null {
     return this.currentUser;
+  }
+
+  updateCurrentUser(user: User) {
+    this.currentUser = user;
+    this.userSubject.next(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
   }
 }

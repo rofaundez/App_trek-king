@@ -1,0 +1,74 @@
+.footer {
+    background: linear-gradient(135deg, #387030 0%, #256e1c 100%);
+    height: 100%;
+  
+    ion-col {
+      display: flex;
+      padding: 2px 0;
+      height: 100%;
+    }
+  
+    ion-grid {
+      height: 100%;
+  
+      ion-row {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
+  
+    .footer-button {
+      --background: transparent;
+      --color: white;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      max-height: 100%;
+      box-shadow: 2px 2px 3px rgb(0, 0, 0);
+  
+      &:active {
+        --background: rgba(255, 255, 255, 0.1);
+        transform: scale(0.95);
+      }
+  
+      .imagen_casa_boton {
+        width: 35px;
+        height: 35px;
+        object-fit: contain;
+        filter: invert(100%);
+        -webkit-filter: invert(100%);
+      }
+  
+      .imagen_SOS_boton {
+        width: 71px;
+        height: 71px;
+        object-fit: contain;
+      }
+  
+      .imagen_usuarios_boton {
+        width: 65px;
+        height: 65px;
+        object-fit: contain;
+        filter: invert(100%);
+        -webkit-filter: invert(100%);
+      }
+
+      .imagen_info_boton {
+        width: 65px;
+        height: 65px;
+        object-fit: contain;
+      }
+
+      .imagen_agenda_boton {
+        width: 65px;
+        height: 65px;
+        object-fit: contain;
+      }
+    }
+  }
+  

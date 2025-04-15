@@ -3,7 +3,7 @@
   <div class="header-container">
     <div class="user-welcome">
       <ion-avatar (click)="goToProfile()" class="imagen_usuario">
-        <img src="assets/img/userLogo.png">
+        <img [src]="userPhoto">
       </ion-avatar>
       <div class="welcome-text">
         <h2>Bienvenido!</h2>
@@ -15,7 +15,11 @@
     <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
     </ion-searchbar>
 
-    <div class="contenedor_filtro">
+    <div class="contenedor_filtro" 
+         (mousedown)="isMouseDown($event)" 
+         (mousemove)="onMouseMove($event)"
+         (mouseup)="isMouseUp($event)"
+         (mouseleave)="isMouseUp($event)">
 
       <ion-button fill="clear" class="boton-filtro">
         <img src="assets/img/montañaLogo.png" class="imagen_filtro">
@@ -137,28 +141,4 @@
     </ion-list>
   </div>
 </ion-content>
-
-<!-- Bottom Navigation -->
-<ion-footer class="footer">
-  <ion-grid class="ion-no-padding">
-    <ion-row class="ion-no-padding ion-justify-content-between" nowrap>
-      <ion-col size="4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button">
-          <img src="assets/img/casaLogo.png" class="imagen_casa_boton">
-        </ion-button>
-      </ion-col>
-
-      <ion-col size="4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button">
-          <img src="assets/img/alarmaLogo.png" class="imagen_SOS_boton">
-        </ion-button>
-      </ion-col>
-
-      <ion-col size="4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button">
-          <img src="assets/img/usuariosLogo.png" class="imagen_usuarios_boton">
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-footer>
+<app-footer></app-footer>
