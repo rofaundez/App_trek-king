@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mis Rutas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/create-route">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="container">
+    <div class="header-container" *ngIf="myRoutes.length > 0">
+      <h1>Mis Rutas Creadas</h1>
+      <p>Gestiona tus rutas de senderismo</p>
+    </div>
+
+    <ion-list *ngIf="myRoutes.length > 0">
+      <ion-item-sliding *ngFor="let route of myRoutes">
+        <ion-item detail class="route-item">
+          <ion-thumbnail slot="start">
+            <img [src]="route.foto || 'assets/img/default-route.jpg'" alt="Imagen de ruta">
+          </ion-thumbnail>
+          <ion-label>
+            <h2>{{route.nombre}}</h2>
+            <p>{{route.localidad}}</p>
+            <ion-badge [color]="getDifficultyColor(route.dificultad)">
+              {{route.dificultad}}
+            </ion-badge>
+          </ion-label>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option color="danger" (click)="confirmDelete(route)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="primary" [routerLink]="['/edit-route', route.id]">
+            <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+
+    <div class="empty-state" *ngIf="myRoutes.length === 0">
+      <ion-icon name="map-outline" class="empty-icon"></ion-icon>
+      <h2>¡Comienza tu Aventura!</h2>
+      <p>Aún no has creado ninguna ruta</p>
+      <ion-button expand="block" routerLink="/create-route" class="create-button">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Crear Primera Ruta
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

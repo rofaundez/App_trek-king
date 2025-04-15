@@ -1,0 +1,87 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header-container {
+  text-align: center;
+  margin-bottom: 30px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--ion-color-dark);
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+}
+
+.route-item {
+  margin-bottom: 10px;
+  border-radius: 8px;
+  --background: var(--ion-color-light);
+
+  ion-thumbnail {
+    --size: 80px;
+    margin-right: 16px;
+
+    img {
+      border-radius: 8px;
+      object-fit: cover;
+    }
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin-bottom: 8px;
+  }
+
+  ion-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+
+  .empty-icon {
+    font-size: 64px;
+    color: var(--ion-color-medium);
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--ion-color-dark);
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin-bottom: 30px;
+  }
+
+  .create-button {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+ion-item-option {
+  --padding-start: 15px;
+  --padding-end: 15px;
+}

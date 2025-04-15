@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Listado de Usuarios</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-list>
+    <ion-item-sliding *ngFor="let user of users">
+      <ion-item>
+        <ion-label *ngIf="!user.isEditing">
+          <h2>{{user.nombre || 'Sin nombre'}}</h2>
+          <p>Email: {{user.email || 'Sin email'}}</p>
+          <p>Contraseña: {{user.password || '****'}}</p>
+        </ion-label>
+        <ion-label *ngIf="user.isEditing">
+          <ion-input [(ngModel)]="user.nombre" placeholder="Nombre"></ion-input>
+          <ion-input [(ngModel)]="user.email" placeholder="Email"></ion-input>
+          <ion-input [(ngModel)]="user.password" placeholder="Contraseña"></ion-input>
+        </ion-label>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="primary" (click)="toggleEdit(user)">
+          <ion-icon slot="icon-only" [name]="user.isEditing ? 'save' : 'create'"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item-sliding *ngFor="let user of users">
+      <ion-item>
+        <ion-label *ngIf="!user.isEditing">
+          <h2>{{user.nombre || 'Sin nombre'}}</h2>
+          <p>Email: {{user.email || 'Sin email'}}</p>
+          <p>Contraseña: {{user.password || '****'}}</p>
+        </ion-label>
+        <ion-label *ngIf="user.isEditing">
+          <ion-input [(ngModel)]="user.nombre" placeholder="Nombre"></ion-input>
+          <ion-input [(ngModel)]="user.email" placeholder="Email"></ion-input>
+          <ion-input [(ngModel)]="user.password" placeholder="Contraseña"></ion-input>
+        </ion-label>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="primary" (click)="toggleEdit(user)">
+          <ion-icon slot="icon-only" [name]="user.isEditing ? 'save' : 'create'"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <div *ngIf="users.length === 0" class="ion-text-center ion-padding">
+    <p>No hay usuarios registrados</p>
+  </div>
+</ion-content>

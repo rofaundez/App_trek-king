@@ -1,0 +1,164 @@
+<ion-content class="main-content">
+  <!-- Header with user info and search -->
+  <div class="header-container">
+    <div class="user-welcome">
+      <ion-avatar (click)="goToProfile()" class="imagen_usuario">
+        <img src="assets/img/userLogo.png">
+      </ion-avatar>
+      <div class="welcome-text">
+        <h2>Bienvenido!</h2>
+        <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
+    </ion-searchbar>
+
+    <div class="contenedor_filtro">
+
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/montañaLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Montañas</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/nieveLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Nieve</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/playaLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Playas</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/bosquesLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Lagos</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/rioLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Rios</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/bosquesLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Parques</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro">
+        <img src="assets/img/cascadaLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Cascadas</span>
+      </ion-button>
+
+    </div>
+
+
+  </div>
+
+  <!-- Categories -->
+  <div class="contenedor-rutas">
+    <ion-list class="lista-rutas">
+      <ion-item class="item-ruta" button lines="none">
+        <div class="contenido-ruta">
+          <div class="imagen-container">
+            <img src="assets/img/cerro_santa_lucia.jpg" class="imagen_ruta">
+          </div>
+          <div class="info-ruta">
+            <h2 class="nombre_ruta">Cerro Santa Lucía</h2>
+            <p class="descripcion_ruta">Santiago de Chile, Santiago</p>
+            <div class="rating">
+              <span class="dificultad_ruta">Facil | 1,3km | Est. 23min </span>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item class="item-ruta" button lines="none">
+        <div class="contenido-ruta">
+          <div class="imagen-container">
+            <img src="assets/img/Cascada_san_juan.jpg" class="imagen_ruta">
+          </div>
+          <div class="info-ruta">
+            <h2 class="nombre_ruta">Cascada San Juan Sendero Estereo</h2>
+            <p class="descripcion_ruta">Peñalolén, Santiago</p>
+            <div class="rating">
+              <span class="dificultad_ruta">Media | 8,7km | Est. 3h 12min </span>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item class="item-ruta" button lines="none">
+        <div class="contenido-ruta">
+          <div class="imagen-container">
+            <img src="assets/img/salto_apoquindo.jpg" class="imagen_ruta">
+          </div>
+          <div class="info-ruta">
+            <h2 class="nombre_ruta">Salto de Apoquindo Los Dominicos</h2>
+            <p class="descripcion_ruta">Las Condes, Santiago</p>
+            <div class="rating">
+              <span class="dificultad_ruta">Dificil | 14,3km | Est. 5h 28min </span>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item class="item-ruta" button lines="none">
+        <div class="contenido-ruta">
+          <div class="imagen-container">
+            <img src="assets/img/lago_aculeo.jpg" class="imagen_ruta">
+          </div>
+          <div class="info-ruta">
+            <h2 class="nombre_ruta">Laguna de Aculeo</h2>
+            <p class="descripcion_ruta">Paine, Santiago</p>
+            <div class="rating">
+              <span class="dificultad_ruta">Media | 24,6km | Est. 5h 32min </span>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+
+      <ion-item class="item-ruta" button lines="none">
+        <div class="contenido-ruta">
+          <div class="imagen-container">
+            <img src="assets/img/cerro_minillas.webp" class="imagen_ruta">
+          </div>
+          <div class="info-ruta">
+            <h2 class="nombre_ruta">Cerro Minillas - Cerro Tarapacá</h2>
+            <p class="descripcion_ruta">La Florida, Santiago</p>
+            <div class="rating">
+              <span class="dificultad_ruta">Dificil | 18,7km | Est. 9h 35min </span>
+            </div>
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<!-- Bottom Navigation -->
+<ion-footer class="footer">
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-no-padding ion-justify-content-between" nowrap>
+      <ion-col size="4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button">
+          <img src="assets/img/casaLogo.png" class="imagen_casa_boton">
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button">
+          <img src="assets/img/alarmaLogo.png" class="imagen_SOS_boton">
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button">
+          <img src="assets/img/usuariosLogo.png" class="imagen_usuarios_boton">
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>
