@@ -6,11 +6,8 @@ import { IonicModule } from '@ionic/angular';
 import { Rutas } from '../models/rutas.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-<<<<<<< Updated upstream
-=======
-import { FooterComponent } from '../components/footer/footer.component';
 import { Subscription } from 'rxjs';
->>>>>>> Stashed changes
+
 
 @Component({
   selector: 'app-home',
@@ -29,7 +26,7 @@ export class HomePage implements OnInit, OnDestroy {
   private isDragging = false;
   private startX = 0;
   private scrollLeft = 0;
-  private userSubscription: Subscription;
+  private userSubscription?: Subscription;
 
   constructor(
     private dbService: DatabaseService,
