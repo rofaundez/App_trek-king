@@ -27,7 +27,6 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Set default values for testing
     this.email = 'jeremiasramos@gmail.com';
     this.password = '12344321';
   }
