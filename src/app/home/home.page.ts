@@ -1,11 +1,16 @@
 import { DatabaseService } from './../services/database.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Rutas } from '../models/rutas.model';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+<<<<<<< Updated upstream
+=======
+import { FooterComponent } from '../components/footer/footer.component';
+import { Subscription } from 'rxjs';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-home',
@@ -14,41 +19,55 @@ import { AuthService } from '../services/auth.service';
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule]
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   userName: string = '';
   userLastName: string = '';
-  userPhoto: string = 'assets/user-photo.jpg';
+  userPhoto: string = 'assets/img/userLogo.png';
   rutasRecomendadas: Rutas[] = [];
   allRoutes: Rutas[] = [];
   
+  private isDragging = false;
+  private startX = 0;
+  private scrollLeft = 0;
+  private userSubscription: Subscription;
+
   constructor(
     private dbService: DatabaseService,
     private authService: AuthService,
     private router: Router
   ) {
-    // Subscribe to auth state changes
-    this.authService.authState$.subscribe(user => {
-      console.log('Auth state changed, user:', user); // Add this log
+    // Nos suscribimos a los cambios del usuario
+    this.userSubscription = this.authService.user$.subscribe(user => {
       if (user) {
         this.userName = user.nombre;
         this.userLastName = user.apellido;
-        console.log('Setting name:', this.userName, 'lastname:', this.userLastName); // Add this log
+        this.userPhoto = user.photo || 'assets/img/userLogo.png';
       } else {
         this.userName = 'Invitado';
-        this.userLastName = 'Invitado';
+        this.userLastName = '';
+        this.userPhoto = 'assets/img/userLogo.png';
       }
     });
   }
 
   ngOnInit() {
-    // Get initial user state
+    // Obtenemos el estado inicial del usuario
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.userName = currentUser.nombre;
       this.userLastName = currentUser.apellido;
+      this.userPhoto = currentUser.photo || 'assets/img/userLogo.png';
     } else {
       this.userName = 'Invitado';
-      this.userLastName = 'Invitado';
+      this.userLastName = '';
+      this.userPhoto = 'assets/img/userLogo.png';
+    }
+  }
+
+  ngOnDestroy() {
+    // Nos desuscribimos para evitar memory leaks
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 
@@ -79,31 +98,26 @@ export class HomePage implements OnInit {
     }
   }
 
-  isMouseDown = false;
-    startX: number = 0;
-    scrollLeft: number = 0;
-  
-    onMouseDown(e: MouseEvent) {
-      const filterContainer = e.currentTarget as HTMLElement;
-      this.isMouseDown = true;
-      this.startX = e.pageX - filterContainer.offsetLeft;
-      this.scrollLeft = filterContainer.scrollLeft;
-    }
-  
-    onMouseLeave() {
-      this.isMouseDown = false;
-    }
-  
-    onMouseUp() {
-      this.isMouseDown = false;
-    }
-  
-    onMouseMove(e: MouseEvent) {
-      if (!this.isMouseDown) return;
-      e.preventDefault();
-      const filterContainer = e.currentTarget as HTMLElement;
-      const x = e.pageX - filterContainer.offsetLeft;
-      const walk = (x - this.startX) * 2;
-      filterContainer.scrollLeft = this.scrollLeft - walk;
-    }
+  isMouseDown(e: MouseEvent) {
+    this.isDragging = true;
+    const slider = e.currentTarget as HTMLElement;
+    this.startX = e.pageX - slider.offsetLeft;
+    this.scrollLeft = slider.scrollLeft;
+    slider.style.cursor = 'grabbing';
+  }
+
+  isMouseUp(e: MouseEvent) {
+    this.isDragging = false;
+    const slider = e.currentTarget as HTMLElement;
+    slider.style.cursor = 'grab';
+  }
+
+  onMouseMove(e: MouseEvent) {
+    if (!this.isDragging) return;
+    e.preventDefault();
+    const slider = e.currentTarget as HTMLElement;
+    const x = e.pageX - slider.offsetLeft;
+    const walk = (x - this.startX) * 2; // Multiplicador de velocidad
+    slider.scrollLeft = this.scrollLeft - walk;
+  }
 }

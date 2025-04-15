@@ -3,7 +3,7 @@
   <div class="header-container">
     <div class="user-welcome">
       <ion-avatar (click)="goToProfile()" class="imagen_usuario">
-        <img src="assets/img/userLogo.png">
+        <img [src]="userPhoto">
       </ion-avatar>
       <div class="welcome-text">
         <h2>Bienvenido!</h2>
@@ -15,7 +15,11 @@
     <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
     </ion-searchbar>
 
-    <div class="contenedor_filtro">
+    <div class="contenedor_filtro" 
+         (mousedown)="isMouseDown($event)" 
+         (mousemove)="onMouseMove($event)"
+         (mouseup)="isMouseUp($event)"
+         (mouseleave)="isMouseUp($event)">
 
       <ion-button fill="clear" class="boton-filtro">
         <img src="assets/img/montañaLogo.png" class="imagen_filtro">

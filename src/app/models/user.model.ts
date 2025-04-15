@@ -4,4 +4,5 @@ export interface User {
   password: string;
   nombre: string;
   apellido: string;  // Changed from apellido to userLastName
+  photo?: string;  // Agregamos el campo photo
 }
