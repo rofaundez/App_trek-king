@@ -6,13 +6,20 @@ import { DatabaseService } from '../services/database.service';
 import { AuthService } from '../services/auth.service';
 import { Rutas } from '../models/rutas.model';
 import { RouterModule } from '@angular/router';
+import { FooterComponent } from '../components/footer/footer.component';
 
 @Component({
   selector: 'app-my-routes',
   templateUrl: './my-routes.page.html',
   styleUrls: ['./my-routes.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, RouterModule]
+  imports: [
+    IonicModule, 
+    CommonModule, 
+    FormsModule, 
+    RouterModule,
+    FooterComponent
+  ]
 })
 export class MyRoutesPage implements OnInit {
   myRoutes: Rutas[] = [];

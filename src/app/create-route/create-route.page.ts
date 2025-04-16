@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule, AlertController } from '@ionic/angular';
+import { IonicModule, AlertController, ModalController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { GoogleMapsService } from '../services/google-maps.service';
 
 @Component({
   selector: 'app-create-route',
@@ -17,13 +18,21 @@ export class CreateRoutePage implements OnInit {
   routeForm!: FormGroup;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
+  startPlacePredictions: any[] = [];
+  endPlacePredictions: any[] = [];
+  isMapModalOpen = false;
+  currentLocationType: 'start' | 'end' | null = null;
+  isMapLoading = false;
+  mapError = false;
 
   constructor(
     private fb: FormBuilder,
     private dbService: DatabaseService,
     private authService: AuthService,
     private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private googleMapsService: GoogleMapsService,
+    private modalController: ModalController
   ) {
     this.initForm();
     this.imagePreview = 'assets/img/cerro_santa_lucia.jpg';
@@ -37,12 +46,12 @@ export class CreateRoutePage implements OnInit {
       descripcion: ['Ruta turística por el histórico Cerro Santa Lucía, un parque urbano con vistas panorámicas de Santiago.', [Validators.required, Validators.minLength(10)]],
       localidad: ['Santiago de Chile, Santiago', Validators.required],
       dificultad: ['Fácil', Validators.required],
-      puntoInicioDireccion: ['Av. Libertador Bernardo O\'Higgins 400, Santiago', Validators.required],
-      puntoInicioLat: [-33.4400, [Validators.required, Validators.min(-90), Validators.max(90)]],
-      puntoInicioLng: [-70.6444, [Validators.required, Validators.min(-180), Validators.max(180)]],
-      puntoTerminoDireccion: ['Av. Libertador Bernardo O\'Higgins 400, Santiago', Validators.required],
-      puntoTerminoLat: [-33.4400, [Validators.required, Validators.min(-90), Validators.max(90)]],
-      puntoTerminoLng: [-70.6444, [Validators.required, Validators.min(-180), Validators.max(180)]]
+      puntoInicioDireccion: ['', Validators.required],
+      puntoInicioLat: [null, [Validators.required, Validators.min(-90), Validators.max(90)]],
+      puntoInicioLng: [null, [Validators.required, Validators.min(-180), Validators.max(180)]],
+      puntoTerminoDireccion: ['', Validators.required],
+      puntoTerminoLat: [null, [Validators.required, Validators.min(-90), Validators.max(90)]],
+      puntoTerminoLng: [null, [Validators.required, Validators.min(-180), Validators.max(180)]]
     });
   }
 
@@ -125,5 +134,110 @@ export class CreateRoutePage implements OnInit {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = error => reject(error);
     });
+  }
+
+  async onStartAddressInput(event: any) {
+    const query = event.target.value;
+    if (query.length > 2) {
+      try {
+        this.startPlacePredictions = await this.googleMapsService.searchPlaces(query);
+      } catch (error) {
+        console.error('Error searching places:', error);
+        this.startPlacePredictions = [];
+      }
+    } else {
+      this.startPlacePredictions = [];
+    }
+  }
+
+  async onEndAddressInput(event: any) {
+    const query = event.target.value;
+    if (query.length > 2) {
+      try {
+        this.endPlacePredictions = await this.googleMapsService.searchPlaces(query);
+      } catch (error) {
+        console.error('Error searching places:', error);
+        this.endPlacePredictions = [];
+      }
+    } else {
+      this.endPlacePredictions = [];
+    }
+  }
+
+  async onStartPlaceSelected(place: any) {
+    try {
+      const coordinates = await this.googleMapsService.getCoordinatesFromAddress(place.description);
+      this.routeForm.patchValue({
+        puntoInicioDireccion: place.description,
+        puntoInicioLat: coordinates.lat,
+        puntoInicioLng: coordinates.lng
+      });
+      this.startPlacePredictions = [];
+    } catch (error) {
+      console.error('Error getting coordinates:', error);
+      await this.showAlert('Error', 'No se pudo obtener las coordenadas del lugar seleccionado');
+    }
+  }
+
+  async onEndPlaceSelected(place: any) {
+    try {
+      const coordinates = await this.googleMapsService.getCoordinatesFromAddress(place.description);
+      this.routeForm.patchValue({
+        puntoTerminoDireccion: place.description,
+        puntoTerminoLat: coordinates.lat,
+        puntoTerminoLng: coordinates.lng
+      });
+      this.endPlacePredictions = [];
+    } catch (error) {
+      console.error('Error getting coordinates:', error);
+      await this.showAlert('Error', 'No se pudo obtener las coordenadas del lugar seleccionado');
+    }
+  }
+
+  async openMapModal(locationType: 'start' | 'end') {
+    this.currentLocationType = locationType;
+    this.isMapModalOpen = true;
+    this.isMapLoading = true;
+    this.mapError = false;
+    
+    // Get current coordinates or default to Santiago
+    const lat = this.routeForm.get(`${locationType === 'start' ? 'puntoInicio' : 'puntoTermino'}Lat`)?.value || -33.4489;
+    const lng = this.routeForm.get(`${locationType === 'start' ? 'puntoInicio' : 'puntoTermino'}Lng`)?.value || -70.6693;
+
+    try {
+      await this.googleMapsService.initMap('map', lat, lng);
+    } catch (error) {
+      console.error('Error al cargar el mapa:', error);
+      this.mapError = true;
+      await this.showAlert(
+        'Error al cargar el mapa',
+        'No se pudo cargar el mapa. Por favor, verifica tu conexión a internet y asegúrate de que la API de Google Maps esté configurada correctamente.'
+      );
+    } finally {
+      this.isMapLoading = false;
+    }
+  }
+
+  async closeMapModal() {
+    if (this.currentLocationType && !this.mapError) {
+      try {
+        const position = this.googleMapsService.getCurrentMarkerPosition();
+        const address = await this.googleMapsService.getAddressFromCoordinates(position.lat, position.lng);
+        
+        const prefix = this.currentLocationType === 'start' ? 'puntoInicio' : 'puntoTermino';
+        this.routeForm.patchValue({
+          [`${prefix}Direccion`]: address,
+          [`${prefix}Lat`]: position.lat,
+          [`${prefix}Lng`]: position.lng
+        });
+      } catch (error) {
+        console.error('Error al obtener la dirección:', error);
+        await this.showAlert('Error', 'No se pudo obtener la dirección del punto seleccionado');
+      }
+    }
+    
+    this.isMapModalOpen = false;
+    this.currentLocationType = null;
+    this.mapError = false;
   }
 }

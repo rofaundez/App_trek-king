@@ -17,4 +17,10 @@ export class FooterComponent {
   goTo(path: string) {
     this.router.navigate([path]);
   }
+  goToMyRoutes() {
+    this.router.navigate(['/my-routes']);
+  }
+  goTohome() {
+    this.router.navigate(['/home']);
+  }
 }
