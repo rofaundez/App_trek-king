@@ -1,9 +1,10 @@
 <ion-content class="ion-padding">
   <!-- Agregar importación de fuentes -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-  <button (click)="goToAutoridadLogin()" class="autoridad-button">Autoridad</button>
+  <button (click)="goToLogin()" class="autoridad-button">usuario</button>
   <div class="form-container">
     <h1 class="title">Trek-King</h1>
+    <h6 class="escritura">Esta ventana es solo para autoridades, por favor si usted no es autoridad, por favor vuelva a la ventana de usuario</h6>
     
     <form (ngSubmit)="login()" #loginForm="ngForm">
       <ion-list class="form-list">
@@ -57,16 +58,7 @@
           Iniciar Sesión
         </ion-button>
         
-        <ion-button fill="clear" (click)="goToRegister()" class="register-link">
-          ¿No tienes cuenta? Regístrate
-        </ion-button>
-        
-        <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
-          ¿Olvidaste tu contraseña?
-        </ion-button>
-        <ion-button fill="clear" (click)="goToHome()" class="forgot-password">
-          Continuar como invitado
-        </ion-button>
+        <ion-button fill="clear" (click)="forgotAutoridadPassword()" class="forgot-password">¿Olvidaste tu contraseña?</ion-button>
       </div>
     </form>
   </div>

@@ -44,6 +44,18 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () => import('./home/home.page').then(m => m.HomePage)
   },
+  {
+    path: 'autoridad-home',
+    loadComponent: () => import('./autoridades/home/home.page').then( m => m.HomePage)
+  },
+  {
+    path: 'autoridad-detalle-ruta',
+    loadComponent: () => import('./autoridades/detalle-ruta/detalle-ruta.page').then( m => m.DetalleRutaPage)
+  },
+  {
+    path: 'autoridad-login',
+    loadComponent: () => import('./autoridades/login/login.page').then( m => m.AutoridadLoginPage)
+  },
 
   {path: '',
   redirectTo: 'home',
@@ -51,7 +63,8 @@ export const routes: Routes = [
 
   {path: '**',
     redirectTo: 'home',
-    pathMatch: 'full',}
+    pathMatch: 'full',},
+
 
 
 

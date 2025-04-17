@@ -101,6 +101,26 @@ export class DatabaseService {
     });
   }
 
+  // Add default autoridad if not exists
+  async addDefaultAutoridad(): Promise<void> {
+    try {
+      const existingAutoridad = await this.getAutoridadByEmail('autoridad@example.com');
+      if (!existingAutoridad) {
+        const defaultAutoridad: Autoridad = {
+          email: 'autoridad@example.com',
+          password: '12345678',
+          nombre: 'Autoridad',
+          role: 'autoridad',
+          zona: 'Santiago'
+        };
+        await this.addAutoridad(defaultAutoridad);
+        console.log('Default autoridad added successfully');
+      }
+    } catch (error) {
+      console.error('Error adding default autoridad:', error);
+    }
+  }
+
   // Get user by email
   async getUserByEmail(email: string): Promise<User | null> {
     return new Promise((resolve, reject) => {

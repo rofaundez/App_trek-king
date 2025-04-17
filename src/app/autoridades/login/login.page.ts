@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { DatabaseService } from '../services/database.service';
+import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-autoridad-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule]
 })
-export class LoginPage implements OnInit {
+export class AutoridadLoginPage implements OnInit {
   email: string = '';
   password: string = '';
   currentField: string = '';
@@ -27,20 +27,30 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.email = 'jeremiasramos@gmail.com';
-    this.password = '12344321';
+    this.email = 'autoridad@example.com';
+    this.password = '12345678';
+    this.addTestAutoridad();
+  }
+
+  async addTestAutoridad() {
+    try {
+      await this.dbService.addDefaultAutoridad();
+      console.log('Test autoridad added or already exists');
+    } catch (error) {
+      console.error('Error adding test autoridad:', error);
+    }
   }
 
   async login() {
     try {
       console.log('Attempting login with:', this.email, this.password);
       
-      const user = await this.dbService.getUserByEmail(this.email);
-      console.log('User found:', user);
+      const autoridad = await this.dbService.getAutoridadByEmail(this.email);
+      console.log('User found:', autoridad);
       
-      if (user && user.password === this.password) {
+      if (autoridad && autoridad.password === this.password) {
         console.log('Login successful');
-        this.authService.login(user);
+        this.authService.loginAutoridad(autoridad);
         
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
@@ -65,17 +75,10 @@ export class LoginPage implements OnInit {
     }
   }
 
-  forgotPassword() {
-    this.router.navigate(['/recover']);
+  forgotAutoridadPassword() {
+    this.router.navigate(['/recover-autoridad']);
   }
-
-  goToRegister() {
-    this.router.navigate(['/registro']);
-  }
-  goToHome() {
-    this.router.navigate(['/home']);
-  }
-  goToAutoridadLogin() {
-    this.router.navigate(['/autoridad-login']);
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 }

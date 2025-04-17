@@ -5,4 +5,5 @@ export interface Autoridad {
     password?: string;
     img?: string;
     role?: string;
+    zona?: string;
 }
