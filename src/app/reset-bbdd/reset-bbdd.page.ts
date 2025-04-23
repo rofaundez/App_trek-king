@@ -37,6 +37,28 @@ export class ResetBbddPage implements OnInit {
           handler: async () => {
             try {
               await this.databaseService.clearDatabase();
+              
+              // Crear usuario por defecto
+              const defaultUser = {
+                email: 'default@default.com',
+                nombre: 'Default',
+                apellido: 'User',
+                password: '1234',
+                role: 'user'
+              };
+              await this.databaseService.addUser(defaultUser);
+
+              // Crear autoridad por defecto
+              const defaultAuthority = {
+                email: 'default@autoridad.com',
+                nombre: 'Default',
+                institucion: 'Institución por Defecto',
+                cargo: 'Jefe',
+                password: '1234',
+                role: 'authority'
+              };
+              await this.databaseService.addAutoridad(defaultAuthority);
+
               await this.showSuccessAlert();
               this.router.navigate(['/home']);
             } catch (error) {
@@ -53,7 +75,7 @@ export class ResetBbddPage implements OnInit {
   private async showSuccessAlert() {
     const alert = await this.alertController.create({
       header: 'Éxito',
-      message: 'La base de datos ha sido reiniciada correctamente.',
+      message: 'La base de datos ha sido reiniciada correctamente. Se han creado las cuentas por defecto.',
       buttons: ['OK']
     });
     await alert.present();

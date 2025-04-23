@@ -27,8 +27,8 @@ export class AutoridadLoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.email = 'autoridad@example.com';
-    this.password = '12345678';
+    this.email = 'je.ramos@duocuc.cl';
+    this.password = '12344321';
     this.addTestAutoridad();
   }
 
@@ -59,7 +59,7 @@ export class AutoridadLoginPage implements OnInit {
           color: 'success'
         });
         await toast.present();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/autoridad-home']);
       } else {
         console.log('Login failed - invalid credentials');
         const toast = await this.toastController.create({
@@ -80,5 +80,8 @@ export class AutoridadLoginPage implements OnInit {
   }
   goToLogin() {
     this.router.navigate(['/login']);
+  }
+  registerAutoridad() {
+    this.router.navigate(['/autoridad-registro']);
   }
 }

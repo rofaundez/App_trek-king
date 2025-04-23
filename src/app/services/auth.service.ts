@@ -50,11 +50,17 @@ export class AuthService {
     localStorage.setItem('currentAutoridad', JSON.stringify(autoridad));
   }
 
-
   logout() {
     this.currentUser = null;
     this.userSubject.next(null);
     localStorage.removeItem('userSession');
+    this.isAuthenticated.next(false);
+  }
+
+  logoutAutoridad() {
+    this.currentAutoridad = null;
+    this.autoridadSubject.next(null);
+    localStorage.removeItem('autoridadSession');
     this.isAuthenticated.next(false);
   }
 

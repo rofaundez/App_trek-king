@@ -56,6 +56,14 @@ export const routes: Routes = [
     path: 'autoridad-login',
     loadComponent: () => import('./autoridades/login/login.page').then( m => m.AutoridadLoginPage)
   },
+  {
+    path: 'autoridad-registro',
+    loadComponent: () => import('./autoridades/registro/registro.page').then( m => m.RegistroPage)
+  },
+  {
+    path: 'autoridad-perfil',
+    loadComponent: () => import('./autoridades/perfil/perfil.page').then( m => m.PerfilPage)
+  },
 
   {path: '',
   redirectTo: 'home',

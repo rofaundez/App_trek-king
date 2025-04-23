@@ -1,0 +1,95 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Perfil de Autoridad</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="profile-container">
+    <!-- Foto de perfil -->
+    <div class="profile-picture-container">
+      <ion-avatar class="profile-picture">
+        <img [src]="fotoPerfil || 'assets/default-profile.png'" alt="Foto de perfil">
+      </ion-avatar>
+      <ion-button fill="clear" class="change-picture">
+        <ion-icon name="camera-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <form (ngSubmit)="actualizarPerfil()" #profileForm="ngForm">
+      <ion-list>
+        <!-- Nombre -->
+        <ion-item>
+          <ion-input
+            [(ngModel)]="nombre"
+            name="nombre"
+            label="Nombre"
+            labelPlacement="floating"
+            placeholder="Ingrese su nombre"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Email -->
+        <ion-item>
+          <ion-input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            label="Correo electrónico"
+            labelPlacement="floating"
+            placeholder="Ingrese su correo"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Contraseña -->
+        <ion-item>
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            label="Nueva contraseña"
+            labelPlacement="floating"
+            placeholder="Deje en blanco para mantener la actual">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('password')">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+
+        <!-- Confirmar contraseña -->
+        <ion-item *ngIf="password">
+          <ion-input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            label="Confirmar nueva contraseña"
+            labelPlacement="floating"
+            placeholder="Repita la nueva contraseña">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('confirmPassword')">
+            <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <div class="button-container">
+        <ion-button expand="block" type="submit" [disabled]="!profileForm.valid">
+          <ion-icon name="save-outline" slot="start"></ion-icon>
+          Guardar cambios
+        </ion-button>
+
+        <ion-button expand="block" fill="outline" color="danger" (click)="confirmarEliminarCuenta()">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Eliminar cuenta
+        </ion-button>
+
+        <ion-button expand="block" fill="clear" (click)="logout()">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          Cerrar sesión
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content> 

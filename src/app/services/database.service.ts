@@ -301,6 +301,22 @@ export class DatabaseService {
       request.onerror = () => reject(request.error);
     });
   }
+  // Get all routes
+  async getRoutes(): Promise<Rutas[]> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const transaction = this.db.transaction('rutas', 'readonly');
+      const store = transaction.objectStore('rutas');
+      const request = store.getAll();
+
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
 
   // Update route
   async updateRoute(id: string, routeData: Rutas): Promise<void> {
@@ -361,6 +377,38 @@ export class DatabaseService {
 
         request.onerror = () => reject(request.error);
       });
+    });
+  }
+
+  async updateAutoridad(id: string, autoridadData: any): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const transaction = this.db.transaction('autoridades', 'readwrite');
+      const store = transaction.objectStore('autoridades');
+      const request = store.put({ ...autoridadData, id });
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  async deleteAutoridad(id: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      const transaction = this.db.transaction('autoridades', 'readwrite');
+      const store = transaction.objectStore('autoridades');
+      const request = store.delete(id);
+
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
     });
   }
 }
