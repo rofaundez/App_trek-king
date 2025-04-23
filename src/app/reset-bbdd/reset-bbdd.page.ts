@@ -43,7 +43,7 @@ export class ResetBbddPage implements OnInit {
                 email: 'default@default.com',
                 nombre: 'Default',
                 apellido: 'User',
-                password: '1234',
+                password: '12344321',
                 role: 'user'
               };
               await this.databaseService.addUser(defaultUser);
@@ -54,7 +54,7 @@ export class ResetBbddPage implements OnInit {
                 nombre: 'Default',
                 institucion: 'Institución por Defecto',
                 cargo: 'Jefe',
-                password: '1234',
+                password: '12344321',
                 role: 'authority'
               };
               await this.databaseService.addAutoridad(defaultAuthority);
@@ -70,6 +70,73 @@ export class ResetBbddPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async clearDatabase() {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Borrado',
+      message: '¿Estás seguro de que deseas borrar toda la base de datos? Esta acción no se puede deshacer.',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Borrar',
+          role: 'destructive',
+          handler: async () => {
+            try {
+              await this.databaseService.clearDatabase();
+              const successAlert = await this.alertController.create({
+                header: 'Éxito',
+                message: 'La base de datos ha sido borrada correctamente.',
+                buttons: ['OK']
+              });
+              await successAlert.present();
+            } catch (error) {
+              const errorAlert = await this.alertController.create({
+                header: 'Error',
+                message: 'No se pudo borrar la base de datos.',
+                buttons: ['OK']
+              });
+              await errorAlert.present();
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async addDefaultAccounts() {
+    try {
+      // Crear usuario por defecto
+      const defaultUser = {
+        email: 'default@default.com',
+        nombre: 'Default',
+        apellido: 'User',
+        password: '1234',
+        role: 'user'
+      };
+      await this.databaseService.addUser(defaultUser);
+
+      // Crear autoridad por defecto
+      const defaultAuthority = {
+        email: 'default@autoridad.com',
+        nombre: 'Default',
+        institucion: 'Institución por Defecto',
+        cargo: 'Jefe',
+        password: '1234',
+        role: 'authority'
+      };
+      await this.databaseService.addAutoridad(defaultAuthority);
+
+      await this.showSuccessAlert();
+      this.router.navigate(['/home']);
+    } catch (error) {
+      this.showErrorAlert();
+    }
   }
 
   private async showSuccessAlert() {

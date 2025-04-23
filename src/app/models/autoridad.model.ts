@@ -6,4 +6,6 @@ export interface Autoridad {
     img?: string;
     role?: string;
     zona?: string;
+    cargo?: string;
+    institucion?: string; 
 }

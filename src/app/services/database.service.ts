@@ -375,7 +375,10 @@ export class DatabaseService {
           }
         };
 
-        request.onerror = () => reject(request.error);
+        request.onerror = () => {
+          console.error(`Error clearing store ${storeName}:`, request.error);
+          reject(request.error);
+        };
       });
     });
   }

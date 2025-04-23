@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { DatabaseService } from '../../services/database.service';
+import { AuthService } from '../../services/auth.service';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
@@ -30,6 +31,7 @@ export class RegistroPage implements OnInit {
   showConfirmPassword: boolean = false;
 
   constructor(
+    private authService: AuthService,
     private dbService: DatabaseService,
     private toastController: ToastController,
     private router: Router
@@ -38,6 +40,19 @@ export class RegistroPage implements OnInit {
   }
 
   ngOnInit() {
+    // Verificar si hay una autoridad autenticada
+    const currentAutoridad = this.authService.getCurrentAutoridad();
+    if (!currentAutoridad) {
+      this.router.navigate(['/autoridad-login']);
+      return;
+    }
+
+    // Verificar si la autoridad tiene el rango adecuado
+    if (currentAutoridad.cargo !== 'jefe' && currentAutoridad.cargo !== 'encargado') {
+      this.router.navigate(['/autoridad-home']);
+      return;
+    }
+
     // Valores por defecto para pruebas
     this.email = 'je.ramos@duocuc.cl  ';
     this.nombre = 'jeremias ramos';
@@ -110,7 +125,7 @@ export class RegistroPage implements OnInit {
       await toast.present();
 
       // Navegar al login de autoridades
-      this.router.navigate(['/autoridades/login']);
+      this.router.navigate(['/autoridad-login']);
       
     } catch (error) {
       console.error('Error en el registro:', error);

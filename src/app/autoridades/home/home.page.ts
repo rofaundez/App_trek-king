@@ -80,7 +80,7 @@ export class HomePage implements OnInit {
   }
 
   puedeCrearAutoridades(): boolean {
-    const rangosPermitidos = ['jefe', 'sargento', 'capitan', 'lider'];
+    const rangosPermitidos = ['jefe'];
     return rangosPermitidos.includes(this.autoridadActual?.cargo?.toLowerCase());
   }
 
