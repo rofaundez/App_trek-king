@@ -95,6 +95,41 @@
           <small class="error-message">Por favor, seleccione su cargo</small>
         </ion-text>
 
+        <!-- Campo de zona -->
+        <ion-item class="custom-input">
+          <ion-select
+            [(ngModel)]="zona"
+            name="zona"
+            required 
+            #zonaInput="ngModel"
+            (ionFocus)="currentField = 'zona'"
+            (ionBlur)="currentField = ''"
+            label="Región"
+            labelPlacement="floating"
+            placeholder="Seleccione su región"
+            [class.valid-input]="zonaInput.valid && zonaInput.touched"
+            [class.invalid-input]="zonaInput.invalid && zonaInput.touched">
+            <ion-select-option value="arica">Región de Arica y Parinacota</ion-select-option>
+            <ion-select-option value="tarapaca">Región de Tarapacá</ion-select-option>
+            <ion-select-option value="antofagasta">Región de Antofagasta</ion-select-option>
+            <ion-select-option value="atacama">Región de Atacama</ion-select-option>
+            <ion-select-option value="coquimbo">Región de Coquimbo</ion-select-option>
+            <ion-select-option value="valparaiso">Región de Valparaíso</ion-select-option>
+            <ion-select-option value="metropolitana">Región Metropolitana de Santiago</ion-select-option>
+            <ion-select-option value="ohiggins">Región del Libertador General Bernardo O'Higgins</ion-select-option>
+            <ion-select-option value="maule">Región del Maule</ion-select-option>
+            <ion-select-option value="nuble">Región de Ñuble</ion-select-option>
+            <ion-select-option value="biobio">Región del Biobío</ion-select-option>
+            <ion-select-option value="araucania">Región de La Araucanía</ion-select-option>
+            <ion-select-option value="losrios">Región de Los Ríos</ion-select-option>
+            <ion-select-option value="loslagos">Región de Los Lagos</ion-select-option>
+            <ion-select-option value="aysen">Región de Aysén</ion-select-option>
+            <ion-select-option value="magallanes">Región de Magallanes</ion-select-option>
+          </ion-select>
+        </ion-item>
+          
+        
+
         <!-- Campo de contraseña -->
         <ion-item class="custom-input">
           <ion-input

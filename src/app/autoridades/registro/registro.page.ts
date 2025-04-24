@@ -24,6 +24,7 @@ export class RegistroPage implements OnInit {
   nombre: string = '';
   institucion: string = '';
   cargo: string = '';
+  zona: string = '';
   password: string = '';
   confirmPassword: string = '';
   currentField: string = '';
@@ -58,6 +59,7 @@ export class RegistroPage implements OnInit {
     this.nombre = 'jeremias ramos';
     this.institucion = 'policia de chile';
     this.cargo = 'jefe';
+    this.zona = 'arica';
     this.password = '';
     this.confirmPassword = '';
   }
@@ -109,6 +111,7 @@ export class RegistroPage implements OnInit {
         email: this.email,
         nombre: this.nombre,
         institucion: this.institucion,
+        zona: this.zona,
         cargo: this.cargo,
         password: this.password,
         role: 'authority' // Rol específico para autoridades
