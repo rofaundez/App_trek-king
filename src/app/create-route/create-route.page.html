@@ -66,22 +66,14 @@
           <h3>Ubicación</h3>
           <div class="location-point">
             <h4>Punto de Inicio</h4>
-            <ion-item class="custom-input" (click)="openMapModal('start')">
+            <ion-button expand="block" (click)="openMapModal('start')">
+              <ion-icon name="map-outline" slot="start"></ion-icon>
+              Seleccionar punto de inicio en el mapa
+            </ion-button>
+            <ion-item class="custom-input">
               <ion-label position="floating">Dirección</ion-label>
-              <ion-input 
-                formControlName="puntoInicioDireccion"
-                (ionInput)="onStartAddressInput($event)"
-                placeholder="Haz clic para seleccionar en el mapa o busca una ubicación...">
-              </ion-input>
-              <ion-icon name="map-outline" slot="end"></ion-icon>
+              <ion-input formControlName="puntoInicioDireccion" readonly></ion-input>
             </ion-item>
-            <div class="predictions-list" *ngIf="startPlacePredictions.length > 0">
-              <ion-item *ngFor="let place of startPlacePredictions" 
-                       button 
-                       (click)="onStartPlaceSelected(place)">
-                {{place.description}}
-              </ion-item>
-            </div>
             <div class="coordinates-container">
               <ion-item class="custom-input">
                 <ion-label position="floating">Latitud</ion-label>
@@ -96,22 +88,14 @@
 
           <div class="location-point">
             <h4>Punto de Término</h4>
-            <ion-item class="custom-input" (click)="openMapModal('end')">
+            <ion-button expand="block" (click)="openMapModal('end')">
+              <ion-icon name="map-outline" slot="start"></ion-icon>
+              Seleccionar punto de término en el mapa
+            </ion-button>
+            <ion-item class="custom-input">
               <ion-label position="floating">Dirección</ion-label>
-              <ion-input 
-                formControlName="puntoTerminoDireccion"
-                (ionInput)="onEndAddressInput($event)"
-                placeholder="Haz clic para seleccionar en el mapa o busca una ubicación...">
-              </ion-input>
-              <ion-icon name="map-outline" slot="end"></ion-icon>
+              <ion-input formControlName="puntoTerminoDireccion" readonly></ion-input>
             </ion-item>
-            <div class="predictions-list" *ngIf="endPlacePredictions.length > 0">
-              <ion-item *ngFor="let place of endPlacePredictions" 
-                       button 
-                       (click)="onEndPlaceSelected(place)">
-                {{place.description}}
-              </ion-item>
-            </div>
             <div class="coordinates-container">
               <ion-item class="custom-input">
                 <ion-label position="floating">Latitud</ion-label>
@@ -140,7 +124,7 @@
       <ion-toolbar>
         <ion-title>{{currentLocationType === 'start' ? 'Seleccionar Punto de Inicio' : 'Seleccionar Punto de Término'}}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closeMapModal()">Cerrar</ion-button>
+          <ion-button (click)="closeMapModal()">Confirmar</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -164,3 +148,36 @@
     </ion-content>
   </ng-template>
 </ion-modal>
+
+<style>
+.map-container {
+  width: 100%;
+  height: 100%;
+  
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  
+  ion-spinner {
+    margin-bottom: 1rem;
+  }
+}
+
+.coordinates-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+</style>

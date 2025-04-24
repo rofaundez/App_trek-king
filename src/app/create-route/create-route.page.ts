@@ -5,7 +5,7 @@ import { IonicModule, AlertController, ModalController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { GoogleMapsService } from '../services/google-maps.service';
+import { OsmMapService } from '../services/osm-map.service';
 
 @Component({
   selector: 'app-create-route',
@@ -31,7 +31,7 @@ export class CreateRoutePage implements OnInit {
     private authService: AuthService,
     private router: Router,
     private alertController: AlertController,
-    private googleMapsService: GoogleMapsService,
+    private osmMapService: OsmMapService,
     private modalController: ModalController
   ) {
     this.initForm();
@@ -136,64 +136,6 @@ export class CreateRoutePage implements OnInit {
     });
   }
 
-  async onStartAddressInput(event: any) {
-    const query = event.target.value;
-    if (query.length > 2) {
-      try {
-        this.startPlacePredictions = await this.googleMapsService.searchPlaces(query);
-      } catch (error) {
-        console.error('Error searching places:', error);
-        this.startPlacePredictions = [];
-      }
-    } else {
-      this.startPlacePredictions = [];
-    }
-  }
-
-  async onEndAddressInput(event: any) {
-    const query = event.target.value;
-    if (query.length > 2) {
-      try {
-        this.endPlacePredictions = await this.googleMapsService.searchPlaces(query);
-      } catch (error) {
-        console.error('Error searching places:', error);
-        this.endPlacePredictions = [];
-      }
-    } else {
-      this.endPlacePredictions = [];
-    }
-  }
-
-  async onStartPlaceSelected(place: any) {
-    try {
-      const coordinates = await this.googleMapsService.getCoordinatesFromAddress(place.description);
-      this.routeForm.patchValue({
-        puntoInicioDireccion: place.description,
-        puntoInicioLat: coordinates.lat,
-        puntoInicioLng: coordinates.lng
-      });
-      this.startPlacePredictions = [];
-    } catch (error) {
-      console.error('Error getting coordinates:', error);
-      await this.showAlert('Error', 'No se pudo obtener las coordenadas del lugar seleccionado');
-    }
-  }
-
-  async onEndPlaceSelected(place: any) {
-    try {
-      const coordinates = await this.googleMapsService.getCoordinatesFromAddress(place.description);
-      this.routeForm.patchValue({
-        puntoTerminoDireccion: place.description,
-        puntoTerminoLat: coordinates.lat,
-        puntoTerminoLng: coordinates.lng
-      });
-      this.endPlacePredictions = [];
-    } catch (error) {
-      console.error('Error getting coordinates:', error);
-      await this.showAlert('Error', 'No se pudo obtener las coordenadas del lugar seleccionado');
-    }
-  }
-
   async openMapModal(locationType: 'start' | 'end') {
     this.currentLocationType = locationType;
     this.isMapModalOpen = true;
@@ -205,24 +147,27 @@ export class CreateRoutePage implements OnInit {
     const lng = this.routeForm.get(`${locationType === 'start' ? 'puntoInicio' : 'puntoTermino'}Lng`)?.value || -70.6693;
 
     try {
-      await this.googleMapsService.initMap('map', lat, lng);
+      // Use setTimeout to ensure the modal is rendered before initializing the map
+      setTimeout(async () => {
+        await this.osmMapService.initMap('map', lat, lng);
+        this.isMapLoading = false;
+      }, 100);
     } catch (error) {
       console.error('Error al cargar el mapa:', error);
       this.mapError = true;
+      this.isMapLoading = false;
       await this.showAlert(
         'Error al cargar el mapa',
-        'No se pudo cargar el mapa. Por favor, verifica tu conexión a internet y asegúrate de que la API de Google Maps esté configurada correctamente.'
+        'No se pudo cargar el mapa. Por favor, verifica tu conexión a internet.'
       );
-    } finally {
-      this.isMapLoading = false;
     }
   }
 
   async closeMapModal() {
     if (this.currentLocationType && !this.mapError) {
       try {
-        const position = this.googleMapsService.getCurrentMarkerPosition();
-        const address = await this.googleMapsService.getAddressFromCoordinates(position.lat, position.lng);
+        const position = this.osmMapService.getCurrentMarkerPosition();
+        const address = await this.osmMapService.getAddressFromCoordinates(position.lat, position.lng);
         
         const prefix = this.currentLocationType === 'start' ? 'puntoInicio' : 'puntoTermino';
         this.routeForm.patchValue({
