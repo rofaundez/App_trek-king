@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { DatabaseService } from '../services/database.service';
-import { User } from '../models/user.model';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
+import { Firestore, collection, addDoc, getDocs, query, where } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-registro',
@@ -31,9 +30,9 @@ export class RegistroPage implements OnInit {
 
   
   constructor(
-    private dbService: DatabaseService,
+    private firestore: Firestore,
     private toastController: ToastController,
-    private router: Router  // Add this line
+    private router: Router
   ) {
     addIcons({ eyeOutline, eyeOffOutline });
   }
@@ -45,7 +44,7 @@ export class RegistroPage implements OnInit {
     this.nombre = 'Jeremias';
     this.password = '12344321';
     this.confirmPassword = '12344321';
-    this.apellido= 'Ramos';
+    this.apellido = 'Ramos'; // Eliminamos el valor por defecto
   }
 
   // Rename the function to avoid conflict
@@ -81,8 +80,12 @@ export class RegistroPage implements OnInit {
     }
 
     try {
-      const existingUserByEmail = await this.dbService.getUserByEmail(this.email);
-      if (existingUserByEmail) {
+      // Verificar si el email ya existe
+      const usersRef = collection(this.firestore, 'users');
+      const q = query(usersRef, where('email', '==', this.email));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
         const toast = await this.toastController.create({
           message: 'Este correo electrónico ya está registrado',
           duration: 2000,
@@ -93,15 +96,21 @@ export class RegistroPage implements OnInit {
         return;
       }
 
-      // Create and save new user
+      // Obtener el último ID
+      const allUsersQuery = await getDocs(collection(this.firestore, 'users'));
+      const nextId = allUsersQuery.size + 1;
+
+      // Crear nuevo usuario en Firebase con ID
       const newUser = {
+        id: nextId,
         email: this.email,
         nombre: this.nombre,
         password: this.password,
         apellido: this.apellido,
+        createdAt: new Date()
       };
 
-      await this.dbService.addUser(newUser);
+      await addDoc(usersRef, newUser);
 
       const toast = await this.toastController.create({
         message: 'Usuario registrado exitosamente',
@@ -111,8 +120,7 @@ export class RegistroPage implements OnInit {
       });
       await toast.present();
 
-      // Navigate to login
-      //this.router.navigate(['/login']);
+      this.router.navigate(['/login']);
       
     } catch (error) {
       console.error('Error en el registro:', error);

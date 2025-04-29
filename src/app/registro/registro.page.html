@@ -41,7 +41,7 @@
             #nombreInput="ngModel"
             (ionFocus)="currentField = 'nombre'"
             (ionBlur)="currentField = ''"
-            label="Nombre completo"
+            label="Nombre"
             labelPlacement="floating"
             placeholder="Ingrese su nombre"
             [class.valid-input]="nombreInput.valid && nombreInput.touched"
@@ -50,6 +50,28 @@
         </ion-item>
         <ion-text color="danger" *ngIf="nombreInput.invalid && nombreInput.touched && currentField === 'nombre'">
           <small class="error-message">Por favor, ingrese un nombre válido</small>
+        </ion-text>
+
+        <!-- Campo de apellido -->
+        <ion-item class="custom-input">
+          <ion-input
+            type="text"
+            [(ngModel)]="apellido"
+            name="apellido"
+            required
+            pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"
+            #apellidoInput="ngModel"
+            (ionFocus)="currentField = 'apellido'"
+            (ionBlur)="currentField = ''"
+            label="Apellido"
+            labelPlacement="floating"
+            placeholder="Ingrese su apellido"
+            [class.valid-input]="apellidoInput.valid && apellidoInput.touched"
+            [class.invalid-input]="apellidoInput.invalid && apellidoInput.touched">
+          </ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="apellidoInput.invalid && apellidoInput.touched && currentField === 'apellido'">
+          <small class="error-message">Por favor, ingrese un apellido válido</small>
         </ion-text>
 
         <!-- Campo de contraseña -->
