@@ -23,4 +23,7 @@ export class FooterComponent {
   goTohome() {
     this.router.navigate(['/home']);
   }
+  goToSos() {
+    this.router.navigate(['/sos']);
+  }
 }

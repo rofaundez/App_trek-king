@@ -1,15 +1,13 @@
 <ion-header class="header-container">
-  <ion-toolbar>
-    <div class="user-welcome" (click)="goToProfile()">
-      <ion-avatar slot="start">
-        <img [src]="userPhoto" alt="Foto de perfil">
-      </ion-avatar>
-      <div class="welcome-text">
-        <h2>Hola</h2>
-        <h3>{{ userName }} {{ userLastName }}</h3>
-      </div>
+  <div class="user-welcome">
+    <ion-avatar (click)="goToProfile()" class="imagen_usuario">
+      <img [src]="userPhoto">
+    </ion-avatar>
+    <div class="welcome-text">
+      <h2>Bienvenido!</h2>
+      <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
     </div>
-  </ion-toolbar>
+  </div>
 </ion-header>
 
 <ion-content class="sos-content">

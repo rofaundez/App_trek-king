@@ -6,6 +6,10 @@ export const routes: Routes = [
     path: 'registro',
     loadComponent: () => import('./registro/registro.page').then((m) => m.RegistroPage),
   },
+  {
+    path: 'sos',
+    loadComponent: () => import('./sos/sos.page').then( m => m.SosPage)
+  },
   
   {
     path: 'menu',
