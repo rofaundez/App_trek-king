@@ -19,8 +19,6 @@ import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircle
     IonTitle, 
     IonToolbar, 
     IonList, 
-    IonItem, 
-    IonLabel, 
     IonButton, 
     IonIcon,
     IonCard,

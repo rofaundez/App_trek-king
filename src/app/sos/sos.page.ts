@@ -25,10 +25,7 @@ import { Router } from '@angular/router';
     FormsModule,
     IonContent,
     IonHeader,
-    IonTitle,
-    IonToolbar,
     IonAvatar,
-    IonButton,
     FooterComponent,
   ],
 })

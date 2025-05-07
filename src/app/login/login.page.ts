@@ -5,6 +5,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-login',
@@ -18,12 +19,12 @@ export class LoginPage implements OnInit {
   password: string = '';
   currentField: string = '';
 
-  // Add to constructor
   constructor(
     private authService: AuthService,
     private dbService: DatabaseService,
     private toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private firestore: Firestore
   ) { }
 
   ngOnInit() {
@@ -33,14 +34,36 @@ export class LoginPage implements OnInit {
 
   async login() {
     try {
-      console.log('Attempting login with:', this.email, this.password);
+      console.log('Intentando iniciar sesión con:', this.email, this.password);
       
-      const user = await this.dbService.getUserByEmail(this.email);
-      console.log('User found:', user);
+      // Consultar directamente en Firebase
+      const usersRef = collection(this.firestore, 'users');
+      const q = query(usersRef, where('email', '==', this.email));
+      const querySnapshot = await getDocs(q);
       
-      if (user && user.password === this.password) {
-        console.log('Login successful');
-        this.authService.login(user);
+      if (querySnapshot.empty) {
+        const toast = await this.toastController.create({
+          message: 'Usuario no encontrado',
+          duration: 2000,
+          position: 'middle',
+          color: 'danger'
+        });
+        toast.present();
+        return;
+      }
+
+      const userDoc = querySnapshot.docs[0];
+      const userData = userDoc.data();
+      
+      if (userData && userData['password'] === this.password) {
+        console.log('Inicio de sesión exitoso');
+        this.authService.login({
+          id: parseInt(userDoc.id) || 0,
+          email: userData['email'],
+          nombre: userData['nombre'],
+          apellido: userData['apellido'],
+          password: userData['password']
+        });
         
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
@@ -51,7 +74,7 @@ export class LoginPage implements OnInit {
         await toast.present();
         this.router.navigate(['/home']);
       } else {
-        console.log('Login failed - invalid credentials');
+        console.log('Inicio de sesión fallido - credenciales inválidas');
         const toast = await this.toastController.create({
           message: 'Credenciales incorrectas',
           duration: 2000,
@@ -61,7 +84,14 @@ export class LoginPage implements OnInit {
         toast.present();
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Error de inicio de sesión:', error);
+      const toast = await this.toastController.create({
+        message: 'Error al intentar iniciar sesión',
+        duration: 2000,
+        position: 'middle',
+        color: 'danger'
+      });
+      toast.present();
     }
   }
 
