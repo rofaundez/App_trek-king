@@ -21,7 +21,6 @@ export class LoginPage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private dbService: DatabaseService,
     private toastController: ToastController,
     private router: Router,
     private firestore: Firestore
