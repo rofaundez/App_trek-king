@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { DatabaseService } from '../../services/database.service';
 import { AuthService } from '../../services/auth.service';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
+import { Firestore, getDocs, addDoc, collection,query,where } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-registro-autoridad',
@@ -33,7 +33,7 @@ export class RegistroPage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private dbService: DatabaseService,
+    private firestore: Firestore,
     private toastController: ToastController,
     private router: Router
   ) {
@@ -53,23 +53,9 @@ export class RegistroPage implements OnInit {
       this.router.navigate(['/autoridad-home']);
       return;
     }
-
-    // Valores por defecto para pruebas
-    this.email = 'je.ramos@duocuc.cl  ';
-    this.nombre = 'jeremias ramos';
-    this.institucion = 'policia de chile';
-    this.cargo = 'jefe';
-    this.zona = 'arica';
-    this.password = '';
-    this.confirmPassword = '';
   }
-
-  validateConfirmPassword(password: string, confirmPass: string): boolean {
-    return password === confirmPass;
-  }
-
   async register() {
-    // Validar que las contraseñas coincidan
+    // Validate passwords match
     if (this.password !== this.confirmPassword) {
       const toast = await this.toastController.create({
         message: 'Las contraseñas no coinciden',
@@ -81,7 +67,7 @@ export class RegistroPage implements OnInit {
       return;
     }
 
-    // Validar longitud de la contraseña
+    // Validate password length
     if (this.password.length < 8) {
       const toast = await this.toastController.create({
         message: 'La contraseña debe tener al menos 8 caracteres',
@@ -94,8 +80,12 @@ export class RegistroPage implements OnInit {
     }
 
     try {
-      const existinAutoridadByEmail = await this.dbService.getAutoridadByEmail(this.email);
-      if (existinAutoridadByEmail) {
+      // Verificar si el email ya existe
+      const AutoridadesRef = collection(this.firestore, 'Autoridades');
+      const q = query(AutoridadesRef, where('email', '==', this.email));
+      const querySnapshot = await getDocs(q);
+      
+      if (!querySnapshot.empty) {
         const toast = await this.toastController.create({
           message: 'Este correo electrónico ya está registrado',
           duration: 2000,
@@ -106,34 +96,40 @@ export class RegistroPage implements OnInit {
         return;
       }
 
-      // Crear y guardar nueva autoridad
-      const newAuthority = {
+      // Obtener el último ID
+      const allAutoridadesQuery = await getDocs(collection(this.firestore, 'Autoridades'));
+      const nextId = allAutoridadesQuery.size + 1;
+
+      // Crear nuevo usuario en Firebase con ID
+      const newAutoridad = {
+        id: nextId,
         email: this.email,
         nombre: this.nombre,
+        password: this.password,
+        createdAt: new Date(),
+        cargo: this.cargo,
         institucion: this.institucion,
         zona: this.zona,
-        cargo: this.cargo,
-        password: this.password,
-        role: 'authority' // Rol específico para autoridades
+        fotoPerfil: '',
+        estado: 'activo'
       };
 
-      await this.dbService.addAutoridad(newAuthority);
+      await addDoc(AutoridadesRef, newAutoridad);
 
       const toast = await this.toastController.create({
-        message: 'Autoridad registrada exitosamente',
+        message: 'Usuario registrado exitosamente',
         duration: 2000,
         position: 'middle',
         color: 'success'
       });
       await toast.present();
 
-      // Navegar al login de autoridades
-      this.router.navigate(['/autoridad-login']);
+      this.router.navigate(['/login']);
       
     } catch (error) {
       console.error('Error en el registro:', error);
       const toast = await this.toastController.create({
-        message: 'Error al registrar autoridad',
+        message: 'Error al registrar usuario',
         duration: 2000,
         position: 'middle',
         color: 'danger'
@@ -141,11 +137,12 @@ export class RegistroPage implements OnInit {
       toast.present();
     }
   }
-
-  home() {
-    this.router.navigate(['/autoridad-home']);
+  home (){
+    this.router.navigate(['/home']);
   }
-
+  validateConfirmPassword(password: string, confirmPass: string): boolean {
+    return password === confirmPass;
+  }
   togglePasswordVisibility(field: 'password' | 'confirmPassword') {
     if (field === 'password') {
       this.showPassword = !this.showPassword;
@@ -153,4 +150,4 @@ export class RegistroPage implements OnInit {
       this.showConfirmPassword = !this.showConfirmPassword;
     }
   }
-} 
+}

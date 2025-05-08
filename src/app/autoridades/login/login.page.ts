@@ -57,11 +57,12 @@ export class AutoridadLoginPage implements OnInit {
       
       if (autoridadesData && autoridadesData['password'] === this.password) {
         console.log('Inicio de sesión exitoso');
-        this.authService.login({
+        this.authService.loginAutoridad({
           id: parseInt(autoridadesDoc.id) || 0,
           email: autoridadesData['email'],
           nombre: autoridadesData['nombre'],
-          apellido: autoridadesData['apellido'],
+          img: autoridadesData['img'],
+          cargo: autoridadesData['cargo'],
           password: autoridadesData['password']
         });
         
@@ -72,7 +73,7 @@ export class AutoridadLoginPage implements OnInit {
           color: 'success'
         });
         await toast.present();
-        this.router.navigate(['/home']);
+        this.router.navigate(['/autoridad-home']);
       } else {
         console.log('Inicio de sesión fallido - credenciales inválidas');
         const toast = await this.toastController.create({

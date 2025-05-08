@@ -1,5 +1,5 @@
 export interface Autoridad {
-    id?: string;
+    id?: number;
     email: string;
     nombre: string;
     password?: string;
