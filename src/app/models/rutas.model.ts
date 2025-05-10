@@ -1,15 +1,19 @@
 export interface Rutas {
-    id?: string;
+    id: string;                    // Cambiado a requerido ya que se usa en la navegación
     nombre: string;
-    foto: string;
-    descripcion: string;
-    dificultad: 'Fácil' | 'Moderada' | 'Difícil' | 'Muy Difícil';
-    creador: {
+    foto?: string;
+    imagen: string;                // Cambiado a requerido ya que se usa en la vista
+    descripcion?: string;          // Cambiado a opcional ya que no siempre se usa
+    ubicacion: string;             // Cambiado a requerido para la vista de lista
+    dificultad: string;            // Simplificado para permitir el formato personalizado
+    localidad?: string;            // Cambiado a opcional
+    categorias: string[];          // Cambiado a requerido para el sistema de filtrado
+    creador?: {                    // Cambiado a opcional ya que no siempre se necesita
         id: string;
         nombre: string;
         email: string;
     };
-    puntosDescanso: {
+    puntosDescanso?: {             // Cambiado a opcional
         nombre: string;
         ubicacion: {
             lat: number;
@@ -17,17 +21,16 @@ export interface Rutas {
         };
         descripcion?: string;
     }[];
-    puntoInicio: {
+    puntoInicio?: {                // Cambiado a opcional
         lat: number;
         lng: number;
         direccion: string;
     };
-    puntoTermino: {
+    puntoTermino?: {               // Cambiado a opcional
         lat: number;
         lng: number;
         direccion: string;
     };
-    localidad: string;
     fechaCreacion?: Date;
     ultimaModificacion?: Date;
 }

@@ -21,37 +21,37 @@
          (mouseup)="isMouseUp($event)"
          (mouseleave)="isMouseUp($event)">
 
-      <ion-button fill="clear" class="boton-filtro">
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Montañas'" (click)="filtrarPorCategoria('Montañas')">
         <img alt src="assets/img/montañaLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Montañas</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Nieve'" (click)="filtrarPorCategoria('Nieve')">
         <img alt src="assets/img/nieveLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Nieve</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Playas'" (click)="filtrarPorCategoria('Playas')">
         <img alt src="assets/img/playaLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Playas</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Lagos'" (click)="filtrarPorCategoria('Lagos')">
         <img alt src="assets/img/bosquesLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Lagos</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Rios'" (click)="filtrarPorCategoria('Rios')">
         <img alt src="assets/img/rioLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Rios</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Parques'" (click)="filtrarPorCategoria('Parques')">
         <img alt src="assets/img/bosquesLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Parques</span>
       </ion-button>
 
-      <ion-button fill="clear" class="boton-filtro">
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Cascadas'" (click)="filtrarPorCategoria('Cascadas')">
         <img alt src="assets/img/cascadaLogo.png" class="imagen_filtro">
         <span class="nombre_filtro">Cascadas</span>
       </ion-button>
@@ -64,80 +64,40 @@
   <!-- Categories -->
   <div class="contenedor-rutas">
     <ion-list class="lista-rutas">
-      <ion-item class="item-ruta" button lines="none" (click)="goToRouteDetails('cerro_santa_lucia', 'Cerro Santa Lucía', 'Santiago de Chile, Santiago', 'Facil | 1,3km | Est. 23min', 'assets/img/cerro_santa_lucia.jpg')">
-        <div class="contenido-ruta">
-          <div class="imagen-container">
-            <img alt src="assets/img/cerro_santa_lucia.jpg" class="imagen_ruta">
-          </div>
-          <div class="info-ruta">
-            <h2 class="nombre_ruta">Cerro Santa Lucía</h2>
-            <p class="descripcion_ruta">Santiago de Chile, Santiago</p>
-            <div class="rating">
-              <span class="dificultad_ruta">Facil | 1,3km | Est. 23min </span>
+      <ng-container *ngIf="rutasRecomendadas.length > 0; else noRutas">
+        <ion-item *ngFor="let ruta of rutasRecomendadas" 
+                  class="item-ruta" 
+                  button 
+                  lines="none" 
+                  (click)="goToRouteDetails(
+                    ruta.id || '', 
+                    ruta.nombre || '', 
+                    ruta.ubicacion || '', 
+                    ruta.dificultad || '', 
+                    ruta.imagen || 'assets/img/default.jpg'
+                  )">
+          <div class="contenido-ruta">
+            <div class="imagen-container">
+              <img alt [src]="ruta.imagen" class="imagen_ruta">
+            </div>
+            <div class="info-ruta">
+              <h2 class="nombre_ruta">{{ruta.nombre}}</h2>
+              <p class="descripcion_ruta">{{ruta.ubicacion}}</p>
+              <div class="rating">
+                <span class="dificultad_ruta">{{ruta.dificultad}}</span>
+              </div>
+              <div class="categorias-container">
+                <span *ngFor="let categoria of ruta.categorias" class="categoria-tag">{{categoria}}</span>
+              </div>
             </div>
           </div>
+        </ion-item>
+      </ng-container>
+      <ng-template #noRutas>
+        <div class="no-rutas-mensaje">
+          <p>No se encontraron rutas que coincidan con el filtro seleccionado.</p>
         </div>
-      </ion-item>
-
-      <ion-item class="item-ruta" button lines="none" (click)="goToRouteDetails('cascada_san_juan', 'Cascada San Juan Sendero Estereo', 'Peñalolén, Santiago', 'Media | 8,7km | Est. 3h 12min', 'assets/img/Cascada_san_juan.jpg')">
-        <div class="contenido-ruta">
-          <div class="imagen-container">
-            <img alt src="assets/img/Cascada_san_juan.jpg" class="imagen_ruta">
-          </div>
-          <div class="info-ruta">
-            <h2 class="nombre_ruta">Cascada San Juan Sendero Estereo</h2>
-            <p class="descripcion_ruta">Peñalolén, Santiago</p>
-            <div class="rating">
-              <span class="dificultad_ruta">Media | 8,7km | Est. 3h 12min </span>
-            </div>
-          </div>
-        </div>
-      </ion-item>
-
-      <ion-item class="item-ruta" button lines="none" (click)="goToRouteDetails('salto_apoquindo', 'Salto de Apoquindo Los Dominicos', 'Las Condes, Santiago', 'Dificil | 14,3km | Est. 5h 28min', 'assets/img/salto_apoquindo.jpg')">
-        <div class="contenido-ruta">
-          <div class="imagen-container">
-            <img alt src="assets/img/salto_apoquindo.jpg" class="imagen_ruta">
-          </div>
-          <div class="info-ruta">
-            <h2 class="nombre_ruta">Salto de Apoquindo Los Dominicos</h2>
-            <p class="descripcion_ruta">Las Condes, Santiago</p>
-            <div class="rating">
-              <span class="dificultad_ruta">Dificil | 14,3km | Est. 5h 28min </span>
-            </div>
-          </div>
-        </div>
-      </ion-item>
-
-      <ion-item class="item-ruta" button lines="none" (click)="goToRouteDetails('lago_aculeo', 'Laguna de Aculeo', 'Paine, Santiago', 'Media | 24,6km | Est. 5h 32min', 'assets/img/lago_aculeo.jpg')">
-        <div class="contenido-ruta">
-          <div class="imagen-container">
-            <img alt src="assets/img/lago_aculeo.jpg" class="imagen_ruta">
-          </div>
-          <div class="info-ruta">
-            <h2 class="nombre_ruta">Laguna de Aculeo</h2>
-            <p class="descripcion_ruta">Paine, Santiago</p>
-            <div class="rating">
-              <span class="dificultad_ruta">Media | 24,6km | Est. 5h 32min </span>
-            </div>
-          </div>
-        </div>
-      </ion-item>
-
-      <ion-item class="item-ruta" button lines="none" (click)="goToRouteDetails('cerro_minillas', 'Cerro Minillas - Cerro Tarapacá', 'La Florida, Santiago', 'Dificil | 18,7km | Est. 9h 35min', 'assets/img/cerro_minillas.webp')">
-        <div class="contenido-ruta">
-          <div class="imagen-container">
-            <img alt src="assets/img/cerro_minillas.webp" class="imagen_ruta">
-          </div>
-          <div class="info-ruta">
-            <h2 class="nombre_ruta">Cerro Minillas - Cerro Tarapacá</h2>
-            <p class="descripcion_ruta">La Florida, Santiago</p>
-            <div class="rating">
-              <span class="dificultad_ruta">Dificil | 18,7km | Est. 9h 35min </span>
-            </div>
-          </div>
-        </div>
-      </ion-item>
+      </ng-template>
     </ion-list>
   </div>
 </ion-content>

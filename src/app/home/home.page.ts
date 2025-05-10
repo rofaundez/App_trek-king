@@ -27,6 +27,51 @@ export class HomePage implements OnInit, OnDestroy {
   userPhoto: string = 'assets/img/userLogo.png';
   rutasRecomendadas: Rutas[] = [];
   allRoutes: Rutas[] = [];
+  filtroActivo: string | null = null;
+  
+  // Rutas con sus categorías asignadas
+  rutasConCategorias = [
+    {
+      id: 'cerro_santa_lucia',
+      nombre: 'Cerro Santa Lucía',
+      ubicacion: 'Santiago de Chile, Santiago',
+      dificultad: 'Facil | 1,3km | Est. 23min',
+      imagen: 'assets/img/cerro_santa_lucia.jpg',
+      categorias: ['Montañas', 'Parques']
+    },
+    {
+      id: 'cascada_san_juan',
+      nombre: 'Cascada San Juan Sendero Estereo',
+      ubicacion: 'Peñalolén, Santiago',
+      dificultad: 'Media | 8,7km | Est. 3h 12min',
+      imagen: 'assets/img/Cascada_san_juan.jpg',
+      categorias: ['Cascadas', 'Montañas']
+    },
+    {
+      id: 'salto_apoquindo',
+      nombre: 'Salto de Apoquindo Los Dominicos',
+      ubicacion: 'Las Condes, Santiago',
+      dificultad: 'Dificil | 14,3km | Est. 5h 28min',
+      imagen: 'assets/img/salto_apoquindo.jpg',
+      categorias: ['Cascadas', 'Rios', 'Montañas']
+    },
+    {
+      id: 'lago_aculeo',
+      nombre: 'Laguna de Aculeo',
+      ubicacion: 'Paine, Santiago',
+      dificultad: 'Media | 24,6km | Est. 5h 32min',
+      imagen: 'assets/img/lago_aculeo.jpg',
+      categorias: ['Lagos']
+    },
+    {
+      id: 'cerro_minillas',
+      nombre: 'Cerro Minillas - Cerro Tarapacá',
+      ubicacion: 'La Florida, Santiago',
+      dificultad: 'Dificil | 18,7km | Est. 9h 35min',
+      imagen: 'assets/img/cerro_minillas.webp',
+      categorias: ['Montañas', 'Nieve']
+    }
+  ];
   
   private isDragging = false;
   private startX = 0;
@@ -64,6 +109,10 @@ export class HomePage implements OnInit, OnDestroy {
       this.userLastName = '';
       this.userPhoto = 'assets/img/userLogo.png';
     }
+    
+    // Inicializamos las rutas recomendadas con todas las rutas
+    this.rutasRecomendadas = [...this.rutasConCategorias];
+    this.allRoutes = [...this.rutasConCategorias];
   }
 
   ngOnDestroy() {
@@ -89,15 +138,24 @@ export class HomePage implements OnInit, OnDestroy {
 
   onSearch(event: any) {
     const searchTerm = event.target.value.toLowerCase();
-    if (searchTerm === '') {
-      this.rutasRecomendadas = [...this.allRoutes];
-    } else {
-      this.rutasRecomendadas = this.allRoutes.filter(ruta => 
-        ruta.nombre.toLowerCase().includes(searchTerm) ||
-        ruta.localidad.toLowerCase().includes(searchTerm) ||
-        ruta.descripcion.toLowerCase().includes(searchTerm)
+    let rutasFiltradas = [...this.allRoutes];
+    
+    // Si hay un filtro activo, aplicamos primero ese filtro
+    if (this.filtroActivo) {
+      rutasFiltradas = this.allRoutes.filter(ruta => 
+        ruta.categorias?.includes(this.filtroActivo!)
       );
     }
+    
+    // Luego aplicamos el filtro de búsqueda
+    if (searchTerm !== '') {
+      rutasFiltradas = rutasFiltradas.filter(ruta => 
+        ruta.nombre.toLowerCase().includes(searchTerm) ||
+        (ruta.ubicacion ? ruta.ubicacion.toLowerCase().includes(searchTerm) : false)
+      );
+    }
+    
+    this.rutasRecomendadas = rutasFiltradas;
   }
 
   isMouseDown(e: MouseEvent) {
@@ -134,5 +192,19 @@ export class HomePage implements OnInit, OnDestroy {
         imagen: imagen
       }
     });
+  }
+  
+  filtrarPorCategoria(categoria: string) {
+    // Si ya está activo este filtro, lo desactivamos
+    if (this.filtroActivo === categoria) {
+      this.filtroActivo = null;
+      this.rutasRecomendadas = [...this.allRoutes];
+    } else {
+      // Activamos el nuevo filtro
+      this.filtroActivo = categoria;
+      this.rutasRecomendadas = this.allRoutes.filter(ruta => 
+        ruta.categorias?.includes(categoria)
+      );
+    }
   }
 }
