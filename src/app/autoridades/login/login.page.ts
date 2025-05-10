@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
-import { DatabaseService } from '../../services/database.service';
+import { Firestore,collection,query,where,getDocs } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -21,7 +21,7 @@ export class AutoridadLoginPage implements OnInit {
   // Add to constructor
   constructor(
     private authService: AuthService,
-    private dbService: DatabaseService,
+    private firestore : Firestore,
     private toastController: ToastController,
     private router: Router
   ) { }
@@ -29,28 +29,42 @@ export class AutoridadLoginPage implements OnInit {
   ngOnInit() {
     this.email = 'je.ramos@duocuc.cl';
     this.password = '12344321';
-    this.addTestAutoridad();
   }
 
-  async addTestAutoridad() {
-    try {
-      await this.dbService.addDefaultAutoridad();
-      console.log('Test autoridad added or already exists');
-    } catch (error) {
-      console.error('Error adding test autoridad:', error);
-    }
-  }
 
   async login() {
     try {
-      console.log('Attempting login with:', this.email, this.password);
+      console.log('Intentando iniciar sesión con:', this.email, this.password);
       
-      const autoridad = await this.dbService.getAutoridadByEmail(this.email);
-      console.log('User found:', autoridad);
+      // Consultar directamente en Firebase
+      const AutoridadesRef = collection(this.firestore, 'Autoridades');
+      const q = query(AutoridadesRef, where('email', '==', this.email));
+      const querySnapshot = await getDocs(q);
       
-      if (autoridad && autoridad.password === this.password) {
-        console.log('Login successful');
-        this.authService.loginAutoridad(autoridad);
+      if (querySnapshot.empty) {
+        const toast = await this.toastController.create({
+          message: 'Usuario no encontrado',
+          duration: 2000,
+          position: 'middle',
+          color: 'danger'
+        });
+        toast.present();
+        return;
+      }
+
+      const autoridadesDoc = querySnapshot.docs[0];
+      const autoridadesData = autoridadesDoc.data();
+      
+      if (autoridadesData && autoridadesData['password'] === this.password) {
+        console.log('Inicio de sesión exitoso');
+        this.authService.loginAutoridad({
+          id: parseInt(autoridadesDoc.id) || 0,
+          email: autoridadesData['email'],
+          nombre: autoridadesData['nombre'],
+          img: autoridadesData['img'],
+          cargo: autoridadesData['cargo'],
+          password: autoridadesData['password']
+        });
         
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
@@ -61,7 +75,7 @@ export class AutoridadLoginPage implements OnInit {
         await toast.present();
         this.router.navigate(['/autoridad-home']);
       } else {
-        console.log('Login failed - invalid credentials');
+        console.log('Inicio de sesión fallido - credenciales inválidas');
         const toast = await this.toastController.create({
           message: 'Credenciales incorrectas',
           duration: 2000,
@@ -71,9 +85,17 @@ export class AutoridadLoginPage implements OnInit {
         toast.present();
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Error de inicio de sesión:', error);
+      const toast = await this.toastController.create({
+        message: 'Error al intentar iniciar sesión',
+        duration: 2000,
+        position: 'middle',
+        color: 'danger'
+      });
+      toast.present();
     }
   }
+
 
   forgotAutoridadPassword() {
     this.router.navigate(['/recover-autoridad']);
