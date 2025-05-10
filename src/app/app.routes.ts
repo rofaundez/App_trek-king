@@ -68,6 +68,10 @@ export const routes: Routes = [
     path: 'autoridad-perfil',
     loadComponent: () => import('./autoridades/perfil/perfil.page').then( m => m.PerfilPage)
   },
+  {
+    path: 'ruta-detalles',
+    loadComponent: () => import('./ruta-detalles/ruta-detalles.page').then( m => m.RutaDetallesPage)
+  },
 
   {path: '',
   redirectTo: 'home',
@@ -75,15 +79,5 @@ export const routes: Routes = [
 
   {path: '**',
     redirectTo: 'home',
-    pathMatch: 'full',},
-
-
-
-
-
-
-
-
-
-
+    pathMatch: 'full',}
 ];

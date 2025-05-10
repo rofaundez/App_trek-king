@@ -9,6 +9,22 @@
       {
         "label": "off"
       }
-    ]
+    ],
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "user-select",
+          "cursor: grabbing",
+          "scroll-behavior",
+          "scroll-behavior: smooth",
+          "scrollbar-width",
+          "background-position: center",
+          "scrollbar-width: none",
+          "backdrop-filter"
+        ]
+      }
+    ],
+    "css-prefix-order": "off"
   }
 }

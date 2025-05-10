@@ -122,4 +122,17 @@ export class HomePage implements OnInit, OnDestroy {
     const walk = (x - this.startX) * 2; // Multiplicador de velocidad
     slider.scrollLeft = this.scrollLeft - walk;
   }
+
+  goToRouteDetails(id: string, nombre: string, ubicacion: string, dificultad: string, imagen: string) {
+    // Navegamos a la página de detalles con los parámetros de la ruta
+    this.router.navigate(['/ruta-detalles'], {
+      queryParams: {
+        id: id,
+        nombre: nombre,
+        ubicacion: ubicacion,
+        dificultad: dificultad,
+        imagen: imagen
+      }
+    });
+  }
 }
