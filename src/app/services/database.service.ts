@@ -137,7 +137,21 @@ export class DatabaseService {
 
       request.onsuccess = () => {
         console.log('User search result:', request.result);
-        resolve(request.result || null);
+        // Si encontramos un usuario, aseguramos que su ID sea siempre string
+        // para mantener consistencia con Firebase
+        if (request.result) {
+          const user = {...request.result}; // Creamos una copia para no modificar el original
+          // Aseguramos que el ID sea siempre un string para Firebase
+          if (user.id !== undefined) {
+            user.id = String(user.id);
+            console.log('Usuario encontrado con ID:', user.id, 'tipo:', typeof user.id);
+          } else {
+            console.warn('Usuario encontrado sin ID');
+          }
+          resolve(user);
+        } else {
+          resolve(null);
+        }
       };
       request.onerror = () => {
         console.error('Error getting user:', request.error);
@@ -234,18 +248,106 @@ export class DatabaseService {
 
 
   async updateUser(id: string, userData: any): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (!this.db) {
         reject('Database not initialized');
         return;
       }
-  
-      const transaction = this.db.transaction('users', 'readwrite');
-      const store = transaction.objectStore('users');
-      const request = store.put(userData);
-  
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
+      
+      try {
+        // Siempre usamos el ID como string para Firebase
+        // Firebase siempre usa IDs como strings
+        console.log('Buscando usuario con ID:', id, 'tipo:', typeof id);
+        
+        // Convertir el ID a número si es necesario para IndexedDB
+        // IndexedDB puede usar keyPath con autoIncrement como números
+        const numericId = parseInt(id);
+        const idToUse = isNaN(numericId) ? id : numericId;
+        console.log('ID convertido para búsqueda:', idToUse, 'tipo:', typeof idToUse);
+        
+        // Primero intentamos buscar el usuario en la base de datos local
+        const transaction1 = this.db.transaction('users', 'readonly');
+        const store1 = transaction1.objectStore('users');
+        const getCurrentRequest = store1.get(idToUse);
+        
+        getCurrentRequest.onsuccess = async () => {
+          const currentUser = getCurrentRequest.result;
+          if (!currentUser) {
+            reject(new Error('Usuario no encontrado'));
+            return;
+          }
+          
+          // Si solo estamos actualizando la foto, mantenemos el email original
+          // para evitar problemas con el índice único
+          if (userData.photo && !userData.email) {
+            userData.email = currentUser.email;
+          }
+          
+          // Si el email ha cambiado, verificamos que no exista otro usuario con ese email
+          if (currentUser.email !== userData.email) {
+            try {
+              const existingUser = await this.getUserByEmail(userData.email);
+              // En Firebase, siempre comparamos IDs como strings
+              if (existingUser && existingUser.id !== id) {
+                reject(new Error('El email ya está en uso por otro usuario'));
+                return;
+              }
+            } catch (error) {
+              reject(error);
+              return;
+            }
+          }
+          
+          // Aseguramos que el objeto userData tenga todos los campos necesarios
+          const completeUserData = {
+            ...currentUser,
+            ...userData,
+            id: id // Mantenemos el ID como string para Firebase
+          };
+          
+          // Si llegamos aquí, podemos actualizar el usuario
+          // Verificamos nuevamente que this.db no sea null
+          if (!this.db) {
+            reject('Database not initialized');
+            return;
+          }
+          
+          // Aseguramos que el ID sea del tipo correcto para IndexedDB
+          // Pero mantenemos el ID como string en el objeto para Firebase
+          console.log('Actualizando usuario con ID:', id, 'Datos:', completeUserData);
+          
+          // Usamos el mismo idToUse para la operación de guardado
+          const transaction2 = this.db.transaction('users', 'readwrite');
+          const store2 = transaction2.objectStore('users');
+          
+          // Aseguramos que el objeto tenga el ID en el formato correcto para IndexedDB
+          const saveData = {...completeUserData};
+          saveData.id = idToUse; // Usamos el ID convertido para IndexedDB
+          
+          const updateRequest = store2.put(saveData);
+          
+          updateRequest.onsuccess = () => {
+            // Después de guardar, aseguramos que el ID se mantenga como string para Firebase
+            resolve();
+          };
+          
+          
+          updateRequest.onerror = (event) => {
+            console.error('Error al actualizar usuario:', event);
+            // Verificar si el error está relacionado con la restricción de unicidad del email
+            if (updateRequest.error && updateRequest.error.name === 'ConstraintError') {
+              reject(new Error('No se pudo actualizar el perfil: El email ya está en uso por otro usuario'));
+            } else {
+              reject(updateRequest.error);
+            }
+          };
+        };
+        
+        getCurrentRequest.onerror = () => reject(getCurrentRequest.error);
+      } catch (error) {
+        console.error('Error en updateUser:', error);
+        reject(error);
+      }
     });
   }
 
@@ -256,11 +358,17 @@ export class DatabaseService {
         return;
       }
 
+      // Siempre usamos el ID como string para Firebase
+      console.log('Eliminando usuario con ID:', id, 'tipo:', typeof id);
+
       const transaction = this.db.transaction('users', 'readwrite');
       const store = transaction.objectStore('users');
       const request = store.delete(id);
 
-      request.onsuccess = () => resolve();
+      request.onsuccess = () => {
+        console.log('Usuario eliminado correctamente con ID:', id);
+        resolve();
+      };
       request.onerror = () => reject(request.error);
     });
   }

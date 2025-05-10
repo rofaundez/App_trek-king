@@ -1,3 +1,4 @@
+import { getStorage } from '@angular/fire/storage';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,6 +8,8 @@ import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import { AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
+import { Firestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-profile',
@@ -29,8 +32,16 @@ export class ProfilePage implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private databaseService: DatabaseService,
-    private alertController: AlertController
-  ) { }
+    private alertController: AlertController,
+    private firestore: Firestore
+  ) {
+    // Verificar el estado de la autenticación al iniciar
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.log('No hay usuario al iniciar el componente');
+      this.router.navigate(['/login']);
+    }
+  }
 
   ngOnInit() {
     const currentUser = this.authService.getCurrentUser();
@@ -86,34 +97,72 @@ export class ProfilePage implements OnInit, OnDestroy {
         throw new Error('No hay usuario activo');
       }
 
-      // Solo verificamos el email si ha cambiado
+      // Asegurarnos de que el ID sea un string
+      const userId = String(currentUser.id);
+      console.log('ID del usuario en updateProfile (convertido a string):', userId);
+
+      // Verificar que el usuario existe en Firestore
+      const userDocRef = doc(this.firestore, 'users', userId);
+      const userDocSnap = await getDoc(userDocRef);
+      
+      if (!userDocSnap.exists()) {
+        throw new Error('Usuario no encontrado en Firestore');
+      }
+
+      // Creamos el objeto de usuario actualizado
+      const updatedUser = {
+        ...currentUser,
+        id: userId, // Aseguramos que el ID sea string
+        nombre: this.userProfile.nombre,
+        apellido: this.userProfile.apellido,
+        photo: this.userProfile.photo
+      };
+
+      // Solo actualizamos el email si ha cambiado
       if (currentUser.email !== this.userProfile.email) {
-        // Buscamos si ya existe un usuario con ese email
-        const existingUser = await this.databaseService.getUserByEmail(this.userProfile.email);
-        
-        if (existingUser && existingUser.id !== currentUser.id) {
-          // Si existe un usuario con ese email y no es el usuario actual
+        try {
+          // Verificar si ya existe un usuario con ese email en Firestore
+          const usersCollection = collection(this.firestore, 'users');
+          const q = query(usersCollection, where('email', '==', this.userProfile.email));
+          const querySnapshot = await getDocs(q);
+          
+          if (!querySnapshot.empty && querySnapshot.docs[0].id !== userId) {
+            // Si existe un usuario con ese email y no es el usuario actual
+            const alert = await this.alertController.create({
+              header: 'Error',
+              message: 'El correo electrónico ya está registrado por otro usuario',
+              buttons: ['OK']
+            });
+            await alert.present();
+            return;
+          }
+          
+          // Si no hay conflicto, actualizamos el email
+          updatedUser.email = this.userProfile.email;
+        } catch (error) {
+          console.error('Error al verificar el email:', error);
           const alert = await this.alertController.create({
             header: 'Error',
-            message: 'El correo electrónico ya está registrado por otro usuario',
+            message: 'No se pudo verificar la disponibilidad del email',
             buttons: ['OK']
           });
           await alert.present();
           return;
         }
+      } else {
+        // Si el email no ha cambiado, aseguramos que se mantenga el original
+        updatedUser.email = currentUser.email;
       }
 
-      // Si llegamos aquí, podemos actualizar el perfil
-      const updatedUser = {
-        ...currentUser,
-        nombre: this.userProfile.nombre,
-        apellido: this.userProfile.apellido,
-        email: this.userProfile.email,
-        photo: this.userProfile.photo
+      // Actualizamos directamente en Firestore
+      const updateData = {
+        nombre: updatedUser.nombre,
+        apellido: updatedUser.apellido,
+        email: updatedUser.email,
+        photo: updatedUser.photo
       };
-
-      // Actualizamos en la base de datos
-      await this.databaseService.updateUser(currentUser.id.toString(), updatedUser);
+      
+      await updateDoc(userDocRef, updateData);
       
       // Actualizamos el usuario en el AuthService
       this.authService.updateCurrentUser(updatedUser);
@@ -140,31 +189,87 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   async onPhotoSelect(event: any) {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async (e: any) => {
-        const photoBase64 = e.target.result;
-        this.userProfile.photo = photoBase64;
-        
-        try {
-          const currentUser = this.authService.getCurrentUser();
-          if (currentUser && currentUser.id) {
-            const updatedUser = {
-              ...currentUser,
-              photo: photoBase64
-            };
-            // Actualizamos en la base de datos
-            await this.databaseService.updateUser(currentUser.id.toString(), updatedUser);
-            // Actualizamos el AuthService que ahora emitirá el cambio
-            this.authService.updateCurrentUser(updatedUser);
-          }
-        } catch (error) {
-          console.error('Error al actualizar la foto de perfil:', error);
-        }
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      console.log('No se seleccionó ningún archivo');
+      return;
     }
-  }
+  
+    try {
+      const currentUser = this.authService.getCurrentUser();
+      console.log('Usuario actual:', currentUser); // Para depuración
+  
+      if (!currentUser) {
+        throw new Error('No hay usuario activo en la sesión');
+      }
+  
+      // Asegurarnos de que el usuario tenga un ID válido
+      if (!currentUser.id) {
+        throw new Error('El usuario no tiene un ID válido');
+      }
+      
+      // Asegurarnos de que el ID sea un string (formato de Firebase)
+      const userId = String(currentUser.id);
+      console.log('ID del usuario (convertido a string):', userId, 'tipo:', typeof userId);
+  
+      // Verificar que el usuario existe en Firestore antes de continuar
+      const userDocRef = doc(this.firestore, 'users', userId);
+      const userDocSnap = await getDoc(userDocRef);
+      
+      if (!userDocSnap.exists()) {
+        throw new Error('Usuario no encontrado en Firestore');
+      }
+      
+      const storage = getStorage();
+      // Usar el ID como string para la ruta de almacenamiento
+      const storageRef = ref(storage, `profile-photos/${userId}`);
+      
+      // Subir el archivo
+      const uploadTask = await uploadBytes(storageRef, file);
+      
+      // Obtener la URL de descarga
+      const downloadURL = await getDownloadURL(uploadTask.ref);
+      
+      // Actualizar directamente en Firestore
+      try {
+        // Actualizar el documento en Firestore
+        await updateDoc(userDocRef, {
+          photo: downloadURL
+        });
+        
+        // Actualizar el usuario en memoria con la nueva foto
+        const updatedUser = {
+          ...currentUser,
+          id: userId, // Aseguramos que el ID sea string
+          photo: downloadURL
+        };
+        
+        // Actualizar en el AuthService
+        this.authService.updateCurrentUser(updatedUser);
+      } catch (error: any) {
+        console.error('Error al actualizar usuario en Firestore:', error);
+        throw new Error(`Error al actualizar la foto: ${error.message}`);
+      }
+      
+      // Actualizar la vista
+      this.userProfile.photo = downloadURL;
+      
+      const alert = await this.alertController.create({
+        header: 'Éxito',
+        message: 'Foto de perfil actualizada correctamente',
+        buttons: ['OK']
+      });
+      await alert.present();
+      
+    } catch (error: any) { // Tipamos el error como any para acceder a message
+      console.error('Error al actualizar la foto de perfil:', error);
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: `No se pudo actualizar la foto de perfil. Error: ${error.message}`,
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
+}
 
   misRutas() {
     this.router.navigate(['/my-routes']);
@@ -174,6 +279,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
   goToHome() {
     this.router.navigate(['/home']);
   }

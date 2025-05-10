@@ -5,7 +5,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
-import { Firestore, collection, addDoc, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, getDocs, query, where, updateDoc, doc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-registro',
@@ -55,32 +55,7 @@ export class RegistroPage implements OnInit {
 
 
   async register() {
-    // Validate passwords match
-    if (this.password !== this.confirmPassword) {
-      const toast = await this.toastController.create({
-        message: 'Las contraseñas no coinciden',
-        duration: 2000,
-        position: 'middle',
-        color: 'danger'
-      });
-      toast.present();
-      return;
-    }
-
-    // Validate password length
-    if (this.password.length < 8) {
-      const toast = await this.toastController.create({
-        message: 'La contraseña debe tener al menos 8 caracteres',
-        duration: 2000,
-        position: 'middle',
-        color: 'danger'
-      });
-      toast.present();
-      return;
-    }
-
     try {
-      // Verificar si el email ya existe
       const usersRef = collection(this.firestore, 'users');
       const q = query(usersRef, where('email', '==', this.email));
       const querySnapshot = await getDocs(q);
@@ -96,21 +71,23 @@ export class RegistroPage implements OnInit {
         return;
       }
 
-      // Obtener el último ID
-      const allUsersQuery = await getDocs(collection(this.firestore, 'users'));
-      const nextId = allUsersQuery.size + 1;
-
-      // Crear nuevo usuario en Firebase con ID
+      // Crear nuevo usuario en Firebase
       const newUser = {
-        id: nextId,
         email: this.email,
         nombre: this.nombre,
         password: this.password,
         apellido: this.apellido,
+        photo: 'assets/img/userLogo.png',
         createdAt: new Date()
       };
 
-      await addDoc(usersRef, newUser);
+      // Crear el documento y obtener la referencia
+      const docRef = await addDoc(usersRef, newUser);
+      
+      // Actualizar el documento con su ID de Firebase
+      await updateDoc(doc(usersRef, docRef.id), {
+        id: docRef.id
+      });
 
       const toast = await this.toastController.create({
         message: 'Usuario registrado exitosamente',
@@ -132,7 +109,7 @@ export class RegistroPage implements OnInit {
       });
       toast.present();
     }
-  }
+}
   forgotPassword() {
     this.router.navigate(['/recover']);
   }

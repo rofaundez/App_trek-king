@@ -57,12 +57,15 @@ export class LoginPage implements OnInit {
       
       if (userData && userData['password'] === this.password) {
         console.log('Inicio de sesión exitoso');
+        // Asegurarnos de que estamos usando el ID del documento
+        const userId = userDoc.id; // Este es el ID del documento de Firebase
         this.authService.login({
-          id: parseInt(userDoc.id) || 0,
+          id: userId,
           email: userData['email'],
           nombre: userData['nombre'],
           apellido: userData['apellido'],
-          password: userData['password']
+          password: userData['password'],
+          photo: userData['photo'] || 'assets/img/userLogo.png'
         });
         
         const toast = await this.toastController.create({

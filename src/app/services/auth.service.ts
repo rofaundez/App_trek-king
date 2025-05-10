@@ -27,10 +27,24 @@ export class AuthService {
   }
 
   async login(user: User) {
+    // Asegurarnos de que el ID sea un string
+    if (user.id) {
+      user.id = String(user.id);
+    }
+    
+    // Aseguramos que el usuario tenga un ID válido
+    if (!user.id) {
+      console.error('Error: Intentando iniciar sesión con un usuario sin ID');
+      return;
+    }
+    
     this.currentUser = user;
     this.userSubject.next(user);
     localStorage.setItem('userSession', JSON.stringify(user));
+    localStorage.setItem('currentUser', JSON.stringify(user)); // También guardar en currentUser para consistencia
     this.isAuthenticated.next(true);
+    
+    console.log('Usuario logueado con ID:', user.id, 'tipo:', typeof user.id);
   }
 
   async loginAutoridad(autoridad: Autoridad) {
@@ -73,8 +87,21 @@ export class AuthService {
   }
 
   updateCurrentUser(user: User) {
+    // Asegurarnos de que el ID sea un string
+    if (user.id) {
+      user.id = String(user.id);
+    } else {
+      console.error('Error: Intentando actualizar un usuario sin ID');
+      return;
+    }
+    
+    console.log('Actualizando usuario con ID:', user.id, 'tipo:', typeof user.id);
+    
     this.currentUser = user;
     this.userSubject.next(user);
+    
+    // Actualizar tanto currentUser como userSession para mantener consistencia
     localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('userSession', JSON.stringify(user));
   }
 }
