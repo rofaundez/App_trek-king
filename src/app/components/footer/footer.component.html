@@ -8,7 +8,7 @@
       </ion-col>
 
       <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" routerLink="/agenda">
+        <ion-button fill="clear" class="footer-button" (click)="goToMyRoutes()">
           <img src="assets/img/agenda.png"alt  class="imagen_agenda_boton">
         </ion-button>
       </ion-col>
@@ -20,13 +20,13 @@
       </ion-col>
 
       <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" (click)="goToMyRoutes()">
-          <img src="assets/img/info.png" alt lass="imagen_info_boton">
+        <ion-button fill="clear" class="footer-button" (click)="goToInfo()">
+          <img src="assets/img/info.png" alt class="imagen_info_boton">
         </ion-button>
       </ion-col>
 
       <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" routerLink="/usuarios">
+        <ion-button fill="clear" class="footer-button" (click)="goToGrupos()">
           <img src="assets/img/usuariosLogo.png" alt class="imagen_usuarios_boton">
         </ion-button>
       </ion-col>

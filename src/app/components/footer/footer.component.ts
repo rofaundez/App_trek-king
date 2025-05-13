@@ -26,4 +26,10 @@ export class FooterComponent {
   goToSos() {
     this.router.navigate(['/sos']);
   }
+  goToInfo() {
+    this.router.navigate(['/info']);
+  }
+  goToGrupos() {
+    this.router.navigate(['/grupos']);
+  }
 }

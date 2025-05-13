@@ -7,6 +7,14 @@ export const routes: Routes = [
     loadComponent: () => import('./registro/registro.page').then((m) => m.RegistroPage),
   },
   {
+    path: 'grupos',
+    loadComponent: () => import('./grupos/grupos.page').then( m => m.GruposPage)
+  },
+  {
+    path: 'info',
+    loadComponent: () => import('./info/info.page').then( m => m.InfoPage)
+  },
+  {
     path: 'sos',
     loadComponent: () => import('./sos/sos.page').then( m => m.SosPage)
   },
@@ -79,5 +87,10 @@ export const routes: Routes = [
 
   {path: '**',
     redirectTo: 'home',
-    pathMatch: 'full',}
+    pathMatch: 'full',},
+  {
+    path: 'grupos',
+    loadComponent: () => import('./grupos/grupos.page').then( m => m.GruposPage)
+  }
+
 ];

@@ -1,14 +1,45 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>info</ion-title>
-  </ion-toolbar>
+<ion-header class="header-container">
+  <div class="user-welcome">
+    <ion-avatar (click)="goToProfile()" class="imagen_usuario">
+      <img [src]="userPhoto">
+    </ion-avatar>
+    <div class="welcome-text">
+      <h2>Bienvenido!</h2>
+      <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
+    </div>
+  </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">info</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="info-content">
+  <div class="info-overlay"></div>
+  <div class="info-container">
+    <div class="info-section">
+      <h2 class="info-title">¿Qué es Trek King?</h2>
+      <p class="info-description">
+        Trek King es una app diseñada para mejorar tu experiencia de trekking. Aquí puedes registrar tus rutas, agendar salidas, unirte a grupos y notificar a autoridades en caso de emergencia.
+      </p>
+    </div>
+
+    <div class="info-section">
+      <h3 class="info-subtitle">¿Cómo funciona?</h3>
+      <ul class="info-lista">
+        <li>Registra la fecha y lugar de tu trekking.</li>
+        <li>Comparte tu ruta con grupos o autoridades.</li>
+        <li>Usa el botón <strong>SOS</strong> en caso de emergencia.</li>
+        <li>Accede a información del clima, dificultad y recomendaciones.</li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <h3 class="info-subtitle">Servicios disponibles</h3>
+      <ul class="info-lista">
+        <li><strong>Agendamiento de rutas:</strong> crea un registro oficial de tu actividad.</li>
+        <li><strong>Vista para autoridades:</strong> acceso a datos de usuarios en ruta.</li>
+        <li><strong>Botón SOS:</strong> envía alertas de emergencia con tu ubicación.</li>
+        <li><strong>Comunidades:</strong> únete a grupos para planificar en conjunto.</li>
+      </ul>
+    </div>
+  </div>
 </ion-content>
+
 <app-footer></app-footer>

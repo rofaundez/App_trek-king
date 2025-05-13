@@ -14,20 +14,22 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-info',
-  templateUrl: './info.page.html',
-  styleUrls: ['./info.page.scss'],
+  selector: 'app-grupos',
+  templateUrl: './grupos.page.html',
+  styleUrls: ['./grupos.page.scss'],
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     IonContent,
     IonHeader,
+    IonToolbar,
+    IonTitle,
     IonAvatar,
     FooterComponent
   ]
 })
-export class InfoPage implements OnInit, OnDestroy {
+export class GruposPage implements OnInit, OnDestroy {
   userPhoto = 'assets/img/userLogo.png';
   userName = 'Invitado';
   userLastName = '';
@@ -60,6 +62,6 @@ export class InfoPage implements OnInit, OnDestroy {
 
   goToProfile() {
     this.router.navigate(['/profile']);
-    console.log('Ir al perfil desde INFO');
+    console.log('Ir al perfil desde GRUPOS');
   }
 }
