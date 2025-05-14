@@ -146,6 +146,7 @@
 
 /*rutas*/
 
+// Contenedor principal con fondo café
 .contenedor-rutas {
   background-color: #311a09;
   min-height: 100%;
@@ -154,7 +155,7 @@
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
-  justify-content: center;
+  flex-direction: column; // Cambiado a column para apilar elementos
   position: relative;
 
   &::before {
@@ -166,9 +167,32 @@
     height: 100%;
     background-color: rgba(94, 68, 55, 0.897);
     pointer-events: none;
+    z-index: 1; // Aseguramos que esté por encima del fondo pero debajo del contenido
   }
   
-  // Mensaje cuando no hay rutas
+  // Header con fondo de hojas
+  .header-container {
+    background-image: url('../../assets/img/hojas_header.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 15px 15px 10px 15px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 2; // Por encima del overlay del fondo café
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.459);
+    }
+  }
+  
+  // Resto de estilos se mantienen igual
   .no-rutas-mensaje {
     text-align: center;
     padding: 20px;

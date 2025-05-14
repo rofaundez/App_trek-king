@@ -1,15 +1,22 @@
-<ion-header>
+<ion-header class="header-container">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/my-routes"></ion-back-button>
     </ion-buttons>
-    <ion-title>Crear Nueva Ruta</ion-title>
+    <ion-title>Crear Ruta</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/my-routes">
+        <ion-icon name="list-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+
+<ion-content>
+  <div class="content-background"></div>
   <div class="container">
-    <div class="header-container">
+    <div class="header-content">
       <h1>Crear Nueva Ruta</h1>
       <p>Completa los detalles de tu ruta</p>
     </div>
@@ -24,7 +31,6 @@
           </ion-item>
 
           <ion-item class="custom-input">
-            <ion-label position="floating">Descripción</ion-label>
             <ion-textarea 
               formControlName="descripcion" 
               rows="4"
@@ -66,7 +72,7 @@
           <h3>Ubicación</h3>
           <div class="location-point">
             <h4>Punto de Inicio</h4>
-            <ion-button expand="block" (click)="openMapModal('start')">
+            <ion-button expand="block" class="map-button" (click)="openMapModal('start')">
               <ion-icon name="map-outline" slot="start"></ion-icon>
               Seleccionar punto de inicio en el mapa
             </ion-button>
@@ -88,7 +94,7 @@
 
           <div class="location-point">
             <h4>Punto de Término</h4>
-            <ion-button expand="block" (click)="openMapModal('end')">
+            <ion-button expand="block" class="map-button" (click)="openMapModal('end')">
               <ion-icon name="map-outline" slot="start"></ion-icon>
               Seleccionar punto de término en el mapa
             </ion-button>
@@ -110,12 +116,14 @@
         </div>
 
         <ion-button expand="block" type="submit" class="submit-button" [disabled]="!routeForm.valid || !selectedFile">
+          <ion-icon name="add-circle-outline" slot="start"></ion-icon>
           Crear Ruta
         </ion-button>
       </div>
     </form>
   </div>
 </ion-content>
+<app-footer></app-footer>
 
 <!-- Map Modal -->
 <ion-modal [isOpen]="isMapModalOpen" (didDismiss)="closeMapModal()">
@@ -124,7 +132,10 @@
       <ion-toolbar>
         <ion-title>{{currentLocationType === 'start' ? 'Seleccionar Punto de Inicio' : 'Seleccionar Punto de Término'}}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closeMapModal()">Confirmar</ion-button>
+          <ion-button (click)="closeMapModal()" class="confirm-button">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            Confirmar
+          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -140,7 +151,8 @@
         <div class="error-container" *ngIf="mapError">
           <ion-icon name="alert-circle-outline" size="large"></ion-icon>
           <p>No se pudo cargar el mapa</p>
-          <ion-button (click)="openMapModal(currentLocationType!)">
+          <ion-button (click)="openMapModal(currentLocationType!)" class="retry-button">
+            <ion-icon name="refresh-outline" slot="start"></ion-icon>
             Reintentar
           </ion-button>
         </div>
@@ -148,36 +160,3 @@
     </ion-content>
   </ng-template>
 </ion-modal>
-
-<style>
-.map-container {
-  width: 100%;
-  height: 100%;
-  
-  #map {
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.loading-container,
-.error-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-  
-  ion-spinner {
-    margin-bottom: 1rem;
-  }
-}
-
-.coordinates-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-</style>

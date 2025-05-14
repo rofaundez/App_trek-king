@@ -1,30 +1,31 @@
-<ion-content class="main-content">
-  <!-- Header with user info and search -->
-  <div class="header-container">
-    <div class="user-welcome">
-      <ion-avatar (click)="goToProfile()" class="imagen_usuario">
-        <img alt [src]="userPhoto">
-      </ion-avatar>
-      <div class="welcome-text">
-        <h2>Bienvenido!</h2>
-        <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
+<ion-content>
+  <div class="contenedor-rutas">
+    <!-- Header con fondo de hojas -->
+    <div class="header-container">
+      <div class="user-welcome">
+        <ion-avatar (click)="goToProfile()" class="imagen_usuario">
+          <img alt [src]="userPhoto">
+        </ion-avatar>
+        <div class="welcome-text">
+          <h2>Bienvenido!</h2>
+          <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
+        </div>
       </div>
-    </div>
 
-    <!-- Search bar -->
-    <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
-    </ion-searchbar>
+      <!-- Search bar -->
+      <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
+      </ion-searchbar>
 
-    <div class="contenedor_filtro" 
-         (mousedown)="isMouseDown($event)" 
-         (mousemove)="onMouseMove($event)"
-         (mouseup)="isMouseUp($event)"
-         (mouseleave)="isMouseUp($event)">
+      <div class="contenedor_filtro" 
+           (mousedown)="isMouseDown($event)" 
+           (mousemove)="onMouseMove($event)"
+           (mouseup)="isMouseUp($event)"
+           (mouseleave)="isMouseUp($event)">
 
-      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Montañas'" (click)="filtrarPorCategoria('Montañas')">
-        <img alt src="assets/img/montañaLogo.png" class="imagen_filtro">
-        <span class="nombre_filtro">Montañas</span>
-      </ion-button>
+        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Montañas'" (click)="filtrarPorCategoria('Montañas')">
+          <img alt src="assets/img/montañaLogo.png" class="imagen_filtro">
+          <span class="nombre_filtro">Montañas</span>
+        </ion-button>
 
       <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Nieve'" (click)="filtrarPorCategoria('Nieve')">
         <img alt src="assets/img/nieveLogo.png" class="imagen_filtro">
@@ -61,8 +62,7 @@
 
   </div>
 
-  <!-- Categories -->
-  <div class="contenedor-rutas">
+    <!-- Contenido de rutas -->
     <ion-list class="lista-rutas">
       <ng-container *ngIf="rutasRecomendadas.length > 0; else noRutas">
         <ion-item *ngFor="let ruta of rutasRecomendadas" 
