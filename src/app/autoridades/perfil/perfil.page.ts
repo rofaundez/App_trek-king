@@ -152,7 +152,4 @@ export class PerfilPage implements OnInit {
       this.showConfirmPassword = !this.showConfirmPassword;
     }
   }
-  home(){
-    this.router.navigate(['/autoridad-home']);
-  }
-} 
+}
