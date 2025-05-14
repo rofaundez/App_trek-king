@@ -8,63 +8,73 @@
     <form (ngSubmit)="login()" #loginForm="ngForm">
       <ion-list class="form-list">
         <!-- Campo de correo electrónico -->
-        <ion-item class="custom-input">
+        <ion-item class="custom-input" [ngClass]="{
+          'input-valid': emailIsValid && emailTouched,
+          'input-invalid': !emailIsValid && emailTouched
+        }">
           <ion-input
             type="email" 
             [(ngModel)]="email" 
             name="email"
             required
-            email
-            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-            #emailInput="ngModel"
-            (ionFocus)="currentField = 'email'"
-            (ionBlur)="currentField = ''"
+            inputmode="email"
+            autocomplete="email"
+            enterkeyhint="next"
+            (keyup.enter)="passwordInput.setFocus()"
+            (ionChange)="validateEmail()"
+            #emailInput
+            (ionFocus)="onEmailFocus()"
+            (ionBlur)="onEmailBlur()"
             label="Correo electrónico"
             labelPlacement="floating"
-            placeholder="ejemplo@correo.com"
-            [class.valid-input]="emailInput.valid && emailInput.touched"
-            [class.invalid-input]="emailInput.invalid && emailInput.touched">
+            placeholder="ejemplo@correo.com">
           </ion-input>
         </ion-item>
-        <ion-text color="danger" *ngIf="emailInput.invalid && emailInput.touched && currentField === 'email'">
+        <ion-text color="danger" *ngIf="!emailIsValid && emailTouched && currentField === 'email'">
           <small class="error-message">Por favor, ingrese un correo válido</small>
         </ion-text>
 
         <!-- Campo de contraseña -->
-        <ion-item class="custom-input">
+        <ion-item class="custom-input" [ngClass]="{
+          'input-valid': passwordIsValid && passwordTouched,
+          'input-invalid': !passwordIsValid && passwordTouched
+        }">
           <ion-input 
             type="password" 
             [(ngModel)]="password" 
             name="password"
             required
-            #passwordInput="ngModel"
-            (ionFocus)="currentField = 'password'"
-            (ionBlur)="currentField = ''"
+            inputmode="text"
+            autocomplete="current-password"
+            enterkeyhint="done"
+            (keyup.enter)="login()"
+            (ionChange)="validatePassword()"
+            #passwordInput
+            (ionFocus)="onPasswordFocus()"
+            (ionBlur)="onPasswordBlur()"
             label="Contraseña"
             labelPlacement="floating"
-            placeholder="************"
-            [class.valid-input]="passwordInput.valid && passwordInput.touched && passwordInput.value.length >= 8"
-            [class.invalid-input]="passwordInput.invalid && passwordInput.touched">
+            placeholder="************">
           </ion-input>
         </ion-item>
-        <ion-text color="danger" *ngIf="passwordInput.invalid && passwordInput.touched && currentField === 'password'">
+        <ion-text color="danger" *ngIf="!passwordIsValid && passwordTouched && currentField === 'password'">
           <small class="error-message">La contraseña es requerida</small>
         </ion-text>
       </ion-list>
 
       <div class="button-container">
-        <ion-button expand="block" type="submit" class="login-button" [disabled]="loginForm.invalid">
+        <ion-button expand="block" type="submit" class="login-button" [disabled]="!formIsValid">
           Iniciar Sesión
         </ion-button>
         
-        <ion-button fill="clear" (click)="goToRegister()" class="register-link">
+        <ion-button fill="clear" (click)="goToRegister()" class="register-link" touch-action="manipulation">
           ¿No tienes cuenta? Regístrate
         </ion-button>
         
-        <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password">
+        <ion-button fill="clear" (click)="forgotPassword()" class="forgot-password" touch-action="manipulation">
           ¿Olvidaste tu contraseña?
         </ion-button>
-        <ion-button fill="clear" (click)="goToHome()" class="forgot-password">
+        <ion-button fill="clear" (click)="goToHome()" class="forgot-password" touch-action="manipulation">
           Continuar como invitado
         </ion-button>
       </div>

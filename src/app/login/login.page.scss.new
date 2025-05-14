@@ -1,0 +1,112 @@
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+
+//titulo
+
+.title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 36px;
+  font-weight: bold;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
+  position: relative;
+  
+  &::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #335a27, transparent);
+    margin: 10px auto 0;
+  }
+}
+
+//formulario
+
+.form-list {
+  background: rgba(255, 255, 255, 0);
+  margin-bottom: 20px;
+  align-items: center;
+  width: 100%;
+  
+
+  //inputs
+
+  ion-item {
+    --background: rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+    --border-radius: 25px;
+    --box-shadow: none;
+    --border-color: transparent;
+    --highlight-color-focused: transparent;
+    overflow: visible;
+    --min-height: 50px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
+  ion-input{
+    --placeholder-color: rgba(255, 255, 255, 0.5);
+    --color: rgba(255, 255, 255, 0.9);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+  
+  .custom-input {
+    border-radius: 25px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    margin-bottom: 26px;
+    width: 100%;
+    touch-action: manipulation;
+  }
+  
+  // Estilos para validación de campos
+  ion-item.ion-valid {
+    --border-color: var(--ion-color-success) !important;
+    --highlight-color: var(--ion-color-success) !important;
+  }
+  
+  ion-item.ion-invalid {
+    --border-color: var(--ion-color-danger) !important;
+    --highlight-color: var(--ion-color-danger) !important;
+  }
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+  width: 100%;
+
+  .login-button {
+    margin-bottom: 10px;
+    --background: linear-gradient(135deg, #2d5a27 0%, #1a4c14 100%);
+    --border-radius: 25px;
+    height: 48px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 25px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+}

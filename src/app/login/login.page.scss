@@ -1,6 +1,11 @@
 .form-container {
   max-width: 400px;
   margin: 0 auto;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
 }
 
 
@@ -33,6 +38,7 @@
   background: rgba(255, 255, 255, 0);
   margin-bottom: 20px;
   align-items: center;
+  width: 100%;
   
 
   //inputs
@@ -45,8 +51,9 @@
     --border-color: transparent;
     --highlight-color-focused: transparent;
     overflow: visible;
-    
-
+    --min-height: 50px;
+    --padding-start: 12px;
+    --padding-end: 12px;
   }
 
   ion-input{
@@ -54,6 +61,10 @@
     --color: rgba(255, 255, 255, 0.9);
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --padding-start: 8px;
+    --padding-end: 8px;
   }
   
   .custom-input {
@@ -61,7 +72,21 @@
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
     overflow: hidden;
     margin-bottom: 26px;
-    width: 98%;
+    width: 100%;
+    touch-action: manipulation;
+  }
+  
+  // Estilos para validación de campos personalizada
+  ion-item.input-valid {
+    --border-color: #2dd36f !important;
+    --highlight-color: #2dd36f !important;
+    border: 1px solid #2dd36f;
+  }
+  
+  ion-item.input-invalid {
+    --border-color: #eb445a !important;
+    --highlight-color: #eb445a !important;
+    border: 1px solid #eb445a;
   }
   
 }
@@ -71,6 +96,7 @@
   flex-direction: column;
   gap: 15px;
   margin-top: 25px;
+  width: 100%;
 
   .login-button {
     margin-bottom: 10px;
@@ -84,7 +110,11 @@
     border-radius: 25px;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.6);
     transition: all 0.2s ease;
-    width: 98%;
+    width: 100%;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    touch-action: manipulation;
+    min-height: 48px;
 
     &:active {
       --background: linear-gradient(135deg, #1a4c14 0%, #2d5a27 100%);
@@ -101,6 +131,10 @@
     transition: all 0.2s ease;
     text-decoration: underline;
     opacity: 0.9;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    touch-action: manipulation;
+    min-height: 40px;
     
     &:active {
       --background: rgba(45, 90, 39, 0.1);
@@ -117,6 +151,10 @@
     font-family: 'Roboto', sans-serif;
     letter-spacing: 0.5px;
     transition: all 0.2s ease;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    touch-action: manipulation;
+    min-height: 40px;
     
     &:active {
       --background: rgba(45, 90, 39, 0.1);
@@ -141,10 +179,14 @@ ion-input {
 }
 
 .error-message {
-  padding-left: 10px;
+  padding-left: 16px;
   font-size: 12px;
   font-family: 'Roboto', sans-serif;
   font-style: italic;
+  color: #eb445a;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  display: block;
 }
 
 // Modificar el estilo del fondo
@@ -156,6 +198,8 @@ ion-content {
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  --keyboard-offset: 0 !important;
+  touch-action: manipulation;
   
   &::before {
     content: "";
@@ -164,7 +208,6 @@ ion-content {
     left: 0;
     width: 100%;
     height: 100%;
-    //background-color: rgba(110, 90, 79, 0.897);
     background-color: rgba(94, 68, 55, 0.897);
     z-index: 0;
   }
@@ -176,12 +219,51 @@ ion-content {
   z-index: 1;
   max-width: 400px;
   margin: 0 auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 // Media queries for responsiveness
+@media screen and (max-width: 480px) {
+  .form-container {
+    padding: 15px 10px;
+    justify-content: flex-start;
+    margin-top: 60px;
+  }
+  
+  .title {
+    font-size: 32px;
+    margin-bottom: 25px;
+    
+    &::after {
+      width: 70px;
+      margin: 8px auto 0;
+    }
+  }
+  
+  .button-container {
+    gap: 12px;
+  }
+
+  .custom-input {
+    margin-bottom: 20px;
+  }
+
+  ion-input {
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-size: 16px;
+  }
+
+  .login-button {
+    height: 44px;
+  }
+}
+
 @media screen and (max-width: 360px) {
   .form-container {
     padding: 15px 10px;
+    margin-top: 50px;
   }
   
   .title {
@@ -197,7 +279,16 @@ ion-content {
   .button-container {
     gap: 10px;
   }
+
+  .login-button {
+    height: 42px;
+  }
+
+  .forgot-password, .register-link {
+    font-size: 13px;
+  }
 }
+
 .autoridad-button {
   background-color: transparent;
   color: white;
@@ -205,4 +296,10 @@ ion-content {
   top: 20px;
   right: 10px;
   z-index: 1;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  touch-action: manipulation;
+
 }
