@@ -1,0 +1,194 @@
+<ion-content class="ion-padding">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <div class="form-container">
+    <h1 class="title">Registro de Autoridades</h1>
+    
+    <form (ngSubmit)="register()" #registerForm="ngForm">
+      <ion-list class="form-list">
+        <!-- Campo de correo electrónico -->
+        <ion-item class="custom-input">
+          <ion-input
+            type="email" 
+            [(ngModel)]="email" 
+            name="email"
+            required
+            email
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+            #emailInput="ngModel"
+            (ionFocus)="currentField = 'email'"
+            (ionBlur)="currentField = ''"
+            label="Correo electrónico institucional"
+            labelPlacement="floating"
+            placeholder="ejemplo@institucion.com"
+            [class.valid-input]="emailInput.valid && emailInput.touched"
+            [class.invalid-input]="emailInput.invalid && emailInput.touched">
+          </ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="emailInput.invalid && emailInput.touched && currentField === 'email'">
+          <small class="error-message">Por favor, ingrese un correo válido</small>
+        </ion-text>
+
+        <!-- Campo de nombre -->
+        <ion-item class="custom-input">
+          <ion-input
+            type="text"
+            [(ngModel)]="nombre"
+            name="nombre"
+            required
+            pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$"
+            #nombreInput="ngModel"
+            (ionFocus)="currentField = 'nombre'"
+            (ionBlur)="currentField = ''"
+            label="Nombre completo"
+            labelPlacement="floating"
+            placeholder="Ingrese su nombre"
+            [class.valid-input]="nombreInput.valid && nombreInput.touched"
+            [class.invalid-input]="nombreInput.invalid && nombreInput.touched">
+          </ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="nombreInput.invalid && nombreInput.touched && currentField === 'nombre'">
+          <small class="error-message">Por favor, ingrese un nombre válido</small>
+        </ion-text>
+
+        <!-- Campo de institución -->
+        <ion-item class="custom-input">
+          <ion-input
+            type="text"
+            [(ngModel)]="institucion"
+            name="institucion"
+            required
+            #institucionInput="ngModel"
+            (ionFocus)="currentField = 'institucion'"
+            (ionBlur)="currentField = ''"
+            label="Institución"
+            labelPlacement="floating"
+            placeholder="Ingrese su institución"
+            [class.valid-input]="institucionInput.valid && institucionInput.touched"
+            [class.invalid-input]="institucionInput.invalid && institucionInput.touched">
+          </ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="institucionInput.invalid && institucionInput.touched && currentField === 'institucion'">
+          <small class="error-message">Por favor, ingrese su institución</small>
+        </ion-text>
+
+        <!-- Campo de cargo -->
+        <ion-item class="custom-input">
+          <ion-select
+            [(ngModel)]="cargo"
+            name="cargo"
+            required
+            #cargoInput="ngModel"
+            (ionFocus)="currentField = 'cargo'"
+            (ionBlur)="currentField = ''"
+            label="Cargo"
+            labelPlacement="floating"
+            placeholder="Seleccione su cargo"
+            [class.valid-input]="cargoInput.valid && cargoInput.touched"
+            [class.invalid-input]="cargoInput.invalid && cargoInput.touched">
+            <ion-select-option value="jefe">Jefe</ion-select-option>
+            <ion-select-option value="encargado">Encargado</ion-select-option>
+            <ion-select-option value="trabajador">Trabajador</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-text color="danger" *ngIf="cargoInput.invalid && cargoInput.touched && currentField === 'cargo'">
+          <small class="error-message">Por favor, seleccione su cargo</small>
+        </ion-text>
+
+        <!-- Campo de zona -->
+        <ion-item class="custom-input">
+          <ion-select
+            [(ngModel)]="zona"
+            name="zona"
+            required 
+            #zonaInput="ngModel"
+            (ionFocus)="currentField = 'zona'"
+            (ionBlur)="currentField = ''"
+            label="Región"
+            labelPlacement="floating"
+            placeholder="Seleccione su región"
+            [class.valid-input]="zonaInput.valid && zonaInput.touched"
+            [class.invalid-input]="zonaInput.invalid && zonaInput.touched">
+            <ion-select-option value="arica">Región de Arica y Parinacota</ion-select-option>
+            <ion-select-option value="tarapaca">Región de Tarapacá</ion-select-option>
+            <ion-select-option value="antofagasta">Región de Antofagasta</ion-select-option>
+            <ion-select-option value="atacama">Región de Atacama</ion-select-option>
+            <ion-select-option value="coquimbo">Región de Coquimbo</ion-select-option>
+            <ion-select-option value="valparaiso">Región de Valparaíso</ion-select-option>
+            <ion-select-option value="metropolitana">Región Metropolitana de Santiago</ion-select-option>
+            <ion-select-option value="ohiggins">Región del Libertador General Bernardo O'Higgins</ion-select-option>
+            <ion-select-option value="maule">Región del Maule</ion-select-option>
+            <ion-select-option value="nuble">Región de Ñuble</ion-select-option>
+            <ion-select-option value="biobio">Región del Biobío</ion-select-option>
+            <ion-select-option value="araucania">Región de La Araucanía</ion-select-option>
+            <ion-select-option value="losrios">Región de Los Ríos</ion-select-option>
+            <ion-select-option value="loslagos">Región de Los Lagos</ion-select-option>
+            <ion-select-option value="aysen">Región de Aysén</ion-select-option>
+            <ion-select-option value="magallanes">Región de Magallanes</ion-select-option>
+          </ion-select>
+        </ion-item>
+          
+        
+
+        <!-- Campo de contraseña -->
+        <ion-item class="custom-input">
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            name="password"
+            required
+            minlength="8"
+            #passwordInput="ngModel"
+            (ionFocus)="currentField = 'password'"
+            (ionBlur)="currentField = ''"
+            label="Contraseña"
+            labelPlacement="floating"
+            placeholder="Mínimo 8 caracteres"
+            [class.valid-input]="passwordInput.valid && passwordInput.touched"
+            [class.invalid-input]="passwordInput.invalid && passwordInput.touched">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('password')" class="eye-button">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-text color="danger" *ngIf="passwordInput.invalid && passwordInput.touched && currentField === 'password'">
+          <small class="error-message">La contraseña debe tener al menos 8 caracteres</small>
+        </ion-text>
+
+        <!-- Campo de confirmación de contraseña -->
+        <ion-item class="custom-input">
+          <ion-input
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            required
+            #confirmPasswordInput="ngModel"
+            (ionFocus)="currentField = 'confirmPassword'"
+            (ionBlur)="currentField = ''"
+            label="Confirmar contraseña"
+            labelPlacement="floating"
+            placeholder="Repita su contraseña"
+            [class.valid-input]="confirmPasswordInput.touched && validateConfirmPassword(password, confirmPassword)"
+            [class.invalid-input]="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword)">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('confirmPassword')" class="eye-button">
+            <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-text color="danger" *ngIf="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword) && currentField === 'confirmPassword'">
+          <small class="error-message">Las contraseñas no coinciden</small>
+        </ion-text>
+      </ion-list>
+
+      <div class="button-container">
+        <ion-button expand="block" type="submit" class="register-button" [disabled]="!registerForm.valid || !validateConfirmPassword(password, confirmPassword)">
+          Registrar Autoridad
+        </ion-button>
+        
+        <ion-button fill="clear" (click)="home()" class="login-link">
+          volver
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content> 

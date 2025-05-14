@@ -1,0 +1,415 @@
+// Estilos para el header
+ion-header {
+  background-image: url('../../assets/img/hojas_header.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.459);
+    z-index: 0;
+  }
+  
+  ion-toolbar {
+    --background: transparent;
+    color: white;
+    position: relative;
+    z-index: 10;
+  }
+}
+
+// Contenido principal
+ion-content {
+  --background: none;
+  background-color: #311a09;
+  background-image: url('../../assets/img/intento_de_fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(94, 68, 55, 0.897);
+    z-index: 0;
+  }
+}
+
+// Contenedor de imagen principal
+.ruta-imagen-container {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.01);
+  }
+  
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    z-index: 2;
+  }
+}
+
+.ruta-imagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.5s ease;
+}
+
+// Tarjeta de información
+ion-card {
+  margin: 0;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  color: white;
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+ion-card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+ion-card-title {
+  font-size: 26px;
+  font-weight: bold;
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+  margin: 5px 0;
+  -webkit-text-stroke: 0.1px rgba(255, 255, 255, 1);
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.842);
+  letter-spacing: 0.5px;
+}
+
+ion-card-subtitle {
+  font-size: 16px;
+  color: rgb(180, 180, 180);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23b4b4b4"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+// Secciones de contenido
+.descripcion-container,
+.caracteristicas-container,
+.puntos-interes-container {
+  margin-top: 28px;
+  padding: 0 8px;
+  position: relative;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+    border-radius: 3px;
+  }
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: white;
+  font-family: 'Times New Roman', Times, serif;
+  -webkit-text-stroke: 0.1px rgba(255, 255, 255, 1);
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.842);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+.descripcion-container h3::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>');
+}
+
+.caracteristicas-container h3::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>');
+}
+
+.puntos-interes-container h3::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>');
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.boton{
+    border-radius: 25%;
+}
+
+.botones-accion {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: 55%;
+  position: relative;
+  z-index: 1;
+}
+
+ion-button {
+  margin: 0;
+  --border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  height: 48px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  &[color="success"] {
+    --background: linear-gradient(135deg, #4caf50, #2e7d32);
+  }
+  
+  &[color="medium"][fill="outline"] {
+    --border-color: rgba(255, 255, 255, 0.6);
+    --color: white;
+  }
+}
+
+// Estilos para los elementos de lista
+ion-item {
+  --background: rgba(0, 0, 0, 0.2);
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --inner-padding-end: 8px;
+  --inner-padding-start: 8px;
+  --border-width: 0;
+  --border-color: transparent;
+  --border-style: none;
+  margin: 12px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  
+  &:active {
+    transform: translateX(3px);
+  }
+  
+  ion-label {
+    color: rgb(180, 180, 180);
+    padding: 10px 0;
+    
+    h4 {
+      margin-bottom: 6px;
+      position: relative;
+      
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-right: 6px;
+      }
+    }
+    
+    p {
+      color: rgb(180, 180, 180);
+      margin-left: 24px;
+    }
+  }
+}
+
+ion-item:nth-child(1) h4::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M14 6l-3.75 5 2.85 3.8-1.6 1.2C9.81 13.75 7 10 7 10l-6 8h22L14 6z"/></svg>');
+}
+
+ion-item:nth-child(2) h4::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M19 19H5V8h14m-3-7l2 3h-4l2-3M7 1L5 4h4L7 1M11 4h2V1h-2m0 19h2v-3h-2m-4 3h2v-3H7m10 3h2v-3h-2M3 6h18v12H3V6z"/></svg>');
+}
+
+ion-item:nth-child(3) h4::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>');
+}
+
+// Estilos para los chips
+ion-chip {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(50, 50, 50, 0.7));
+  color: white;
+  border-radius: 21px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  padding: 5px 12px;
+  height: 30px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+
+// Estilos para párrafos
+p {
+  color: rgb(180, 180, 180);
+  margin: 8px 0;
+  line-height: 1.6;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+  position: relative;
+  padding-left: 5px;
+  
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 3px;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+  }
+}
+
+// Animaciones y efectos
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.descripcion-container,
+.caracteristicas-container,
+.puntos-interes-container {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.descripcion-container { animation-delay: 0.1s; }
+.caracteristicas-container { animation-delay: 0.2s; }
+.puntos-interes-container { animation-delay: 0.3s; }
+
+// Media queries para responsividad
+@media screen and (max-width: 360px) {
+  .ruta-imagen-container {
+    height: 180px;
+  }
+  
+  ion-card-title {
+    font-size: 22px;
+  }
+  
+  h3 {
+    font-size: 18px;
+  }
+  
+  ion-button {
+    height: 44px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  ion-content {
+    .ion-padding {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  }
+  
+  .ruta-imagen-container {
+    height: 300px;
+  }
+  
+  ion-card {
+    padding: 10px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  ion-content {
+    .ion-padding {
+      max-width: 1000px;
+      padding: 30px;
+    }
+  }
+  
+  .ruta-imagen-container {
+    height: 350px;
+  }
+}

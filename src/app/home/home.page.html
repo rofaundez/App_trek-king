@@ -1,0 +1,104 @@
+<ion-content>
+  <div class="contenedor-rutas">
+    <!-- Header con fondo de hojas -->
+    <div class="header-container">
+      <div class="user-welcome">
+        <ion-avatar (click)="goToProfile()" class="imagen_usuario">
+          <img alt [src]="userPhoto">
+        </ion-avatar>
+        <div class="welcome-text">
+          <h2>Bienvenido!</h2>
+          <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
+        </div>
+      </div>
+
+      <!-- Search bar -->
+      <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
+      </ion-searchbar>
+
+      <div class="contenedor_filtro" 
+           (mousedown)="isMouseDown($event)" 
+           (mousemove)="onMouseMove($event)"
+           (mouseup)="isMouseUp($event)"
+           (mouseleave)="isMouseUp($event)">
+
+        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Montañas'" (click)="filtrarPorCategoria('Montañas')">
+          <img alt src="assets/img/montañaLogo.png" class="imagen_filtro">
+          <span class="nombre_filtro">Montañas</span>
+        </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Nieve'" (click)="filtrarPorCategoria('Nieve')">
+        <img alt src="assets/img/nieveLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Nieve</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Playas'" (click)="filtrarPorCategoria('Playas')">
+        <img alt src="assets/img/playaLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Playas</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Lagos'" (click)="filtrarPorCategoria('Lagos')">
+        <img alt src="assets/img/bosquesLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Lagos</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Rios'" (click)="filtrarPorCategoria('Rios')">
+        <img alt src="assets/img/rioLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Rios</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Parques'" (click)="filtrarPorCategoria('Parques')">
+        <img alt src="assets/img/bosquesLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Parques</span>
+      </ion-button>
+
+      <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Cascadas'" (click)="filtrarPorCategoria('Cascadas')">
+        <img alt src="assets/img/cascadaLogo.png" class="imagen_filtro">
+        <span class="nombre_filtro">Cascadas</span>
+      </ion-button>
+
+    </div>
+
+
+  </div>
+
+    <!-- Contenido de rutas -->
+    <ion-list class="lista-rutas">
+      <ng-container *ngIf="rutasRecomendadas.length > 0; else noRutas">
+        <ion-item *ngFor="let ruta of rutasRecomendadas" 
+                  class="item-ruta" 
+                  button 
+                  lines="none" 
+                  (click)="goToRouteDetails(
+                    ruta.id || '', 
+                    ruta.nombre || '', 
+                    ruta.ubicacion || '', 
+                    ruta.dificultad || '', 
+                    ruta.imagen || 'assets/img/default.jpg'
+                  )">
+          <div class="contenido-ruta">
+            <div class="imagen-container">
+              <img alt [src]="ruta.imagen" class="imagen_ruta">
+            </div>
+            <div class="info-ruta">
+              <h2 class="nombre_ruta">{{ruta.nombre}}</h2>
+              <p class="descripcion_ruta">{{ruta.ubicacion}}</p>
+              <div class="rating">
+                <span class="dificultad_ruta">{{ruta.dificultad}}</span>
+              </div>
+              <div class="categorias-container">
+                <span *ngFor="let categoria of ruta.categorias" class="categoria-tag">{{categoria}}</span>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ng-container>
+      <ng-template #noRutas>
+        <div class="no-rutas-mensaje">
+          <p>No se encontraron rutas que coincidan con el filtro seleccionado.</p>
+        </div>
+      </ng-template>
+    </ion-list>
+  </div>
+</ion-content>
+<app-footer></app-footer>

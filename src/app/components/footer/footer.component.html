@@ -1,0 +1,35 @@
+<ion-footer class="footer">
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-no-padding ion-justify-content-between" nowrap>
+      <ion-col size="2.4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button" (click)="goTohome()"   >
+          <img src="assets/img/casaLogo.png" alt class="imagen_casa_boton">
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="2.4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button" routerLink="/agenda">
+          <img src="assets/img/agenda.png"alt  class="imagen_agenda_boton">
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="2.4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button" (click)="goToSos()">
+          <img src="assets/img/alarmaLogo.png" alt class="imagen_SOS_boton">
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="2.4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button" (click)="goToMyRoutes()">
+          <img src="assets/img/info.png" alt class="imagen_info_boton">
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="2.4" class="ion-text-center">
+        <ion-button fill="clear" class="footer-button" routerLink="/usuarios">
+          <img src="assets/img/usuariosLogo.png" alt class="imagen_usuarios_boton">
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

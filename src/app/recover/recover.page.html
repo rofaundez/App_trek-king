@@ -1,0 +1,80 @@
+
+
+<ion-content class="ion-padding">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <div class="form-container">
+    <h1 class="title">Trek-King</h1>
+    <h2 class="subtitle">Recuperar Contraseña</h2>
+    
+    <!-- Show this message only before email verification -->
+    <p class="description" *ngIf="!showPasswordReset">
+      Ingresa tu correo electrónico para recuperar tu contraseña
+    </p>
+    
+    <!-- Show warning message only after email verification -->
+    <h2 class="Cuidado" *ngIf="showPasswordReset">
+      ¡Cuidado! No compartas tu contraseña
+    </h2>
+    
+    <form (ngSubmit)="verifyEmail()" #recoverForm="ngForm" *ngIf="!showPasswordReset">
+      <ion-list class="form-list">
+        <ion-item class="custom-input">
+          <ion-input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            email
+            label="Correo electrónico"
+            labelPlacement="floating"
+            placeholder="ejemplo@correo.com"
+            #emailInput="ngModel"
+            [class.valid-input]="emailInput.valid && emailInput.touched"
+            [class.invalid-input]="emailInput.invalid && emailInput.touched">
+          </ion-input>
+        </ion-item>
+      </ion-list>
+
+      <div class="button-container">
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          class="recover-button"
+          [disabled]="!recoverForm.valid">
+          Recuperar contraseña
+        </ion-button>
+        
+        <ion-button fill="clear" (click)="goToLogin()" class="login-link">
+          Volver al inicio de sesión
+        </ion-button>
+      </div>
+    </form>
+
+    <div *ngIf="showPasswordReset" class="password-display">
+      <ion-list class="form-list">
+        <ion-item class="custom-input">
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            [value]="userPassword"
+            readonly
+            label="Tu contraseña"
+            labelPlacement="floating">
+          </ion-input>
+          <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()" class="eye-button">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <div class="button-container">
+        <ion-button 
+          expand="block" 
+          (click)="goToLogin()" 
+          class="recover-button">
+          Ir a iniciar sesión
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

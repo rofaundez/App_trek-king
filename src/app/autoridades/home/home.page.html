@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Panel de Autoridad</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="puedeCrearAutoridades()" (click)="crearAutoridad()">
+        <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="verPerfil()">
+        <ion-icon name="person-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+
+  <ion-list class="rutas-list">
+    <ion-card *ngFor="let ruta of rutas" class="ruta-card">
+      <ion-card-header>
+        <ion-card-title>{{ ruta.nombre }}</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <p class="descripcion">{{ ruta.descripcion }}</p>
+        <div class="info-container">
+          <ion-badge [color]="getDificultadColor(ruta.dificultad)">
+            {{ ruta.dificultad }}
+          </ion-badge>
+          <span class="duracion">{{ ruta.duracion }} horas</span>
+        </div>
+        
+        <div class="button-container">
+          <ion-button fill="clear" (click)="verRuta(ruta)">
+            <ion-icon name="eye-outline" slot="start"></ion-icon>
+            Ver
+          </ion-button>
+          <ion-button fill="clear" (click)="editarRuta(ruta)">
+            <ion-icon name="create-outline" slot="start"></ion-icon>
+            Editar
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="eliminarRuta(ruta)">
+            <ion-icon name="trash-outline" slot="start"></ion-icon>
+            Eliminar
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <div *ngIf="rutas.length === 0" class="no-rutas">
+    <p>No hay rutas disponibles</p>
+  </div>
+</ion-content>
