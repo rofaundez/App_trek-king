@@ -4,12 +4,11 @@
   <button (click)="goToAutoridadLogin()" class="autoridad-button">Autoridad</button>
   <div class="form-container">
     <h1 class="title">Trek-King</h1>
-    
     <form (ngSubmit)="login()" #loginForm="ngForm">
       <ion-list class="form-list">
         <!-- Campo de correo electrónico -->
         <ion-item class="custom-input">
-          <ion-input
+          <input
             type="email" 
             [(ngModel)]="email" 
             name="email"
@@ -24,7 +23,7 @@
             placeholder="ejemplo@correo.com"
             [class.valid-input]="emailInput.valid && emailInput.touched"
             [class.invalid-input]="emailInput.invalid && emailInput.touched">
-          </ion-input>
+          
         </ion-item>
         <ion-text color="danger" *ngIf="emailInput.invalid && emailInput.touched && currentField === 'email'">
           <small class="error-message">Por favor, ingrese un correo válido</small>
@@ -32,7 +31,7 @@
 
         <!-- Campo de contraseña -->
         <ion-item class="custom-input">
-          <ion-input 
+          <input 
             type="password" 
             [(ngModel)]="password" 
             name="password"
@@ -45,7 +44,7 @@
             placeholder="************"
             [class.valid-input]="passwordInput.valid && passwordInput.touched && passwordInput.value.length >= 8"
             [class.invalid-input]="passwordInput.invalid && passwordInput.touched">
-          </ion-input>
+          
         </ion-item>
         <ion-text color="danger" *ngIf="passwordInput.invalid && passwordInput.touched && currentField === 'password'">
           <small class="error-message">La contraseña es requerida</small>

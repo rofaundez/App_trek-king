@@ -89,6 +89,8 @@ export class RegistroPage implements OnInit {
         id: docRef.id
       });
 
+      this.login();
+
       const toast = await this.toastController.create({
         message: 'Usuario registrado exitosamente',
         duration: 2000,
@@ -97,7 +99,7 @@ export class RegistroPage implements OnInit {
       });
       await toast.present();
 
-      this.router.navigate(['/login']);
+      
       
     } catch (error) {
       console.error('Error en el registro:', error);

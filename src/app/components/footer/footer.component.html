@@ -1,35 +1,56 @@
-<ion-footer class="footer">
-  <ion-grid class="ion-no-padding">
-    <ion-row class="ion-no-padding ion-justify-content-between" nowrap>
-      <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" (click)="goTohome()"   >
-          <img src="assets/img/casaLogo.png" alt class="imagen_casa_boton">
-        </ion-button>
-      </ion-col>
+<div class="footer">
+  <div class="col">
+    <button (click)="goTohome()">
+      <svg class="imgNormal" width="97px" height="97px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M21.4498 10.275L11.9998 3.1875L2.5498 10.275L2.9998 11.625H3.7498V20.25H20.2498V11.625H20.9998L21.4498 10.275ZM5.2498 18.75V10.125L11.9998 5.0625L18.7498 10.125V18.75H14.9999V14.3333L14.2499 13.5833H9.74988L8.99988 14.3333V18.75H5.2498ZM10.4999 18.75H13.4999V15.0833H10.4999V18.75Z" fill="#ffffff"></path> </g></svg>
+    </button>
+  </div>
+  <div class="col">
+    <button (click)="goToAgenda()">
+      <svg class="imgNormal" width="97px" height="97px" viewBox="0 0 32 32" id="icons" version="1.0" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><style type="text/css"> .st0{fill:none;stroke:#ffffff;stroke-width:2;stroke-miterlimit:10;} </style><rect class="st0" height="24" id="XMLID_110_" width="16" x="9" y="4"></rect><line class="st0" id="XMLID_234_" x1="11" x2="7" y1="8" y2="8"></line><line class="st0" id="XMLID_235_" x1="11" x2="7" y1="12" y2="12"></line><line class="st0" id="XMLID_236_" x1="11" x2="7" y1="16" y2="16"></line><line class="st0" id="XMLID_237_" x1="11" x2="7" y1="20" y2="20"></line><line class="st0" id="XMLID_238_" x1="11" x2="7" y1="24" y2="24"></line><line class="st0" id="XMLID_26_" x1="13" x2="22" y1="10" y2="10"></line><g id="XMLID_386_"></g></g></svg>
+    </button>
+  </div>
+  <div class="col">
+    <button (click)="goToSos()">
+      <svg class="imgNormal" width="97px" height="97px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M19.5099 5.85L13.5699 2.42C12.5999 1.86 11.3999 1.86 10.4199 2.42L4.48992 5.85C3.51992 6.41 2.91992 7.45 2.91992 8.58V15.42C2.91992 16.54 3.51992 17.58 4.48992 18.15L10.4299 21.58C11.3999 22.14 12.5999 22.14 13.5799 21.58L19.5199 18.15C20.4899 17.59 21.0899 16.55 21.0899 15.42V8.58C21.0799 7.45 20.4799 6.42 19.5099 5.85ZM11.2499 7.75C11.2499 7.34 11.5899 7 11.9999 7C12.4099 7 12.7499 7.34 12.7499 7.75V13C12.7499 13.41 12.4099 13.75 11.9999 13.75C11.5899 13.75 11.2499 13.41 11.2499 13V7.75ZM12.9199 16.63C12.8699 16.75 12.7999 16.86 12.7099 16.96C12.5199 17.15 12.2699 17.25 11.9999 17.25C11.8699 17.25 11.7399 17.22 11.6199 17.17C11.4899 17.12 11.3899 17.05 11.2899 16.96C11.1999 16.86 11.1299 16.75 11.0699 16.63C11.0199 16.51 10.9999 16.38 10.9999 16.25C10.9999 15.99 11.0999 15.73 11.2899 15.54C11.3899 15.45 11.4899 15.38 11.6199 15.33C11.9899 15.17 12.4299 15.26 12.7099 15.54C12.7999 15.64 12.8699 15.74 12.9199 15.87C12.9699 15.99 12.9999 16.12 12.9999 16.25C12.9999 16.38 12.9699 16.51 12.9199 16.63Z" fill="#ff0000"></path> </g></svg>
+    </button>
+  </div>
+  <div class="col">
+    <button (click)="goToMyRoutes()">
+      <svg class="imgNormal " width="97px" height="97px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 17V11" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path> <circle cx="1" cy="1" r="1" transform="matrix(1 0 0 -1 11 9)" fill="#ffffff"></circle> <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"></path> </g></svg>
+    </button>
+  </div>
+  <div class="col">
+    <button (click)="goToGroups()">
+      <svg class="imgNormal" width="97px" height="97px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M21.4498 10.275L11.9998 3.1875L2.5498 10.275L2.9998 11.625H3.7498V20.25H20.2498V11.625H20.9998L21.4498 10.275ZM5.2498 18.75V10.125L11.9998 5.0625L18.7498 10.125V18.75H14.9999V14.3333L14.2499 13.5833H9.74988L8.99988 14.3333V18.75H5.2498ZM10.4999 18.75H13.4999V15.0833H10.4999V18.75Z" fill="#ffffff"></path> </g></svg>
+    </button>
+  </div>
+    
+    <!-- <ion-button fill="clear" class="footer-button" (click)="goTohome()"   >
+      
+    </ion-button> -->
+  
 
-      <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" routerLink="/agenda">
-          <img src="assets/img/agenda.png"alt  class="imagen_agenda_boton">
-        </ion-button>
-      </ion-col>
+  <!-- <div class="col"><img src="assets/img/casaLogo.png" alt class="imagen_casa_boton">
+    <!-- <ion-button fill="clear" class="footer-button" routerLink="/agenda">
+      <img src="assets/img/agenda.png"alt  class="imagen_agenda_boton">
+    </ion-button> -->
+  <!-- </div> -->
 
-      <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" (click)="goToSos()">
-          <img src="assets/img/alarmaLogo.png" alt class="imagen_SOS_boton">
-        </ion-button>
-      </ion-col>
+  <!-- <div class="col"><img src="assets/img/casaLogo.png" alt class="imagen_casa_boton"> -->
+    <!-- <ion-button fill="clear" class="footer-button" (click)="goToSos()">
+      <img src="assets/img/alarmaLogo.png" alt class="imagen_SOS_boton">
+    </ion-button> -->
+  <!-- </div> -->
 
-      <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" (click)="goToMyRoutes()">
-          <img src="assets/img/info.png" alt class="imagen_info_boton">
-        </ion-button>
-      </ion-col>
+  <!-- <div class="col"><img src="assets/img/casaLogo.png" alt class="imagen_casa_boton"> -->
+    <!-- <ion-button fill="clear" class="footer-button" (click)="goToMyRoutes()">
+      <img src="assets/img/info.png" alt class="imagen_info_boton">
+    </ion-button> -->
+  <!-- </div> -->
 
-      <ion-col size="2.4" class="ion-text-center">
-        <ion-button fill="clear" class="footer-button" routerLink="/usuarios">
-          <img src="assets/img/usuariosLogo.png" alt class="imagen_usuarios_boton">
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-footer>
+  <!-- <div class="col"><img src="assets/img/casaLogo.png" alt class="imagen_casa_boton"> -->
+    <!-- <ion-button fill="clear" class="footer-button" routerLink="/usuarios">
+      <img src="assets/img/usuariosLogo.png" alt class="imagen_usuarios_boton">
+    </ion-button> -->
+  <!-- </div> -->
+</div>

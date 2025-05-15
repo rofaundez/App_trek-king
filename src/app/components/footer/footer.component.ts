@@ -14,8 +14,12 @@ export class FooterComponent {
 
   constructor(private router: Router) {}
 
-  goTo(path: string) {
-    this.router.navigate([path]);
+
+  goToAgenda(){
+    this.router.navigate(['/agenda'])
+  }
+  goToGroups(){
+    this.router.navigate(['/Groups'])
   }
   goToMyRoutes() {
     this.router.navigate(['/my-routes']);

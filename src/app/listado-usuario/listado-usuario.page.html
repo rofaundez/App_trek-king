@@ -14,9 +14,9 @@
           <p>Contraseña: {{user.password || '****'}}</p>
         </ion-label>
         <ion-label *ngIf="user.isEditing">
-          <ion-input [(ngModel)]="user.nombre" placeholder="Nombre"></ion-input>
-          <ion-input [(ngModel)]="user.email" placeholder="Email"></ion-input>
-          <ion-input [(ngModel)]="user.password" placeholder="Contraseña"></ion-input>
+          <input [(ngModel)]="user.nombre" placeholder="Nombre">
+          <input [(ngModel)]="user.email" placeholder="Email">
+          <input [(ngModel)]="user.password" placeholder="Contraseña">
         </ion-label>
       </ion-item>
 
@@ -39,9 +39,9 @@
           <p>Contraseña: {{user.password || '****'}}</p>
         </ion-label>
         <ion-label *ngIf="user.isEditing">
-          <ion-input [(ngModel)]="user.nombre" placeholder="Nombre"></ion-input>
-          <ion-input [(ngModel)]="user.email" placeholder="Email"></ion-input>
-          <ion-input [(ngModel)]="user.password" placeholder="Contraseña"></ion-input>
+          <input [(ngModel)]="user.nombre" placeholder="Nombre">
+          <input [(ngModel)]="user.email" placeholder="Email">
+          <input [(ngModel)]="user.password" placeholder="Contraseña">
         </ion-label>
       </ion-item>
 

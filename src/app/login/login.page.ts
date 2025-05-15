@@ -66,7 +66,7 @@ export class LoginPage implements OnInit {
           password: userData['password'],
           photo: userData['photo'] || 'assets/img/userLogo.png'
         });
-        
+        this.goToHome();
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
           duration: 2000,
@@ -74,7 +74,6 @@ export class LoginPage implements OnInit {
           color: 'success'
         });
         await toast.present();
-        this.router.navigate(['/home']);
       } else {
         console.log('Inicio de sesión fallido - credenciales inválidas');
         const toast = await this.toastController.create({

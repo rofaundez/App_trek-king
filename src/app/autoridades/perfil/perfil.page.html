@@ -20,19 +20,19 @@
       <ion-list>
         <!-- Nombre -->
         <ion-item>
-          <ion-input
+          <input
             [(ngModel)]="nombre"
             name="nombre"
             label="Nombre"
             labelPlacement="floating"
             placeholder="Ingrese su nombre"
             required>
-          </ion-input>
+          
         </ion-item>
 
         <!-- Email -->
         <ion-item>
-          <ion-input
+          <input
             type="email"
             [(ngModel)]="email"
             name="email"
@@ -40,19 +40,19 @@
             labelPlacement="floating"
             placeholder="Ingrese su correo"
             required>
-          </ion-input>
+          
         </ion-item>
 
         <!-- Contraseña -->
         <ion-item>
-          <ion-input
+          <input
             [type]="showPassword ? 'text' : 'password'"
             [(ngModel)]="password"
             name="password"
             label="Nueva contraseña"
             labelPlacement="floating"
             placeholder="Deje en blanco para mantener la actual">
-          </ion-input>
+          
           <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('password')">
             <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
@@ -60,14 +60,14 @@
 
         <!-- Confirmar contraseña -->
         <ion-item *ngIf="password">
-          <ion-input
+          <input
             [type]="showConfirmPassword ? 'text' : 'password'"
             [(ngModel)]="confirmPassword"
             name="confirmPassword"
             label="Confirmar nueva contraseña"
             labelPlacement="floating"
             placeholder="Repita la nueva contraseña">
-          </ion-input>
+          
           <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('confirmPassword')">
             <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>

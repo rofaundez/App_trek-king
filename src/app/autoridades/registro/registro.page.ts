@@ -115,6 +115,7 @@ export class RegistroPage implements OnInit {
       };
 
       await addDoc(AutoridadesRef, newAutoridad);
+      this.home();
 
       const toast = await this.toastController.create({
         message: 'Usuario registrado exitosamente',
@@ -124,7 +125,7 @@ export class RegistroPage implements OnInit {
       });
       await toast.present();
 
-      this.router.navigate(['/login']);
+      
       
     } catch (error) {
       console.error('Error en el registro:', error);

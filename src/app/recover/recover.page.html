@@ -20,7 +20,7 @@
     <form (ngSubmit)="verifyEmail()" #recoverForm="ngForm" *ngIf="!showPasswordReset">
       <ion-list class="form-list">
         <ion-item class="custom-input">
-          <ion-input
+          <input
             type="email"
             [(ngModel)]="email"
             name="email"
@@ -32,7 +32,7 @@
             #emailInput="ngModel"
             [class.valid-input]="emailInput.valid && emailInput.touched"
             [class.invalid-input]="emailInput.invalid && emailInput.touched">
-          </ion-input>
+          
         </ion-item>
       </ion-list>
 
@@ -54,13 +54,13 @@
     <div *ngIf="showPasswordReset" class="password-display">
       <ion-list class="form-list">
         <ion-item class="custom-input">
-          <ion-input
+          <input
             [type]="showPassword ? 'text' : 'password'"
             [value]="userPassword"
             readonly
             label="Tu contraseña"
             labelPlacement="floating">
-          </ion-input>
+          
           <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()" class="eye-button">
             <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
           </ion-button>

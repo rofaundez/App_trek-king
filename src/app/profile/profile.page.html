@@ -22,17 +22,17 @@
     <ion-list class="lista_datos">
       <ion-item class="item_user">
         <ion-label position="stacked">Nombre</ion-label>
-        <ion-input [(ngModel)]="userProfile.nombre" [readonly]="!isEditing"></ion-input>
+        <input [(ngModel)]="userProfile.nombre" [readonly]="!isEditing">
       </ion-item>
 
       <ion-item class="item_user">
         <ion-label position="stacked">Apellido</ion-label>
-        <ion-input [(ngModel)]="userProfile.apellido" [readonly]="!isEditing"></ion-input>
+        <input [(ngModel)]="userProfile.apellido" [readonly]="!isEditing">
       </ion-item>
 
       <ion-item class="item_user">
         <ion-label position="stacked">Email</ion-label>
-        <ion-input [(ngModel)]="userProfile.email" [readonly]="!isEditing"></ion-input>
+        <input [(ngModel)]="userProfile.email" [readonly]="!isEditing">
       </ion-item>
     </ion-list>
 

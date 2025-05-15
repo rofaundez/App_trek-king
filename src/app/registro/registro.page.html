@@ -9,7 +9,7 @@
       <ion-list class="form-list">
         <!-- Campo de correo electrónico -->
         <ion-item class="custom-input">
-          <ion-input
+          <input
             type="email" 
             [(ngModel)]="email" 
             name="email"
@@ -24,7 +24,7 @@
             placeholder="ejemplo@correo.com"
             [class.valid-input]="emailInput.valid && emailInput.touched"
             [class.invalid-input]="emailInput.invalid && emailInput.touched">
-          </ion-input>
+          
         </ion-item>
         <ion-text color="danger" *ngIf="emailInput.invalid && emailInput.touched && currentField === 'email'">
           <small class="error-message">Por favor, ingrese un correo válido</small>
@@ -32,7 +32,7 @@
 
         <!-- Campo de nombre -->
         <ion-item class="custom-input">
-          <ion-input
+          <input
             type="text"
             [(ngModel)]="nombre"
             name="nombre"
@@ -46,7 +46,7 @@
             placeholder="Ingrese su nombre"
             [class.valid-input]="nombreInput.valid && nombreInput.touched"
             [class.invalid-input]="nombreInput.invalid && nombreInput.touched">
-          </ion-input>
+          
         </ion-item>
         <ion-text color="danger" *ngIf="nombreInput.invalid && nombreInput.touched && currentField === 'nombre'">
           <small class="error-message">Por favor, ingrese un nombre válido</small>
@@ -54,7 +54,7 @@
 
         <!-- Campo de apellido -->
         <ion-item class="custom-input">
-          <ion-input
+          <input
             type="text"
             [(ngModel)]="apellido"
             name="apellido"
@@ -68,7 +68,7 @@
             placeholder="Ingrese su apellido"
             [class.valid-input]="apellidoInput.valid && apellidoInput.touched"
             [class.invalid-input]="apellidoInput.invalid && apellidoInput.touched">
-          </ion-input>
+          
         </ion-item>
         <ion-text color="danger" *ngIf="apellidoInput.invalid && apellidoInput.touched && currentField === 'apellido'">
           <small class="error-message">Por favor, ingrese un apellido válido</small>
@@ -76,7 +76,7 @@
 
         <!-- Campo de contraseña -->
         <ion-item class="custom-input">
-          <ion-input
+          <input
             [type]="showPassword ? 'text' : 'password'"
             [(ngModel)]="password"
             name="password"
@@ -90,7 +90,7 @@
             placeholder="Mínimo 8 caracteres"
             [class.valid-input]="passwordInput.valid && passwordInput.touched"
             [class.invalid-input]="passwordInput.invalid && passwordInput.touched">
-          </ion-input>
+          
           <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('password')" class="eye-button">
             <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
           </ion-button>
@@ -101,7 +101,7 @@
 
         <!-- Campo de confirmación de contraseña -->
         <ion-item class="custom-input">
-          <ion-input
+          <input
             [type]="showConfirmPassword ? 'text' : 'password'"
             [(ngModel)]="confirmPassword"
             name="confirmPassword"
@@ -114,7 +114,7 @@
             placeholder="Repita su contraseña"
             [class.valid-input]="confirmPasswordInput.touched && validateConfirmPassword(password, confirmPassword)"
             [class.invalid-input]="confirmPasswordInput.touched && !validateConfirmPassword(password, confirmPassword)">
-          </ion-input>
+          
           <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('confirmPassword')" class="eye-button">
             <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
           </ion-button>

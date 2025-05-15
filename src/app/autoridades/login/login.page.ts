@@ -65,7 +65,7 @@ export class AutoridadLoginPage implements OnInit {
           cargo: autoridadesData['cargo'],
           password: autoridadesData['password']
         });
-        
+        this.goToHome();
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
           duration: 2000,
@@ -73,7 +73,7 @@ export class AutoridadLoginPage implements OnInit {
           color: 'success'
         });
         await toast.present();
-        this.router.navigate(['/autoridad-home']);
+        
       } else {
         console.log('Inicio de sesión fallido - credenciales inválidas');
         const toast = await this.toastController.create({
@@ -97,6 +97,9 @@ export class AutoridadLoginPage implements OnInit {
   }
 
 
+  goToHome(){
+    this.router.navigate(['/autoridad-home'])
+  };
   forgotAutoridadPassword() {
     this.router.navigate(['/recover-autoridad']);
   }
