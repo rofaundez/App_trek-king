@@ -90,11 +90,14 @@ export class AgendaPage implements OnInit {
   verDetallesRuta(ruta: RutaAgendada) {
     this.router.navigate(['/ruta-detalles'], {
       queryParams: {
-        id: ruta.id,
+        id: ruta.rutaId,
         nombre: ruta.nombre,
         ubicacion: ruta.ubicacion,
         dificultad: ruta.dificultad,
-        imagen: ruta.imagen
+        imagen: ruta.imagen,
+        descripcion: ruta.descripcion,
+        caracteristicas: JSON.stringify(ruta.caracteristicas),
+        puntosInteres: ruta.puntosInteres
       }
     });
   }

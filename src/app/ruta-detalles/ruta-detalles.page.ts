@@ -62,6 +62,9 @@ export class RutaDetallesPage implements OnInit {
   horaSeleccionada: string = '';
   fechaMinima: string = '';
   
+  // Variable para controlar si la ruta ya está guardada
+  rutaYaGuardada: boolean = false;
+  
   // Información específica de la ruta
   rutaDescripcion: string = '';
   rutaCaracteristicas = {
@@ -131,12 +134,12 @@ export class RutaDetallesPage implements OnInit {
     addIcons({ calendarOutline, closeOutline, checkmarkOutline });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // Inicializamos la fecha mínima para el calendario (fecha actual)
     this.fechaMinima = new Date().toISOString();
     
     // Obtenemos los parámetros de la ruta desde la URL
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe(async params => {
       if (params) {
         this.rutaId = params['id'] || '';
         this.rutaNombre = params['nombre'] || '';
@@ -146,29 +149,76 @@ export class RutaDetallesPage implements OnInit {
         
         // Cargamos la información específica de la ruta seleccionada
         this.cargarInformacionRuta();
+        
+        // Verificamos si la ruta ya está guardada
+        await this.verificarRutaGuardada();
       }
     });
   }
   
   /**
+   * Verifica si la ruta actual ya está guardada por el usuario
+   */
+  async verificarRutaGuardada() {
+    // Verificar si hay un usuario logueado
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      return;
+    }
+    
+    try {
+      // Obtener las rutas guardadas del usuario
+      const rutasGuardadas = await this.rutasGuardadasService.obtenerRutasGuardadas();
+      
+      // Verificar si la ruta actual está en las rutas guardadas
+      this.rutaYaGuardada = rutasGuardadas.some(ruta => ruta.rutaId === this.rutaId);
+    } catch (error) {
+      console.error('Error al verificar si la ruta está guardada:', error);
+    }
+  }
+
+  /**
    * Carga la información específica de la ruta seleccionada
    */
   cargarInformacionRuta() {
-    if (this.rutaId && this.rutasInfo[this.rutaId]) {
-      const infoRuta = this.rutasInfo[this.rutaId];
-      this.rutaDescripcion = infoRuta.descripcion;
-      this.rutaCaracteristicas = infoRuta.caracteristicas;
-      this.rutaPuntosInteres = infoRuta.puntosInteres;
-    } else {
-      // Información por defecto si no se encuentra la ruta
-      this.rutaDescripcion = 'No hay información disponible para esta ruta.';
-      this.rutaCaracteristicas = {
-        tipoTerreno: 'No especificado',
-        mejorEpoca: 'No especificado',
-        recomendaciones: 'No especificado'
-      };
-      this.rutaPuntosInteres = 'No hay puntos de interés registrados para esta ruta.';
-    }
+    // Primero verificamos si tenemos la información en los parámetros de la URL (cuando viene de la agenda)
+    this.route.queryParams.subscribe(params => {
+      if (params['descripcion'] && params['puntosInteres']) {
+        // Si tenemos la información en los parámetros, la usamos
+        this.rutaDescripcion = params['descripcion'];
+        try {
+          this.rutaCaracteristicas = params['caracteristicas'] ? JSON.parse(params['caracteristicas']) : {
+            tipoTerreno: 'No especificado',
+            mejorEpoca: 'No especificado',
+            recomendaciones: 'No especificado'
+          };
+        } catch (error) {
+          console.error('Error al parsear características:', error);
+          this.rutaCaracteristicas = {
+            tipoTerreno: 'No especificado',
+            mejorEpoca: 'No especificado',
+            recomendaciones: 'No especificado'
+          };
+        }
+        this.rutaPuntosInteres = params['puntosInteres'];
+      } else if (this.rutaId && this.rutasInfo[this.rutaId]) {
+        // Si no tenemos la información en los parámetros, la buscamos en la base de datos local
+        const infoRuta = this.rutasInfo[this.rutaId];
+        this.rutaDescripcion = infoRuta.descripcion;
+        this.rutaCaracteristicas = infoRuta.caracteristicas;
+        this.rutaPuntosInteres = infoRuta.puntosInteres;
+      } else {
+        // Información por defecto si no se encuentra la ruta
+        this.rutaDescripcion = 'No hay información disponible para esta ruta.';
+        this.rutaCaracteristicas = {
+          tipoTerreno: 'No especificado',
+          mejorEpoca: 'No especificado',
+          recomendaciones: 'No especificado'
+        };
+        this.rutaPuntosInteres = 'No hay puntos de interés registrados para esta ruta.';
+      }
+    });
+
   }
 
   volver() {
@@ -220,7 +270,10 @@ export class RutaDetallesPage implements OnInit {
         dificultad: this.rutaDificultad,
         imagen: this.rutaImagen,
         fechaProgramada: fechaFormateada,
-        horaProgramada: horaFormateada
+        horaProgramada: horaFormateada,
+        descripcion: this.rutaDescripcion,
+        caracteristicas: this.rutaCaracteristicas,
+        puntosInteres: this.rutaPuntosInteres
       };
       
       // Guardar en Firebase

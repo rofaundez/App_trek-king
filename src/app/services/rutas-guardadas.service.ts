@@ -13,6 +13,13 @@ export interface RutaAgendada {
   imagen: string;
   fechaProgramada: string;
   horaProgramada: string;
+  descripcion?: string;
+  caracteristicas?: {
+    tipoTerreno: string;
+    mejorEpoca: string;
+    recomendaciones: string;
+  };
+  puntosInteres?: string;
 }
 
 @Injectable({
@@ -120,7 +127,10 @@ export class RutasGuardadasService {
           dificultad: data['dificultad'],
           imagen: data['imagen'],
           fechaProgramada: data['fechaProgramada'],
-          horaProgramada: data['horaProgramada']
+          horaProgramada: data['horaProgramada'],
+          descripcion: data['descripcion'],
+          caracteristicas: data['caracteristicas'],
+          puntosInteres: data['puntosInteres']
         });
       });
       
