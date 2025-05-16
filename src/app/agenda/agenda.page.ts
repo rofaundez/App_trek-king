@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonIcon, IonBackButton, IonButtons, ToastController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonIcon, IonBackButton, IonButtons, IonButton, ToastController, AlertController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { FooterComponent } from '../components/footer/footer.component';
 import { addIcons } from 'ionicons';
-import { calendarOutline, timeOutline } from 'ionicons/icons';
+import { calendarOutline, timeOutline, trashOutline } from 'ionicons/icons';
 import { RutasGuardadasService, RutaAgendada } from '../services/rutas-guardadas.service';
 import { AuthService } from '../services/auth.service';
 
@@ -24,7 +24,9 @@ import { AuthService } from '../services/auth.service';
     IonList, 
     IonItem, 
     IonLabel, 
+    IonButton,
     IonIcon,
+    IonButtons,
     CommonModule, 
     FormsModule,
     FooterComponent
@@ -39,10 +41,11 @@ export class AgendaPage implements OnInit {
     private router: Router,
     private rutasGuardadasService: RutasGuardadasService,
     private toastController: ToastController,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertController: AlertController
   ) {
     // Añadir iconos necesarios
-    addIcons({ calendarOutline, timeOutline });
+    addIcons({ calendarOutline, timeOutline, trashOutline });
   }
 
   async ngOnInit() {
@@ -98,6 +101,53 @@ export class AgendaPage implements OnInit {
 
   volver(){
     this.router.navigate(['/home']);
+  }
+
+  /**
+   * Muestra un diálogo de confirmación para eliminar una ruta
+   * @param ruta La ruta que se desea eliminar
+   */
+  async confirmarEliminarRuta(ruta: RutaAgendada, event: Event) {
+    // Detener la propagación del evento para evitar que se active el verDetallesRuta
+    event.stopPropagation();
+    
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: `¿Estás seguro de que deseas eliminar la ruta "${ruta.nombre}"?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => this.eliminarRuta(ruta.id!)
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  /**
+   * Elimina una ruta de la agenda y de Firebase
+   * @param rutaId ID de la ruta a eliminar
+   */
+  private async eliminarRuta(rutaId: string) {
+    try {
+      // Eliminar la ruta de Firebase
+      await this.rutasGuardadasService.eliminarRutaGuardada(rutaId);
+      
+      // Actualizar la lista de rutas agendadas
+      await this.cargarRutasGuardadas();
+      
+      // Mostrar mensaje de éxito
+      this.mostrarToast('Ruta eliminada correctamente');
+    } catch (error) {
+      console.error('Error al eliminar la ruta:', error);
+      this.mostrarToast('Error al eliminar la ruta. Por favor, intenta nuevamente.');
+    }
   }
   
   /**

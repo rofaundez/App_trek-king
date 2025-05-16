@@ -130,4 +130,32 @@ export class RutasGuardadasService {
       throw error;
     }
   }
+
+  /**
+   * Elimina una ruta guardada de la base de datos
+   * @param rutaId ID de la ruta a eliminar
+   * @returns Promise que se resuelve cuando la ruta ha sido eliminada
+   */
+  async eliminarRutaGuardada(rutaId: string): Promise<void> {
+    try {
+      const userId = this.getCurrentUserId();
+      if (!userId) {
+        throw new Error('No hay un usuario logueado para eliminar la ruta');
+      }
+      
+      // Importar las funciones necesarias de Firebase
+      const { doc, deleteDoc } = await import('firebase/firestore');
+      
+      // Referencia al documento a eliminar
+      const docRef = doc(this.db, 'rutas-guardadas', rutaId);
+      
+      // Eliminar el documento
+      await deleteDoc(docRef);
+      
+      console.log('Ruta eliminada correctamente');
+    } catch (error) {
+      console.error('Error al eliminar la ruta guardada:', error);
+      throw error;
+    }
+  }
 }
