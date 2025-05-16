@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonItem, IonLabel, IonChip, IonIcon, IonButton, IonModal, IonDatetime, IonText, IonDatetimeButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonItem, IonLabel, IonChip, IonIcon, IonButton, IonModal, IonDatetime, IonText, IonDatetimeButton, ToastController } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FooterComponent } from '../components/footer/footer.component';
 import { addIcons } from 'ionicons';
 import { calendarOutline, closeOutline, checkmarkOutline } from 'ionicons/icons';
+import { RutasGuardadasService, RutaAgendada } from '../services/rutas-guardadas.service';
+import { AuthService } from '../services/auth.service';
 
 interface RutaInfo {
   descripcion: string;
@@ -120,7 +122,10 @@ export class RutaDetallesPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private rutasGuardadasService: RutasGuardadasService,
+    private toastController: ToastController,
+    private authService: AuthService
   ) { 
     // Añadir iconos necesarios
     addIcons({ calendarOutline, closeOutline, checkmarkOutline });
@@ -179,30 +184,60 @@ export class RutaDetallesPage implements OnInit {
     this.isCalendarModalOpen = false;
   }
 
-  confirmarFecha() {
+  async confirmarFecha() {
     // Verificamos que se haya seleccionado una fecha y hora
     if (!this.fechaSeleccionada || !this.horaSeleccionada) {
-      alert('Por favor, selecciona una fecha y hora para continuar.');
+      this.mostrarToast('Por favor, selecciona una fecha y hora para continuar.');
       return;
     }
     
-    // Aquí se podría implementar la lógica para guardar la ruta con la fecha seleccionada
-    // Por ahora solo mostramos un mensaje y cerramos el modal
-    console.log('Ruta guardada para la fecha:', this.fechaSeleccionada, 'a las', this.horaSeleccionada);
-    this.isCalendarModalOpen = false;
+    // Verificar si hay un usuario logueado
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.mostrarToast('Debes iniciar sesión para guardar rutas. Por favor, inicia sesión e intenta nuevamente.');
+      this.isCalendarModalOpen = false;
+      this.router.navigate(['/login']);
+      return;
+    }
     
-    // Formateamos la fecha para mostrarla de manera más amigable
-    const fechaFormateada = new Date(this.fechaSeleccionada).toLocaleDateString('es-ES', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-    
-    // Extraemos solo la hora y minutos del string de hora
-    const horaFormateada = this.horaSeleccionada.substring(11, 16);
-    
-    alert(`¡Ruta guardada con éxito!\nHas programado la ruta "${this.rutaNombre}" para el ${fechaFormateada} a las ${horaFormateada}.`);
+    try {
+      // Formateamos la fecha para mostrarla de manera más amigable
+      const fechaFormateada = new Date(this.fechaSeleccionada).toLocaleDateString('es-ES', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      // Extraemos solo la hora y minutos del string de hora
+      const horaFormateada = this.horaSeleccionada.substring(11, 16);
+      
+      // Crear objeto de ruta agendada
+      const rutaAgendada: RutaAgendada = {
+        rutaId: this.rutaId,
+        nombre: this.rutaNombre,
+        ubicacion: this.rutaUbicacion,
+        dificultad: this.rutaDificultad,
+        imagen: this.rutaImagen,
+        fechaProgramada: fechaFormateada,
+        horaProgramada: horaFormateada
+      };
+      
+      // Guardar en Firebase
+      await this.rutasGuardadasService.guardarRuta(rutaAgendada);
+      
+      // Cerrar el modal y mostrar mensaje de éxito
+      this.isCalendarModalOpen = false;
+      this.mostrarToast(`¡Ruta guardada con éxito! Has programado la ruta "${this.rutaNombre}" para el ${fechaFormateada} a las ${horaFormateada}.`);
+    } catch (error) {
+      console.error('Error al guardar la ruta:', error);
+      if (error instanceof Error && error.message.includes('No hay un usuario logueado')) {
+        this.mostrarToast('Debes iniciar sesión para guardar rutas. Por favor, inicia sesión e intenta nuevamente.');
+        this.router.navigate(['/login']);
+      } else {
+        this.mostrarToast('Ocurrió un error al guardar la ruta. Por favor, intenta nuevamente.');
+      }
+    }
   }
 
   cambioFecha(event: any) {
@@ -211,5 +246,18 @@ export class RutaDetallesPage implements OnInit {
 
   cambioHora(event: any) {
     this.horaSeleccionada = event.detail.value;
+  }
+  
+  /**
+   * Muestra un mensaje toast
+   * @param mensaje Mensaje a mostrar
+   */
+  async mostrarToast(mensaje: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'bottom'
+    });
+    await toast.present();
   }
 }

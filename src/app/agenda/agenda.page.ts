@@ -1,22 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonIcon, IonBackButton, IonButtons } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonIcon, IonBackButton, IonButtons, ToastController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { FooterComponent } from '../components/footer/footer.component';
 import { addIcons } from 'ionicons';
 import { calendarOutline, timeOutline } from 'ionicons/icons';
+import { RutasGuardadasService, RutaAgendada } from '../services/rutas-guardadas.service';
+import { AuthService } from '../services/auth.service';
 
-// Interfaz para las rutas agendadas
-interface RutaAgendada {
-  id: string;
-  nombre: string;
-  ubicacion: string;
-  dificultad: string;
-  imagen: string;
-  fechaProgramada: string;
-  horaProgramada: string;
-}
+// Nota: Ahora usamos la interfaz RutaAgendada importada desde el servicio
 
 @Component({
   selector: 'app-agenda',
@@ -42,15 +35,52 @@ export class AgendaPage implements OnInit {
   // Array para almacenar las rutas agendadas
   rutasAgendadas: RutaAgendada[] = [];
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private rutasGuardadasService: RutasGuardadasService,
+    private toastController: ToastController,
+    private authService: AuthService
+  ) {
     // Añadir iconos necesarios
     addIcons({ calendarOutline, timeOutline });
   }
 
-  ngOnInit() {
-    // Aquí se cargarían las rutas agendadas desde un servicio o almacenamiento local
-    // Por ahora, dejamos el array vacío para mostrar el mensaje de "No tienes rutas programadas"
-    // En el futuro, se implementará la lógica para cargar las rutas guardadas
+  async ngOnInit() {
+    // Verificar si hay un usuario logueado
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.mostrarToast('Debes iniciar sesión para ver tus rutas guardadas.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
+    // Cargar las rutas guardadas desde Firebase
+    await this.cargarRutasGuardadas();
+  }
+  
+  /**
+   * Carga las rutas guardadas desde Firebase
+   */
+  async cargarRutasGuardadas() {
+    try {
+      // Verificar si hay un usuario logueado
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        this.mostrarToast('Debes iniciar sesión para ver tus rutas guardadas.');
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      this.rutasAgendadas = await this.rutasGuardadasService.obtenerRutasGuardadas();
+    } catch (error) {
+      console.error('Error al cargar las rutas guardadas:', error);
+      if (error instanceof Error && error.message.includes('No hay un usuario logueado')) {
+        this.mostrarToast('Debes iniciar sesión para ver tus rutas guardadas.');
+        this.router.navigate(['/login']);
+      } else {
+        this.mostrarToast('Error al cargar las rutas guardadas. Por favor, intenta nuevamente.');
+      }
+    }
   }
 
   // Método para ver detalles de una ruta
@@ -68,5 +98,18 @@ export class AgendaPage implements OnInit {
 
   volver(){
     this.router.navigate(['/home']);
+  }
+  
+  /**
+   * Muestra un mensaje toast
+   * @param mensaje Mensaje a mostrar
+   */
+  async mostrarToast(mensaje: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 3000,
+      position: 'bottom'
+    });
+    await toast.present();
   }
 }
