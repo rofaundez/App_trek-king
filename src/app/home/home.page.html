@@ -12,9 +12,18 @@
         </div>
       </div>
 
-      <!-- Search bar -->
-      <ion-searchbar placeholder="Buscar rutas" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
-      </ion-searchbar>
+      <!-- Search bar con autocompletado -->
+      <div class="search-container">
+        <ion-searchbar placeholder="Buscar rutas" [(ngModel)]="searchTerm" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
+        </ion-searchbar>
+        <div class="autocomplete-container" *ngIf="sugerencias.length > 0">
+          <ion-list class="autocomplete-list">
+            <ion-item *ngFor="let sugerencia of sugerencias" (click)="seleccionarSugerencia(sugerencia)" button>
+              <ion-label>{{sugerencia}}</ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
 
       <div class="contenedor_filtro" 
            (mousedown)="isMouseDown($event)" 

@@ -62,6 +62,12 @@
 
 
 
+.search-container {
+  position: relative;
+  width: 100%;
+  z-index: 100;
+}
+
 .custom-searchbar {
   --background: rgba(20, 20, 20, 0.904);
   --border-radius: 25px;
@@ -72,6 +78,42 @@
   padding: 0%;
   border-radius: 25px;
   margin-top: 10px;
+}
+
+.autocomplete-container {
+  position: absolute;
+  width: calc(100% - 30px);
+  margin: 0 15px;
+  background: rgba(20, 20, 20, 0.95);
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.autocomplete-list {
+  padding: 0;
+  margin: 0;
+}
+
+.autocomplete-list ion-item {
+  --background: transparent;
+  --color: white;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 40px;
+  font-size: 14px;
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+.autocomplete-list ion-item:last-child {
+  --border-radius: 0 0 15px 15px;
+  --border-style: none;
+}
+
+.autocomplete-list ion-item:hover {
+  --background: rgba(255, 255, 255, 0.1);
 }
 
 .user-welcome,

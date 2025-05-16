@@ -283,4 +283,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   goToHome() {
     this.router.navigate(['/home']);
   }
+  Gotorutas() {
+    this.router.navigate(['/agenda']);
+  }
 }

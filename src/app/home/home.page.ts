@@ -28,6 +28,8 @@ export class HomePage implements OnInit, OnDestroy {
   rutasRecomendadas: Rutas[] = [];
   allRoutes: Rutas[] = [];
   filtroActivo: string | null = null;
+  searchTerm: string = '';
+  sugerencias: string[] = [];
   
   // Rutas con sus categorías asignadas
   rutasConCategorias = [
@@ -138,6 +140,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   onSearch(event: any) {
     const searchTerm = event.target.value.toLowerCase();
+    this.searchTerm = event.target.value;
     let rutasFiltradas = [...this.allRoutes];
     
     // Si hay un filtro activo, aplicamos primero ese filtro
@@ -153,6 +156,12 @@ export class HomePage implements OnInit, OnDestroy {
         ruta.nombre.toLowerCase().includes(searchTerm) ||
         (ruta.ubicacion ? ruta.ubicacion.toLowerCase().includes(searchTerm) : false)
       );
+      
+      // Generamos sugerencias de autocompletado
+      this.generarSugerencias(searchTerm);
+    } else {
+      // Si no hay texto de búsqueda, limpiamos las sugerencias
+      this.sugerencias = [];
     }
     
     this.rutasRecomendadas = rutasFiltradas;
@@ -192,6 +201,42 @@ export class HomePage implements OnInit, OnDestroy {
         imagen: imagen
       }
     });
+  }
+  
+  // Método para generar sugerencias basadas en el texto de búsqueda
+  generarSugerencias(searchTerm: string) {
+    if (!searchTerm) {
+      this.sugerencias = [];
+      return;
+    }
+    
+    // Obtenemos todos los nombres de rutas que coincidan parcialmente con el término de búsqueda
+    const nombresSugeridos = this.allRoutes
+      .filter(ruta => ruta.nombre.toLowerCase().includes(searchTerm))
+      .map(ruta => ruta.nombre);
+    
+    // Limitamos a máximo 5 sugerencias para no sobrecargar la interfaz
+    this.sugerencias = [...new Set(nombresSugeridos)].slice(0, 5);
+  }
+  
+  // Método para seleccionar una sugerencia del autocompletado
+  seleccionarSugerencia(sugerencia: string) {
+    this.searchTerm = sugerencia;
+    
+    // Filtramos las rutas con la sugerencia seleccionada
+    let rutasFiltradas = this.allRoutes.filter(ruta => 
+      ruta.nombre === sugerencia
+    );
+    
+    // Si hay un filtro activo, también lo aplicamos
+    if (this.filtroActivo) {
+      rutasFiltradas = rutasFiltradas.filter(ruta => 
+        ruta.categorias?.includes(this.filtroActivo!)
+      );
+    }
+    
+    this.rutasRecomendadas = rutasFiltradas;
+    this.sugerencias = []; // Ocultamos las sugerencias después de seleccionar
   }
   
   filtrarPorCategoria(categoria: string) {
