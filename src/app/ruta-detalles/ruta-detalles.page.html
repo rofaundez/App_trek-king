@@ -71,17 +71,21 @@
       </div>
 
       <!-- Botones de acción -->
-      <div class="botones-accion" *ngIf="!rutaYaGuardada">
-        <ion-button color="medium" class="boton" fill="outline" (click)="abrirCalendario()">
-          <ion-icon name="calendar-outline" style="margin-right: 8px"></ion-icon>
-          Guardar en Mis Rutas
-        </ion-button>
-      </div>
-      <div class="botones-accion" *ngIf="rutaYaGuardada">
-        <ion-button color="success" class="boton" fill="outline" disabled>
-          <ion-icon name="checkmark-outline" style="margin-right: 8px"></ion-icon>
-          Ruta ya guardada
-        </ion-button>
+      <div class="botones-accion">
+        <div class="botones-container">
+          <ion-button *ngIf="!rutaYaGuardada" color="medium" class="boton" fill="outline" (click)="abrirCalendario()">
+            <ion-icon name="calendar-outline" style="margin-right: 8px"></ion-icon>
+            Guardar en Mis Rutas
+          </ion-button>
+          <ion-button *ngIf="rutaYaGuardada" color="success" class="boton" fill="outline" disabled>
+            <ion-icon name="checkmark-outline" style="margin-right: 8px"></ion-icon>
+            Ruta ya guardada
+          </ion-button>
+          <ion-button color="tertiary" class="boton" fill="outline" (click)="buscarGrupo()">
+            <ion-icon name="people-outline" style="margin-right: 8px"></ion-icon>
+            Buscar Grupo
+          </ion-button>
+        </div>
       </div>
     </ion-card-content>
   </ion-card>

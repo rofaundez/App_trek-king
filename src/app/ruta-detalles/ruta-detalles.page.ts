@@ -5,10 +5,11 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons,
 import { ActivatedRoute, Router } from '@angular/router';
 import { FooterComponent } from '../components/footer/footer.component';
 import { addIcons } from 'ionicons';
-import { calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sendOutline, timeOutline, personCircleOutline } from 'ionicons/icons';
+import { calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sendOutline, timeOutline, personCircleOutline, peopleOutline } from 'ionicons/icons';
 import { RutasGuardadasService, RutaAgendada } from '../services/rutas-guardadas.service';
 import { AuthService } from '../services/auth.service';
 import { ComentariosService, Comentario } from '../services/comentarios.service';
+import { BuscarGrupoService, PublicacionGrupo } from '../services/buscar-grupo.service';
 
 interface RutaInfo {
   descripcion: string;
@@ -140,10 +141,11 @@ export class RutaDetallesPage implements OnInit {
     private rutasGuardadasService: RutasGuardadasService,
     private toastController: ToastController,
     private authService: AuthService,
-    private comentariosService: ComentariosService
+    private comentariosService: ComentariosService,
+    private buscarGrupoService: BuscarGrupoService
   ) { 
     // Añadir iconos necesarios
-    addIcons({ calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sendOutline, timeOutline, personCircleOutline });
+    addIcons({ calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sendOutline, timeOutline, personCircleOutline, peopleOutline });
   }
 
   async ngOnInit() {
@@ -428,5 +430,51 @@ export class RutaDetallesPage implements OnInit {
    */
   generarEstrellas(calificacion: number): boolean[] {
     return Array(5).fill(0).map((_, i) => i < Math.round(calificacion));
+  }
+
+  /**
+   * Crea una publicación de búsqueda de grupo para la ruta actual
+   */
+  async buscarGrupo() {
+    // Verificar si hay un usuario logueado
+    if (!this.usuarioActual) {
+      this.mostrarToast('Debes iniciar sesión para buscar grupo. Por favor, inicia sesión e intenta nuevamente.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
+    try {
+      // Crear objeto de publicación de grupo
+      const publicacion: PublicacionGrupo = {
+        rutaId: this.rutaId,
+        nombre: this.rutaNombre,
+        ubicacion: this.rutaUbicacion,
+        dificultad: this.rutaDificultad,
+        imagen: this.rutaImagen,
+        descripcion: this.rutaDescripcion,
+        caracteristicas: this.rutaCaracteristicas,
+        puntosInteres: this.rutaPuntosInteres,
+        usuarioId: this.usuarioActual.id,
+        nombreUsuario: this.usuarioActual.nombre || this.usuarioActual.email,
+        fecha: new Date()
+      };
+      
+      // Guardar en Firebase
+      await this.buscarGrupoService.crearPublicacion(publicacion);
+      
+      // Mostrar mensaje de éxito
+      this.mostrarToast('¡Publicación creada con éxito! Ahora otros usuarios podrán ver tu búsqueda de grupo.');
+      
+      // Navegar a la página de grupos
+      this.router.navigate(['/grupos']);
+    } catch (error) {
+      console.error('Error al crear publicación de búsqueda de grupo:', error);
+      if (error instanceof Error && error.message.includes('No hay un usuario logueado')) {
+        this.mostrarToast('Debes iniciar sesión para buscar grupo. Por favor, inicia sesión e intenta nuevamente.');
+        this.router.navigate(['/login']);
+      } else {
+        this.mostrarToast('Ocurrió un error al crear la publicación. Por favor, intenta nuevamente.');
+      }
+    }
   }
 }

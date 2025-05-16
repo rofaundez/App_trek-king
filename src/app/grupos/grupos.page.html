@@ -6,63 +6,201 @@
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
         </ion-buttons>
-        <ion-title>Detalles de la Ruta</ion-title>
+        <ion-title>Búsqueda de Grupos</ion-title>
       </ion-toolbar>
     </ion-header>    
 
-    <!-- Contenido de grupos -->
-    <ion-list class="lista-grupos">
-      <ng-container *ngIf="gruposFiltrados.length > 0; else noGrupos">
-        <ion-item *ngFor="let grupo of gruposFiltrados" 
-                  class="item-grupo" 
-                  button 
-                  lines="none" 
-                  (click)="verDetallesGrupo(grupo.id)">
-          <div class="contenido-grupo">
-            <div class="imagen-container">
-              <img alt [src]="grupo.rutaImagen || 'assets/img/default.jpg'" class="imagen_ruta">
-            </div>
-            <div class="info-grupo">
-              <h2 class="nombre_grupo">{{grupo.titulo || 'Título del grupo'}}</h2>
-              <p class="descripcion_grupo">{{grupo.descripcion || 'Descripción del grupo'}}</p>
-              <div class="detalles-grupo">
-                <span class="creador_grupo">Por: {{grupo.creador || 'Usuario'}}</span>
-                <span class="fecha_grupo">{{grupo.fecha || 'Fecha'}}</span>
+    <!-- Contenido de publicaciones de búsqueda de grupo -->
+    <div class="publicaciones-container">
+      <ng-container *ngIf="publicaciones.length > 0; else noPublicaciones">
+        <ion-card *ngFor="let publicacion of publicaciones" class="publicacion-card">
+          <div class="imagen-container">
+            <img [src]="publicacion.imagen || 'assets/img/default.jpg'" alt="{{publicacion.nombre}}" class="ruta-imagen">
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{publicacion.nombre}}</ion-card-title>
+            <ion-card-subtitle>{{publicacion.ubicacion}}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-chip color="primary">
+              <ion-label>{{publicacion.dificultad}}</ion-label>
+            </ion-chip>
+            
+            <div class="publicacion-info">
+              
+              <div class="publicacion-detalles">
+                <div class="usuario-info">
+                  <ion-icon name="person-circle-outline"></ion-icon>
+                  <span>{{publicacion.nombreUsuario}}</span>
+                </div>
+                <div class="fecha-info">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span>{{formatearFecha(publicacion.fecha)}}</span>
+                </div>
               </div>
-              <div class="categorias-container">
-                <span *ngFor="let categoria of grupo.categorias" class="categoria-tag">{{categoria}}</span>
-              </div>
-              <div class="acciones-grupo">
-                <ion-button fill="clear" size="small" class="boton-accion">
+              
+              <div class="acciones-publicacion">
+                <ion-button fill="clear" size="small" (click)="verComentarios(publicacion)">
                   <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
                   Comentar
                 </ion-button>
-                <ion-button fill="clear" size="small" class="boton-accion">
-                  <ion-icon name="people-outline" slot="start"></ion-icon>
-                  Unirse
+                <ion-button fill="clear" size="small" (click)="verDetallesRuta(publicacion)">
+                  <ion-icon name="eye-outline" slot="start"></ion-icon>
+                  Ver Ruta
+                </ion-button>
+                <ion-button *ngIf="usuarioActual && usuarioActual.id === publicacion.usuarioId" 
+                          fill="clear" 
+                          color="danger" 
+                          size="small" 
+                          (click)="confirmarEliminarPublicacion(publicacion, $event)">
+                  <ion-icon name="trash-outline" slot="start"></ion-icon>
+                  Eliminar
                 </ion-button>
               </div>
             </div>
-          </div>
-        </ion-item>
+          </ion-card-content>
+        </ion-card>
       </ng-container>
-      <ng-template #noGrupos>
-        <div class="no-grupos-mensaje">
-          <p>No hay grupos disponibles en este momento.</p>
-          <p>¡Sé el primero en crear uno!</p>
-          <ion-button expand="block" class="crear-grupo-btn">
-            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-            Crear grupo
-          </ion-button>
+      
+      <ng-template #noPublicaciones>
+        <div class="no-publicaciones-mensaje">
+          <p>No hay búsquedas de grupo disponibles en este momento.</p>
+          <p>Puedes crear una búsqueda de grupo desde la página de detalles de una ruta.</p>
         </div>
       </ng-template>
-    </ion-list>
+    </div>
   </div>
-
-  <!-- Botón flotante para crear nuevo grupo -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="light" class="crear-grupo-fab">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
+
+<!-- Modal de comentarios -->
+<ion-modal [isOpen]="isComentariosModalOpen" class="comentarios-modal">
+  <ng-template>
+    <ion-header class="comentarios-header">
+      <ion-toolbar class="headercomentarios">
+        <ion-title>Comentarios</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarComentarios()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding comentarios-content">
+      <div *ngIf="publicacionSeleccionada" class="comentarios-container">
+        <div class="publicacion-info" >
+          <h4>Ruta: {{publicacionSeleccionada.nombre}}</h4>
+          <p>Publicado por: {{publicacionSeleccionada.nombreUsuario}}</p>
+        </div>
+        
+        <!-- Lista de comentarios -->
+        <div class="comentarios-lista" *ngIf="comentarios.length > 0">
+          <h5 class="comentarios-contador">{{ comentarios.length }} {{ comentarios.length === 1 ? 'comentario' : 'comentarios' }}</h5>
+          
+          <div *ngFor="let comentario of comentarios" class="comentario-wrapper">
+            <!-- Solo mostrar comentarios principales (no respuestas) -->
+            <ng-container *ngIf="!comentario.esRespuesta">
+              <ion-card class="comentario-card">
+                <ion-card-content>
+                  <div class="comentario-container">
+                    <div class="comentario-header">
+                      <div class="usuario-info">
+                        <ion-avatar class="avatar-mini">
+                          <ion-icon name="person-circle-outline" class="usuario-icon"></ion-icon>
+                        </ion-avatar>
+                        <span class="usuario-nombre">{{ comentario.nombreUsuario }}</span>
+                      </div>
+                      <div class="comentario-fecha">
+                        <ion-icon name="time-outline" size="small"></ion-icon>
+                        <span>{{ formatearFecha(comentario.fecha) }}</span>
+                      </div>
+                    </div>
+                    
+                    <div class="comentario-texto">
+                      <p>{{ comentario.texto }}</p>
+                    </div>
+                    
+                    <div class="comentario-acciones">
+                      <ion-button fill="clear" size="small" (click)="activarModoRespuesta(comentario)" style="color: rgb(18, 94, 165);">
+                        <ion-icon name="return-down-forward-outline" slot="start"></ion-icon>
+                        Responder
+                      </ion-button>
+                    </div>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+              
+              <!-- Respuestas a este comentario -->
+              <div class="respuestas-container" *ngIf="comentario.respuestas && comentario.respuestas.length > 0">
+                <ion-card *ngFor="let respuesta of comentario.respuestas" class="respuesta-card">
+                  <ion-card-content>
+                    <div class="comentario-container">
+                      <div class="comentario-header">
+                        <div class="usuario-info">
+                          <ion-avatar class="avatar-mini">
+                            <ion-icon name="person-circle-outline" class="usuario-icon"></ion-icon>
+                          </ion-avatar>
+                          <span class="usuario-nombre">{{ respuesta.nombreUsuario }}</span>
+                        </div>
+                        <div class="comentario-fecha">
+                          <ion-icon name="time-outline" size="small"></ion-icon>
+                          <span>{{ formatearFecha(respuesta.fecha) }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="comentario-texto">
+                        <p>{{ respuesta.texto }}</p>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        
+        <!-- Mensaje cuando no hay comentarios -->
+        <div class="sin-comentarios" *ngIf="comentarios.length === 0">
+          <ion-card>
+            <ion-card-content>
+              <p>Aún no hay comentarios para esta publicación. ¡Sé el primero en comentar!</p>
+            </ion-card-content>
+          </ion-card>
+        </div>
+        
+        <!-- Formulario para añadir comentario o respuesta -->
+        <div class="comentario-form">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title *ngIf="!modoRespuesta">Deja tu comentario</ion-card-title>
+              <ion-card-title *ngIf="modoRespuesta">Respondiendo a {{ comentarioSeleccionado?.nombreUsuario }}</ion-card-title>
+              
+              <ion-button *ngIf="modoRespuesta" fill="clear" size="small" (click)="cancelarRespuesta()">
+                <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+                Cancelar respuesta
+              </ion-button>
+            </ion-card-header>
+            
+            <ion-card-content>
+              <!-- Área de texto para el comentario -->
+              <ion-item class="comentario-textarea">
+                <ion-textarea 
+                  [(ngModel)]="nuevoComentario" 
+                  placeholder="{{ modoRespuesta ? 'Escribe tu respuesta aquí...' : 'Escribe tu comentario aquí...' }}"
+                  rows="4"
+                  maxlength="500"></ion-textarea>
+              </ion-item>
+              
+              <!-- Botón para enviar -->
+              <div class="ion-text-end">
+                <ion-button (click)="enviarComentario()" [disabled]="!nuevoComentario.trim()" color="primary">
+                  <ion-icon name="send-outline" slot="start"></ion-icon>
+                  {{ modoRespuesta ? 'Responder' : 'Publicar' }}
+                </ion-button>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
