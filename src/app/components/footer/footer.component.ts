@@ -19,7 +19,7 @@ export class FooterComponent {
     this.router.navigate(['/agenda'])
   }
   goToGroups(){
-    this.router.navigate(['/Groups'])
+    this.router.navigate(['/grupos'])
   }
   goToMyRoutes() {
     this.router.navigate(['/my-routes']);

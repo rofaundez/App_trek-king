@@ -1,0 +1,68 @@
+<ion-content>
+  <div class="contenedor-grupos">
+    <!-- Header con fondo de hojas -->
+    <ion-header [translucent]="true" class="header-container">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
+        </ion-buttons>
+        <ion-title>Detalles de la Ruta</ion-title>
+      </ion-toolbar>
+    </ion-header>    
+
+    <!-- Contenido de grupos -->
+    <ion-list class="lista-grupos">
+      <ng-container *ngIf="gruposFiltrados.length > 0; else noGrupos">
+        <ion-item *ngFor="let grupo of gruposFiltrados" 
+                  class="item-grupo" 
+                  button 
+                  lines="none" 
+                  (click)="verDetallesGrupo(grupo.id)">
+          <div class="contenido-grupo">
+            <div class="imagen-container">
+              <img alt [src]="grupo.rutaImagen || 'assets/img/default.jpg'" class="imagen_ruta">
+            </div>
+            <div class="info-grupo">
+              <h2 class="nombre_grupo">{{grupo.titulo || 'Título del grupo'}}</h2>
+              <p class="descripcion_grupo">{{grupo.descripcion || 'Descripción del grupo'}}</p>
+              <div class="detalles-grupo">
+                <span class="creador_grupo">Por: {{grupo.creador || 'Usuario'}}</span>
+                <span class="fecha_grupo">{{grupo.fecha || 'Fecha'}}</span>
+              </div>
+              <div class="categorias-container">
+                <span *ngFor="let categoria of grupo.categorias" class="categoria-tag">{{categoria}}</span>
+              </div>
+              <div class="acciones-grupo">
+                <ion-button fill="clear" size="small" class="boton-accion">
+                  <ion-icon name="chatbubble-outline" slot="start"></ion-icon>
+                  Comentar
+                </ion-button>
+                <ion-button fill="clear" size="small" class="boton-accion">
+                  <ion-icon name="people-outline" slot="start"></ion-icon>
+                  Unirse
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ng-container>
+      <ng-template #noGrupos>
+        <div class="no-grupos-mensaje">
+          <p>No hay grupos disponibles en este momento.</p>
+          <p>¡Sé el primero en crear uno!</p>
+          <ion-button expand="block" class="crear-grupo-btn">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            Crear grupo
+          </ion-button>
+        </div>
+      </ng-template>
+    </ion-list>
+  </div>
+
+  <!-- Botón flotante para crear nuevo grupo -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="light" class="crear-grupo-fab">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

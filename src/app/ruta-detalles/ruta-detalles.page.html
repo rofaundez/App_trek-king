@@ -25,6 +25,16 @@
         <ion-label>{{rutaDificultad}}</ion-label>
       </ion-chip>
       
+      <!-- Calificación promedio -->
+      <div class="calificacion-promedio" *ngIf="calificacionPromedio > 0">
+        <div class="estrellas-container">
+          <ion-icon *ngFor="let estrella of generarEstrellas(calificacionPromedio)" 
+                    [name]="estrella ? 'star' : 'star-outline'" 
+                    color="warning"></ion-icon>
+          <span class="calificacion-texto">{{ calificacionPromedio.toFixed(1) }} ({{ comentarios.length }} opiniones)</span>
+        </div>
+      </div>
+      
       <!-- Descripción de la ruta -->
       <div class="descripcion-container">
         <h3>Descripción</h3>
@@ -72,6 +82,83 @@
           <ion-icon name="checkmark-outline" style="margin-right: 8px"></ion-icon>
           Ruta ya guardada
         </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  
+  <!-- Sección de comentarios -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Opiniones de usuarios</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Formulario para añadir comentario -->
+      <div class="comentario-form">
+        <h4>Deja tu opinión</h4>
+        
+        <!-- Selector de calificación -->
+        <div class="calificacion-selector">
+          <p>¿Cómo calificarías esta ruta?</p>
+          <div class="estrellas-selector">
+            <ion-icon *ngFor="let _ of [1,2,3,4,5]; let i = index" 
+                      [name]="i < calificacion ? 'star' : 'star-outline'" 
+                      color="warning"
+                      (click)="calificacion = i+1"></ion-icon>
+          </div>
+        </div>
+        
+        <!-- Área de texto para el comentario -->
+        <ion-item class="comentario-textarea">
+          <ion-textarea 
+            [(ngModel)]="nuevoComentario" 
+            placeholder="Comparte tu experiencia en esta ruta..."
+            rows="4"
+            maxlength="500"></ion-textarea>
+        </ion-item>
+        
+        <!-- Botón para enviar -->
+        <div class="ion-text-end">
+          <ion-button (click)="enviarComentario()" [disabled]="!nuevoComentario.trim() || calificacion === 0">
+            <ion-icon name="send-outline" slot="start"></ion-icon>
+            Publicar
+          </ion-button>
+        </div>
+      </div>
+      
+      <!-- Lista de comentarios -->
+      <div class="comentarios-lista" *ngIf="comentarios.length > 0">
+        <h4>{{ comentarios.length }} {{ comentarios.length === 1 ? 'opinión' : 'opiniones' }}</h4>
+        
+        <ion-item *ngFor="let comentario of comentarios" lines="full" class="comentario-item">
+          <div class="comentario-container">
+            <div class="comentario-header">
+              <div class="usuario-info">
+                <ion-icon name="person-circle-outline" class="usuario-icon"></ion-icon>
+                <span class="usuario-nombre">{{ comentario.nombreUsuario }}</span>
+              </div>
+              <div class="comentario-fecha">
+                <ion-icon name="time-outline" size="small"></ion-icon>
+                <span>{{ formatearFecha(comentario.fecha) }}</span>
+              </div>
+            </div>
+            
+            <div class="comentario-estrellas">
+              <ion-icon *ngFor="let estrella of generarEstrellas(comentario.calificacion)" 
+                        [name]="estrella ? 'star' : 'star-outline'" 
+                        color="warning"
+                        size="small"></ion-icon>
+            </div>
+            
+            <div class="comentario-texto">
+              <p>{{ comentario.texto }}</p>
+            </div>
+          </div>
+        </ion-item>
+      </div>
+      
+      <!-- Mensaje cuando no hay comentarios -->
+      <div class="sin-comentarios" *ngIf="comentarios.length === 0">
+        <p>Aún no hay opiniones para esta ruta. ¡Sé el primero en compartir tu experiencia!</p>
       </div>
     </ion-card-content>
   </ion-card>

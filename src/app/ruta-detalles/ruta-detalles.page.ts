@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonItem, IonLabel, IonChip, IonIcon, IonButton, IonModal, IonDatetime, IonText, IonDatetimeButton, ToastController } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonItem, IonLabel, IonChip, IonIcon, IonButton, IonModal, IonDatetime, IonText, IonDatetimeButton, ToastController, IonTextarea, IonInput, IonRange } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FooterComponent } from '../components/footer/footer.component';
 import { addIcons } from 'ionicons';
-import { calendarOutline, closeOutline, checkmarkOutline } from 'ionicons/icons';
+import { calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sendOutline, timeOutline, personCircleOutline } from 'ionicons/icons';
 import { RutasGuardadasService, RutaAgendada } from '../services/rutas-guardadas.service';
 import { AuthService } from '../services/auth.service';
+import { ComentariosService, Comentario } from '../services/comentarios.service';
 
 interface RutaInfo {
   descripcion: string;
@@ -44,10 +45,13 @@ interface RutaInfo {
     IonDatetime,
     IonIcon,
     IonText,
+    IonTextarea,
+    IonInput,
+    IonRange,
     CommonModule, 
     FormsModule,
     FooterComponent
-  ]
+  ],
 })
 export class RutaDetallesPage implements OnInit {
   rutaId: string = '';
@@ -55,6 +59,13 @@ export class RutaDetallesPage implements OnInit {
   rutaUbicacion: string = '';
   rutaDificultad: string = '';
   rutaImagen: string = '';
+  
+  // Variables para comentarios y calificaciones
+  comentarios: Comentario[] = [];
+  nuevoComentario: string = '';
+  calificacion: number = 0;
+  calificacionPromedio: number = 0;
+  usuarioActual: any = null;
   
   // Variables para el calendario
   isCalendarModalOpen: boolean = false;
@@ -128,15 +139,19 @@ export class RutaDetallesPage implements OnInit {
     private router: Router,
     private rutasGuardadasService: RutasGuardadasService,
     private toastController: ToastController,
-    private authService: AuthService
+    private authService: AuthService,
+    private comentariosService: ComentariosService
   ) { 
     // Añadir iconos necesarios
-    addIcons({ calendarOutline, closeOutline, checkmarkOutline });
+    addIcons({ calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sendOutline, timeOutline, personCircleOutline });
   }
 
   async ngOnInit() {
     // Inicializamos la fecha mínima para el calendario (fecha actual)
     this.fechaMinima = new Date().toISOString();
+    
+    // Obtenemos el usuario actual
+    this.usuarioActual = this.authService.getCurrentUser();
     
     // Obtenemos los parámetros de la ruta desde la URL
     this.route.queryParams.subscribe(async params => {
@@ -152,6 +167,9 @@ export class RutaDetallesPage implements OnInit {
         
         // Verificamos si la ruta ya está guardada
         await this.verificarRutaGuardada();
+        
+        // Cargamos los comentarios de la ruta
+        await this.cargarComentarios();
       }
     });
   }
@@ -312,5 +330,103 @@ export class RutaDetallesPage implements OnInit {
       position: 'bottom'
     });
     await toast.present();
+  }
+  
+  /**
+   * Carga los comentarios de la ruta actual
+   */
+  async cargarComentarios() {
+    if (!this.rutaId) return;
+    
+    try {
+      // Obtener los comentarios de la ruta
+      this.comentarios = await this.comentariosService.obtenerComentariosPorRuta(this.rutaId);
+      
+      // Calcular la calificación promedio
+      this.calificacionPromedio = await this.comentariosService.obtenerCalificacionPromedio(this.rutaId);
+    } catch (error) {
+      console.error('Error al cargar los comentarios:', error);
+      this.mostrarToast('Error al cargar los comentarios. Por favor, intenta nuevamente.');
+    }
+  }
+  
+  /**
+   * Envía un nuevo comentario para la ruta actual
+   */
+  async enviarComentario() {
+    // Verificar que haya un comentario y una calificación
+    if (!this.nuevoComentario.trim()) {
+      this.mostrarToast('Por favor, escribe un comentario.');
+      return;
+    }
+    
+    if (this.calificacion === 0) {
+      this.mostrarToast('Por favor, selecciona una calificación.');
+      return;
+    }
+    
+    // Verificar si hay un usuario logueado
+    if (!this.usuarioActual) {
+      this.mostrarToast('Debes iniciar sesión para dejar un comentario. Por favor, inicia sesión e intenta nuevamente.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    
+    try {
+      // Crear el objeto de comentario
+      const comentario: Comentario = {
+        rutaId: this.rutaId,
+        usuarioId: this.usuarioActual.id,
+        nombreUsuario: this.usuarioActual.nombre || this.usuarioActual.email,
+        texto: this.nuevoComentario,
+        calificacion: this.calificacion,
+        fecha: new Date()
+      };
+      
+      // Guardar el comentario en Firebase
+      await this.comentariosService.guardarComentario(comentario);
+      
+      // Limpiar el formulario
+      this.nuevoComentario = '';
+      this.calificacion = 0;
+      
+      // Recargar los comentarios
+      await this.cargarComentarios();
+      
+      // Mostrar mensaje de éxito
+      this.mostrarToast('¡Comentario publicado con éxito!');
+    } catch (error) {
+      console.error('Error al enviar el comentario:', error);
+      if (error instanceof Error && error.message.includes('No hay un usuario logueado')) {
+        this.mostrarToast('Debes iniciar sesión para dejar un comentario. Por favor, inicia sesión e intenta nuevamente.');
+        this.router.navigate(['/login']);
+      } else {
+        this.mostrarToast('Error al publicar el comentario. Por favor, intenta nuevamente.');
+      }
+    }
+  }
+  
+  /**
+   * Formatea la fecha para mostrarla de manera amigable
+   * @param fecha Fecha a formatear
+   * @returns Fecha formateada
+   */
+  formatearFecha(fecha: Date): string {
+    return fecha.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+  
+  /**
+   * Genera un array de estrellas para mostrar la calificación
+   * @param calificacion Calificación (1-5)
+   * @returns Array con valores true/false para cada estrella
+   */
+  generarEstrellas(calificacion: number): boolean[] {
+    return Array(5).fill(0).map((_, i) => i < Math.round(calificacion));
   }
 }

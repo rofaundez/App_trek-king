@@ -76,6 +76,10 @@ export const routes: Routes = [
     path: 'agenda',
     loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
   },
+  {
+    path: 'grupos',
+    loadComponent: () => import('./grupos/grupos.page').then( m => m.GruposPage)
+  },
 
   {path: '',
   redirectTo: 'home',
@@ -84,6 +88,8 @@ export const routes: Routes = [
   {path: '**',
     redirectTo: 'home',
     pathMatch: 'full',},
+  
+
   
 
 ];
