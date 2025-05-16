@@ -1,0 +1,53 @@
+<ion-header [translucent]="true" class="header-container">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Inicio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="contenedor-rutas">
+    <!-- Contenido de rutas agendadas -->
+    <ion-list class="lista-rutas">
+      <ng-container *ngIf="rutasAgendadas.length > 0; else noRutas">
+        <ion-item *ngFor="let ruta of rutasAgendadas" 
+                  class="item-ruta" 
+                  button 
+                  lines="none"
+                  (click)="verDetallesRuta(ruta)">
+          <div class="contenido-ruta">
+            <div class="imagen-container">
+              <img alt [src]="ruta.imagen" class="imagen_ruta">
+            </div>
+            <div class="info-ruta">
+              <h2 class="nombre_ruta">{{ruta.nombre}}</h2>
+              <p class="descripcion_ruta">{{ruta.ubicacion}}</p>
+              <div class="fecha-programada">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span>{{ruta.fechaProgramada}}</span>
+              </div>
+              <div class="hora-programada">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>{{ruta.horaProgramada}}</span>
+              </div>
+              <div class="rating">
+                <span class="dificultad_ruta">{{ruta.dificultad}}</span>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ng-container>
+      <ng-template #noRutas>
+        <div class="no-rutas-mensaje">
+          <ion-icon name="calendar-outline" class="icono-grande"></ion-icon>
+          <p>No tienes rutas programadas</p>
+          <p>Agenda la ruta que quieras hacer para verla aqui.</p>
+        </div>
+      </ng-template>
+    </ion-list>
+  </div>
+</ion-content>
+
+<app-footer></app-footer>

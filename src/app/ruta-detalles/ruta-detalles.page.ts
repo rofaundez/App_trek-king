@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonItem, IonLabel, IonChip, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCardSubtitle, IonItem, IonLabel, IonChip, IonIcon, IonButton, IonModal, IonDatetime, IonText, IonDatetimeButton } from '@ionic/angular/standalone';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FooterComponent } from '../components/footer/footer.component';
+import { addIcons } from 'ionicons';
+import { calendarOutline, closeOutline, checkmarkOutline } from 'ionicons/icons';
 
 interface RutaInfo {
   descripcion: string;
@@ -20,7 +22,7 @@ interface RutaInfo {
   templateUrl: './ruta-detalles.page.html',
   styleUrls: ['./ruta-detalles.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonDatetimeButton, 
     IonContent, 
     IonHeader, 
     IonTitle, 
@@ -36,6 +38,10 @@ interface RutaInfo {
     IonLabel, 
     IonChip,
     IonButton,
+    IonModal,
+    IonDatetime,
+    IonIcon,
+    IonText,
     CommonModule, 
     FormsModule,
     FooterComponent
@@ -47,6 +53,12 @@ export class RutaDetallesPage implements OnInit {
   rutaUbicacion: string = '';
   rutaDificultad: string = '';
   rutaImagen: string = '';
+  
+  // Variables para el calendario
+  isCalendarModalOpen: boolean = false;
+  fechaSeleccionada: string = '';
+  horaSeleccionada: string = '';
+  fechaMinima: string = '';
   
   // Información específica de la ruta
   rutaDescripcion: string = '';
@@ -109,9 +121,15 @@ export class RutaDetallesPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router
-  ) { }
+  ) { 
+    // Añadir iconos necesarios
+    addIcons({ calendarOutline, closeOutline, checkmarkOutline });
+  }
 
   ngOnInit() {
+    // Inicializamos la fecha mínima para el calendario (fecha actual)
+    this.fechaMinima = new Date().toISOString();
+    
     // Obtenemos los parámetros de la ruta desde la URL
     this.route.queryParams.subscribe(params => {
       if (params) {
@@ -150,5 +168,48 @@ export class RutaDetallesPage implements OnInit {
 
   volver() {
     this.router.navigate(['/home']);
+  }
+
+  // Métodos para el manejo del calendario
+  abrirCalendario() {
+    this.isCalendarModalOpen = true;
+  }
+
+  cerrarCalendario() {
+    this.isCalendarModalOpen = false;
+  }
+
+  confirmarFecha() {
+    // Verificamos que se haya seleccionado una fecha y hora
+    if (!this.fechaSeleccionada || !this.horaSeleccionada) {
+      alert('Por favor, selecciona una fecha y hora para continuar.');
+      return;
+    }
+    
+    // Aquí se podría implementar la lógica para guardar la ruta con la fecha seleccionada
+    // Por ahora solo mostramos un mensaje y cerramos el modal
+    console.log('Ruta guardada para la fecha:', this.fechaSeleccionada, 'a las', this.horaSeleccionada);
+    this.isCalendarModalOpen = false;
+    
+    // Formateamos la fecha para mostrarla de manera más amigable
+    const fechaFormateada = new Date(this.fechaSeleccionada).toLocaleDateString('es-ES', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    // Extraemos solo la hora y minutos del string de hora
+    const horaFormateada = this.horaSeleccionada.substring(11, 16);
+    
+    alert(`¡Ruta guardada con éxito!\nHas programado la ruta "${this.rutaNombre}" para el ${fechaFormateada} a las ${horaFormateada}.`);
+  }
+
+  cambioFecha(event: any) {
+    this.fechaSeleccionada = event.detail.value;
+  }
+
+  cambioHora(event: any) {
+    this.horaSeleccionada = event.detail.value;
   }
 }

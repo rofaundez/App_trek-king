@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="header-container">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
@@ -62,16 +62,8 @@
 
       <!-- Botones de acción -->
       <div class="botones-accion">
-        <ion-button color="success" class="boton">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" style="margin-right: 8px">
-            <path d="M13.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM9.8 8.9L7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3C14.8 12 16.8 13 19 13v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5.1-.8.1L6 8.3V13h2V9.6l1.8-.7"/>
-          </svg>
-          Iniciar Ruta
-        </ion-button>
-        <ion-button color="medium" class="boton" fill="outline">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" style="margin-right: 8px">
-            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
-          </svg>
+        <ion-button color="medium" class="boton" fill="outline" (click)="abrirCalendario()">
+          <ion-icon name="calendar-outline" style="margin-right: 8px"></ion-icon>
           Guardar en Mis Rutas
         </ion-button>
       </div>
@@ -79,5 +71,72 @@
   </ion-card>
   </div>
 </ion-content>
+
+<!-- Modal del calendario -->
+<ion-modal [isOpen]="isCalendarModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Seleccionar fecha y hora</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarCalendario()">
+            <ion-icon name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="calendario-container">
+        <ion-text class="ion-text-center">
+          <h4>¿Cuándo quieres realizar esta ruta?</h4>
+        </ion-text>
+        
+        <div class="selector-container">
+          <div class="fecha-selector">
+            <ion-text>
+              <h5>Selecciona una fecha</h5>
+            </ion-text>
+            <ion-datetime 
+              class="xd"
+              presentation="date"
+              [preferWheel]="false"
+              [showDefaultButtons]="false"
+              [min]="fechaMinima"
+              (ionChange)="cambioFecha($event)"
+              locale="es-ES"
+              min="today"
+              [firstDayOfWeek]="1"
+            ></ion-datetime>
+          </div>
+          
+          <div class="hora-selector">
+            <ion-text>
+              <h5>Selecciona una hora</h5>
+            </ion-text>
+            <ion-datetime
+              class="xd"
+              color="success"
+              presentation="time"
+              [preferWheel]="true"
+              [showDefaultButtons]="false"
+              (ionChange)="cambioHora($event)"
+              locale="es-ES"
+              minuteValues="0, 15, 30, 45"
+            ></ion-datetime>
+          </div>
+        </div>
+        
+        <div class="ion-padding ion-text-center">
+          <ion-button expand="block" (click)="confirmarFecha()" [disabled]="!fechaSeleccionada || !horaSeleccionada">
+            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+            GUARDAR EN MIS RUTAS
+          </ion-button>
+        </div>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
 
 <app-footer></app-footer>
