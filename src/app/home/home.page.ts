@@ -139,7 +139,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   onSearch(event: any) {
-    const searchTerm = event.target.value.toLowerCase();
+    const searchTerm = (event.target.value?.toLowerCase() ?? '');
     this.searchTerm = event.target.value;
     let rutasFiltradas = [...this.allRoutes];
     
@@ -153,14 +153,16 @@ export class HomePage implements OnInit, OnDestroy {
     // Luego aplicamos el filtro de búsqueda
     if (searchTerm !== '') {
       rutasFiltradas = rutasFiltradas.filter(ruta => 
-        ruta.nombre.toLowerCase().includes(searchTerm) ||
-        (ruta.ubicacion ? ruta.ubicacion.toLowerCase().includes(searchTerm) : false)
+        ruta.nombre?.toLowerCase()?.includes(searchTerm) ||
+        ruta.ubicacion?.toLowerCase()?.includes(searchTerm)
       );
       
       // Generamos sugerencias de autocompletado
       this.generarSugerencias(searchTerm);
     } else {
-      // Si no hay texto de búsqueda, limpiamos las sugerencias
+      // Si no hay texto de búsqueda, mostramos todas las rutas
+      rutasFiltradas = [...this.allRoutes];
+      // Limpiamos las sugerencias
       this.sugerencias = [];
     }
     
