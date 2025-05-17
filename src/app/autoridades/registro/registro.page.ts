@@ -139,7 +139,7 @@ export class RegistroPage implements OnInit {
     }
   }
   home (){
-    this.router.navigate(['/home']);
+    this.router.navigate(['/autoridad-home']);
   }
   validateConfirmPassword(password: string, confirmPass: string): boolean {
     return password === confirmPass;

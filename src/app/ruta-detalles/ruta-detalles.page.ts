@@ -26,7 +26,7 @@ interface RutaInfo {
   templateUrl: './ruta-detalles.page.html',
   styleUrls: ['./ruta-detalles.page.scss'],
   standalone: true,
-  imports: [IonDatetimeButton, 
+  imports: [
     IonContent, 
     IonHeader, 
     IonTitle, 
@@ -47,8 +47,6 @@ interface RutaInfo {
     IonIcon,
     IonText,
     IonTextarea,
-    IonInput,
-    IonRange,
     CommonModule, 
     FormsModule,
     FooterComponent

@@ -44,19 +44,19 @@
         </ion-item>
 
         <!-- Contraseña -->
-        <ion-item>
+        <!-- <ion-item>
           <input
             [type]="showPassword ? 'text' : 'password'"
             [(ngModel)]="password"
             name="password"
             label="Nueva contraseña"
             labelPlacement="floating"
-            placeholder="Deje en blanco para mantener la actual">
+            placeholder="contraseña">
           
           <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility('password')">
             <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
           </ion-button>
-        </ion-item>
+        </ion-item> -->
 
         <!-- Confirmar contraseña -->
         <ion-item *ngIf="password">
