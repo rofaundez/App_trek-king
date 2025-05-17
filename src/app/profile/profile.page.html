@@ -13,10 +13,7 @@
       <ion-avatar class="profile-avatar">
         <img [src]="userProfile.photo" alt="Profile photo">
       </ion-avatar>
-      <ion-button *ngIf="isEditing" fill="clear" class="change-photo-btn">
-        <input type="file" (change)="onPhotoSelect($event)" accept="image/*">
-        <ion-icon name="camera"></ion-icon>
-      </ion-button>
+        <input *ngIf="isEditing" fill="clear" class="change-photo-btn" type="file" (change)="onPhotoSelect($event)" accept="image/*" class="change-photo-btn" >
     </div>
 
     <ion-list class="lista_datos">

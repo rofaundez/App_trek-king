@@ -401,3 +401,37 @@
     }
   }
 }
+
+// Estilos adicionales para mejorar la experiencia en dispositivos móviles
+@media (max-width: 576px) {
+  .comentarios-modal {
+    --height: 90%;
+    --width: 100%;
+    --border-radius: 16px 16px 0 0;
+  }
+  
+  .comentario-form {
+    position: sticky;
+    bottom: 0;
+    background-color: rgba(49, 26, 9, 0.95);
+    padding-top: 10px;
+    margin-top: 10px;
+    z-index: 10;
+  }
+  
+  .comentario-textarea {
+    max-height: 120px;
+    overflow-y: auto;
+  }
+}
+
+// Mejora para el enfoque del textarea
+ion-textarea.has-focus {
+  --padding-bottom: 20px; // Añade espacio adicional cuando está enfocado
+}
+
+// Asegurarse de que el contenido del modal sea scrollable
+.comentarios-content {
+  overflow-y: auto;
+  position: relative;
+}

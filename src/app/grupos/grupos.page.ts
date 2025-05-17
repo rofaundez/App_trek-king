@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -405,5 +405,40 @@ export class GruposPage implements OnInit {
         puntosInteres: publicacion.puntosInteres
       }
     });
+  }
+  
+  @ViewChild('comentarioTextarea') comentarioTextarea!: ElementRef;
+  @ViewChild('comentarioForm') comentarioForm!: ElementRef;
+  
+  /**
+   * Maneja el evento de enfoque en el textarea
+   * Ajusta el scroll para que el área de texto sea visible cuando aparece el teclado
+   */
+  onTextareaFocus() {
+    // Esperamos a que el teclado aparezca
+    setTimeout(() => {
+      if (this.comentarioForm && this.comentarioForm.nativeElement) {
+        // Obtenemos la posición del formulario
+        const yOffset = this.comentarioForm.nativeElement.getBoundingClientRect().top;
+        const modalContent = document.querySelector('.comentarios-content');
+        
+        if (modalContent) {
+          // Desplazamos el contenido para que el formulario sea visible
+          modalContent.scrollTo({
+            top: yOffset - 100, // Ajustamos para dejar espacio arriba
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, 300); // Pequeño retraso para asegurar que el teclado ya está visible
+  }
+  
+  /**
+   * Maneja el evento de scroll del contenido
+   * @param event Evento de scroll
+   */
+  onContentScroll(event: any) {
+    // Podemos usar este método para realizar acciones adicionales durante el scroll
+    // Por ejemplo, ocultar elementos de la UI mientras se hace scroll
   }
 }
