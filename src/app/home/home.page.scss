@@ -62,32 +62,61 @@
 
 
 
+// Estilos para la barra de búsqueda personalizada
 .search-container {
   position: relative;
   width: 100%;
   z-index: 100;
+  margin-bottom: 15px;
 }
 
 .custom-searchbar {
-  --background: rgba(20, 20, 20, 0.904);
-  --border-radius: 25px;
-  --box-shadow: 3px 3px 6px rgb(0, 0, 0);
-  --placeholder-color: rgb(255, 255, 255);
-  --color: white;
-  --icon-color: rgba(255, 255, 255, 0.9);
-  padding: 0%;
-  border-radius: 25px;
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  background-color: rgba(20, 20, 20, 0.904);
+  padding: 8px 12px;
+  box-shadow: 3px 3px 6px rgb(0, 0, 0);
+  transition: all 0.3s ease;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  padding: 8px 0;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-button {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: transform 0.3s ease;
+}
+
+.search-button:active {
+  transform: scale(0.95);
 }
 
 .autocomplete-container {
   position: absolute;
-  width: calc(100% - 30px);
-  margin: 0 15px;
-  background: rgba(20, 20, 20, 0.95);
+  width: 100%;
+  background: rgba(0, 0, 0, 0.822);
   border-radius: 0 0 15px 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   z-index: 999;
+  size: 52px;
   max-height: 200px;
   overflow-y: auto;
 }
@@ -217,7 +246,7 @@
     background-image: url('../../assets/img/hojas_header.jpg');
     background-size: cover;
     background-position: center;
-    padding: 15px 15px 10px 15px;
+    padding: 55px 15px 10px 15px;
     color: white;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     position: relative;
