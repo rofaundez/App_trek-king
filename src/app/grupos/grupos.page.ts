@@ -10,7 +10,7 @@ import { BuscarGrupoService, PublicacionGrupo, ComentarioGrupo } from '../servic
 import { AuthService } from '../services/auth.service';
 import { addIcons } from 'ionicons';
 import { peopleOutline, personCircleOutline, timeOutline, sendOutline, chatbubbleOutline, closeOutline, returnDownForwardOutline, closeCircleOutline, eyeOutline, trashOutline } from 'ionicons/icons';
-
+import { FooterComponent } from '../components/footer/footer.component';
 interface Grupo {
   id: string;
   titulo: string;
@@ -46,7 +46,8 @@ interface Grupo {
     IonTextarea,
     IonModal,
     CommonModule, 
-    FormsModule
+    FormsModule,
+    FooterComponent
   ]
 })
 export class GruposPage implements OnInit {

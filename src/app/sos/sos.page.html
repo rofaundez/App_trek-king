@@ -40,16 +40,16 @@
       <div class="timer">{{ cuentaRegresiva }}</div>
 
       <p class="mensaje">Selecciona una situación de emergencia:</p>
-      <ion-list class="sos-options">
-        <ion-item
-          button
+      <div class="sos-options">
+        <button
           *ngFor="let mensaje of mensajesEmergencia"
+          class="emergency-option-button"
           (click)="seleccionarMensaje(mensaje)"
           [class.selected]="mensaje === mensajeSeleccionado"
         >
-          <ion-label>{{ mensaje }}</ion-label>
-        </ion-item>
-      </ion-list>
+          {{ mensaje }}
+        </button>
+      </div>
 
       <p *ngIf="mensajeSeleccionado" class="sos-instruccion">
         <strong>Instrucciones:</strong><br />
@@ -72,6 +72,5 @@
       </ul>
     </div>
   </div>
+  <app-footer></app-footer>
 </ion-content>
-
-<app-footer></app-footer>

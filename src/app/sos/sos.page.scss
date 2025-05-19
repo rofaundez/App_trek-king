@@ -1,212 +1,143 @@
+// HEADER
 .header-container {
-    background-image: url('../../assets/img/hojas_header.jpg');
-    background-size: cover;
-    background-position: center;
-    padding: 15px;
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  background-image: url('../../assets/img/hojas_header.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 15px;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.459);
+    z-index: 0;
+  }
+
+  ion-toolbar {
+    --background: transparent;
+  }
+
+  .user-welcome {
+    display: flex;
+    align-items: center;
     position: relative;
-  
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.459);
-      z-index: 0;
+    z-index: 1;
+
+    ion-avatar {
+      margin-right: 10px;
+      border: 3px solid rgba(255, 255, 255, 0.8);
     }
-  
-    ion-toolbar {
-      --background: transparent;
-    }
-  
-    .user-welcome {
-      display: flex;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-  
-      ion-avatar {
-        margin-right: 10px;
-        border: 3px solid rgba(255, 255, 255, 0.8);
-      }
-  
-      .welcome-text h2, .welcome-text h3 {
+
+    .welcome-text {
+      h2, h3 {
         margin: 0;
       }
     }
   }
-  
-  .sos-content {
-    background-image: url('../../assets/img/intento_de_fondo.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-  
-    .sos-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(94, 68, 55, 0.897);
-      z-index: 1;
-    }
-  
-    .sos-container {
-      position: relative;
-      z-index: 2;
-      padding: 20px;
-      color: white;
-  
-      .sos-section {
-        text-align: center;
-        margin-bottom: 30px;
-  
-        .sos-title {
-          font-size: 24px;
-          font-weight: bold;
-          text-shadow: 1px 1px 2px black;
-        }
-  
-        .sos-description {
-          font-size: 16px;
-          margin: 10px 0 20px;
-          color: #e0e0e0;
-        }
-  
-        .sos-button, .group-button {
-          display: block;
-          width: 80%;
-          margin: 10px auto;
-          background-color: #c62828;
-          color: white;
-          border: none;
-          padding: 15px 30px;
-          font-size: 18px;
-          border-radius: 20px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-          transition: background-color 0.3s, transform 0.2s;
-  
-          &:active {
-            background-color: #b71c1c;
-            transform: scale(0.95);
-          }
-        }
-  
-        .group-button {
-          background-color: #c62828; // marrón clarito para "avisar grupo"
-          
-          &:active {
-            background-color: #6d4c41;
-          }
-        }
-      }
-  
-      .sos-info {
-        padding: 15px;
-        background-color: rgba(0, 0, 0, 0.4);
-        border-radius: 15px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-  
-        .sos-subtitle {
-          font-size: 20px;
-          margin-bottom: 10px;
-          text-shadow: 1px 1px 2px black;
-        }
-  
-        .sos-lista {
-          list-style-type: disc;
-          padding-left: 20px;
-  
-          li {
-            margin-bottom: 8px;
-            color: #ddd;
-          }
-        }
-      }
-    }
+}
+
+// CONTENIDO PRINCIPAL
+.sos-content {
+  background-image: url('../../assets/img/intento_de_fondo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 56px); // Deja espacio al footer
+  padding: 20px;
+  box-sizing: border-box;
+
+  .sos-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(94, 68, 55, 0.897);
+    z-index: 0;
   }
-  
-  .custom-alert {
-    --background: rgba(94, 68, 55, 0.9);
-    --color: #ffffff;
-  
-    .alert-wrapper {
-      border-radius: 16px;
-      border: 2px solid #c28f72;
-      background: rgba(94, 68, 55, 0.95);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-    }
-  
-    .alert-title {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #f0e6d2;
-      text-shadow: 1px 1px 2px black;
-    }
-  
-    .alert-message {
-      font-size: 1.1em;
-      color: #e0e0e0;
-      text-shadow: 1px 1px 2px black;
-    }
-  
-    .alert-button {
-      color: #ffffff;
-      background-color: #388e3c;
-      border-radius: 8px;
-      margin-top: 10px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-  
-    .alert-button:hover {
-      background-color: #2e7d32;
-    }
-  }
-  
-  .sos-content {
-    --background: #fff3f3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  
+
   .sos-container {
-    margin-top: 50px;
+    position: relative;
+    z-index: 2;
     width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .sos-button {
-    font-size: 22px;
-    font-weight: bold;
-    padding: 20px 35px;
-    background-color: #d32f2f !important;
+    padding: 20px;
     color: white;
-    border-radius: 16px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    flex-grow: 1;
+    box-sizing: border-box;
   }
-  
-  .sos-warning {
-    background-color: #ffcccb;
-    color: #7b0000;
+
+  .sos-section {
     text-align: center;
-    font-weight: bold;
-    padding: 15px;
-    border-radius: 12px;
-    margin: 10px 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    z-index: 5;
+    margin-bottom: 30px;
+
+    .sos-title {
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px black;
+    }
+
+    .sos-description {
+      font-size: 16px;
+      margin: 10px 0 20px;
+      color: #e0e0e0;
+    }
+
+    .sos-button, .group-button {
+      display: block;
+      width: 60%;
+      margin: 30px auto;
+      height: 150px;
+      background-color: #c62828;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      transition: background-color 0.3s, transform 0.2s;
+
+      &:active {
+        background-color: #b71c1c;
+        transform: scale(0.95);
+      }
+    }
+
+    .group-button {
+      background-color: #8e4b32;
+
+      &:active {
+        background-color: #6d4c41;
+      }
+    }
   }
-  
+
+  .sos-info {
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+
+    .sos-subtitle {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 2px black;
+    }
+
+    .sos-lista {
+      list-style-type: disc;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 8px;
+        color: #ddd;
+      }
+    }
+  }
+
   .sos-popup {
     position: fixed;
     top: 10%;
@@ -221,28 +152,117 @@
     max-width: 400px;
     z-index: 100;
     text-align: center;
-  
+
     h3 {
       margin-bottom: 10px;
     }
-  
+
     .timer {
       font-size: 36px;
       font-weight: bold;
       color: #2196f3;
       margin: 15px 0;
     }
-  
-    ion-button {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-  
+
     .mensaje {
       margin-top: 20px;
       font-size: 16px;
       color: #333;
       font-weight: 500;
     }
+
+    .sos-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+
+      .emergency-option-button {
+        background-color: #1e88e5;
+        color: white;
+        border: none;
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #1565c0;
+        }
+
+        &.selected {
+          border: 2px solid #ffffff;
+          background-color: #0d47a1;
+        }
+      }
+    }
+
+    .sos-instruccion {
+      font-size: 15px;
+      margin-top: 10px;
+      color: #444;
+      background-color: #f1f1f1;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    ion-button {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .sos-warning {
+      background-color: #ffcccb;
+      color: #7b0000;
+      text-align: center;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
   }
-  
+}
+
+// ALERTA PERSONALIZADA
+.custom-alert {
+  --background: rgba(94, 68, 55, 0.9);
+  --color: #ffffff;
+
+  .alert-wrapper {
+    border-radius: 16px;
+    border: 2px solid #c28f72;
+    background: rgba(94, 68, 55, 0.95);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  }
+
+  .alert-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #f0e6d2;
+    text-shadow: 1px 1px 2px black;
+  }
+
+  .alert-message {
+    font-size: 1.1em;
+    color: #e0e0e0;
+    text-shadow: 1px 1px 2px black;
+  }
+
+  .alert-button {
+    color: #ffffff;
+    background-color: #388e3c;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &:hover {
+      background-color: #2e7d32;
+    }
+  }
+}
