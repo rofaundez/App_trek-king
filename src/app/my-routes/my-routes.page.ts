@@ -6,6 +6,7 @@ import { DatabaseService } from '../services/database.service';
 import { AuthService } from '../services/auth.service';
 import { Rutas } from '../models/rutas.model';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from '../components/header/header.component';
 import { FooterComponent } from '../components/footer/footer.component';
 
 @Component({
@@ -18,7 +19,8 @@ import { FooterComponent } from '../components/footer/footer.component';
     CommonModule, 
     FormsModule, 
     RouterModule,
-    FooterComponent
+    FooterComponent,
+    HeaderComponent
   ]
 })
 export class MyRoutesPage implements OnInit {

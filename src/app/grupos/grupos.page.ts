@@ -10,6 +10,7 @@ import { BuscarGrupoService, PublicacionGrupo, ComentarioGrupo } from '../servic
 import { AuthService } from '../services/auth.service';
 import { addIcons } from 'ionicons';
 import { peopleOutline, personCircleOutline, timeOutline, sendOutline, chatbubbleOutline, closeOutline, returnDownForwardOutline, closeCircleOutline, eyeOutline, trashOutline } from 'ionicons/icons';
+import { HeaderComponent } from '../components/header/header.component';
 
 interface Grupo {
   id: string;
@@ -27,6 +28,7 @@ interface Grupo {
   styleUrls: ['./grupos.page.scss'],
   standalone: true,
   imports: [IonButtons, IonBackButton, 
+    HeaderComponent,
     IonContent, 
     IonHeader, 
     IonTitle, 

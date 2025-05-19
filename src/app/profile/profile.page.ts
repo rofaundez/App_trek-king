@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import { AlertController } from '@ionic/angular';
+import { HeaderComponent } from '../components/header/header.component';
 import { Subscription } from 'rxjs';
 import { ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Firestore, doc, getDoc, updateDoc, collection, query, where, getDocs } from '@angular/fire/firestore';
@@ -16,7 +17,7 @@ import { Firestore, doc, getDoc, updateDoc, collection, query, where, getDocs } 
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [HeaderComponent,IonicModule, CommonModule, FormsModule]
 })
 export class ProfilePage implements OnInit, OnDestroy {
   userProfile: any = {

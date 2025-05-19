@@ -36,7 +36,6 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
 
-
 input {
     width: 100%;
     border:none;
@@ -65,3 +64,8 @@ option{
     background-color: transparent;
     color: rgb(0, 0, 0);
 }
+
+.ion-padding {
+    padding: 10px; 
+}
+

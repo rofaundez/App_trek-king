@@ -7,6 +7,7 @@ import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { logOutOutline, trashOutline, saveOutline } from 'ionicons/icons';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-perfil-autoridad',
@@ -16,7 +17,8 @@ import { logOutOutline, trashOutline, saveOutline } from 'ionicons/icons';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule
+    IonicModule,
+    HeaderComponent
   ]
 })
 export class PerfilPage implements OnInit {
