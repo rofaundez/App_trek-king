@@ -7,7 +7,8 @@
     "axe/forms": [
       "default",
       {
-        "label": "off"
+        "label": "off",
+        "select-name": "off"
       }
     ],
     "compat-api/css": [
@@ -25,6 +26,12 @@
         ]
       }
     ],
-    "css-prefix-order": "off"
+    "css-prefix-order": "off",
+    "axe/name-role-value": [
+      "default",
+      {
+        "button-name": "off"
+      }
+    ]
   }
 }

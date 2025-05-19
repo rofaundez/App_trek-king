@@ -13,12 +13,55 @@
 
 <ion-content class="sos-content">
   <div class="sos-overlay"></div>
+
   <div class="sos-container">
     <div class="sos-section">
-      <h2 class="sos-title">¿Necesitas Ayuda?</h2>
-      <p class="sos-description">Presiona los siguientes botones para alertar a las autoridades o a tu grupo de contacto.</p>
-      <button class="sos-button" (click)="sendSOSAlert()">SOS - Avisar a autoridades</button>
-      <button class="group-button" (click)="notifyGroup()">Avisar a tu grupo!</button>
+      <h2 class="sos-title">Emergencia</h2>
+      <p class="sos-description">Selecciona una opción para solicitar ayuda</p>
+
+      <!-- Botón con popup -->
+      <button class="sos-button" (click)="mostrarPopup()">SOS - Avisar a autoridades</button>
+
+      <!-- Botón para grupo -->
+      <button class="group-button" (click)="avisarGrupo()">Avisar a mi grupo</button>
+    </div>
+
+    <div class="sos-info">
+      <h3 class="sos-subtitle">¿Cuándo usar el botón SOS?</h3>
+      <ul class="sos-lista">
+        <li>En caso de accidente o pérdida.</li>
+        <li>Si no puedes seguir caminando.</li>
+        <li>Cuando haya una amenaza en la ruta.</li>
+      </ul>
+    </div>
+
+    <!-- POPUP de cuenta regresiva y opciones -->
+    <div *ngIf="popupVisible" class="sos-popup">
+      <h3>¿Estás seguro de activar el SOS?</h3>
+      <div class="timer">{{ cuentaRegresiva }}</div>
+
+      <p class="mensaje">Selecciona una situación de emergencia:</p>
+      <div class="sos-options">
+        <button
+          *ngFor="let mensaje of mensajesEmergencia"
+          class="emergency-option-button"
+          (click)="seleccionarMensaje(mensaje)"
+          [class.selected]="mensaje === mensajeSeleccionado"
+        >
+          {{ mensaje }}
+        </button>
+      </div>
+
+      <p *ngIf="mensajeSeleccionado" class="sos-instruccion">
+        <strong>Instrucciones:</strong><br />
+        {{ obtenerInstruccion(mensajeSeleccionado) }}
+      </p>
+
+      <ion-button expand="block" color="danger" (click)="cancelarSOS()">Cancelar</ion-button>
+
+      <div class="sos-warning">
+        ⚠️ Usar este botón solo en emergencias reales. El mal uso puede tener consecuencias legales.
+      </div>
     </div>
 
     <div class="sos-info">
@@ -26,9 +69,9 @@
       <ul class="sos-lista">
         <li>Busca un lugar seguro.</li>
         <li>Permanece visible y tranquilo.</li>
-        <li>Si vez o escuchas personas o a los rescatistas intenta hacer ruido si puedes o lo necesitas para que te puedan ubicar con mas facilidad.</li>
+        <li>Haz ruido si ves o escuchas personas para que te ubiquen más fácilmente.</li>
       </ul>
     </div>
   </div>
+  <app-footer></app-footer>
 </ion-content>
-<app-footer></app-footer>

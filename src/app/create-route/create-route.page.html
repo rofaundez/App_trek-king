@@ -13,117 +13,135 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
   <div class="content-background"></div>
   <div class="container">
     <div class="header-content">
       <h1>Crear Nueva Ruta</h1>
-      <p>Completa los detalles de tu ruta</p>
+      <p>Completa los detalles para compartir tu experiencia</p>
     </div>
 
     <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
       <div class="form-container">
+        <!-- Información Básica -->
         <div class="form-section">
           <h3>Información Básica</h3>
-          <ion-item class="custom-input">
-            <ion-label position="floating">Nombre de la Ruta</ion-label>
-            <input formControlName="nombre" type="text" placeholder="Ej: Cerro Santa Lucía">
-          </ion-item>
+          <div class="input-group">
+            <ion-item class="custom-input">
+              <ion-label position="floating">Nombre de la Ruta</ion-label>
+              <ion-input formControlName="nombre" type="text" placeholder="Ej: Cerro Santa Lucía"></ion-input>
+            </ion-item>
 
-          <ion-item class="custom-input">
-            <ion-textarea 
-              formControlName="descripcion" 
-              rows="4"
-              placeholder="Describe la ruta, sus características y recomendaciones">
-            </ion-textarea>
-          </ion-item>
+            <ion-item class="custom-input">
+              <ion-label position="floating">Localidad</ion-label>
+              <ion-input formControlName="localidad" type="text" placeholder="Ej: Santiago, Chile"></ion-input>
+            </ion-item>
 
-          <ion-item class="custom-input">
-            <ion-label position="floating">Localidad</ion-label>
-            <input formControlName="localidad" type="text" placeholder="Ej: Santiago, Chile">
-          </ion-item>
+            <ion-item class="custom-input">
+              <ion-label position="floating">Dificultad</ion-label>
+              <ion-select formControlName="dificultad" interface="action-sheet">
+                <ion-select-option value="Fácil">Fácil</ion-select-option>
+                <ion-select-option value="Moderada">Moderada</ion-select-option>
+                <ion-select-option value="Difícil">Difícil</ion-select-option>
+              </ion-select>
+            </ion-item>
 
-          <ion-item class="custom-input">
-            <ion-label position="floating">Dificultad</ion-label>
-            <ion-select formControlName="dificultad" interface="action-sheet">
-              <ion-select-option value="Fácil">Fácil</ion-select-option>
-              <ion-select-option value="Moderada">Moderada</ion-select-option>
-              <ion-select-option value="Difícil">Difícil</ion-select-option>
-              <ion-select-option value="Muy Difícil">Muy Difícil</ion-select-option>
-            </ion-select>
-          </ion-item>
+            <ion-item class="custom-input description-textarea">
+              <ion-label position="floating">Descripción</ion-label>
+              <ion-textarea 
+                formControlName="descripcion" 
+                rows="4"
+                placeholder="Describe la ruta, sus características y recomendaciones">
+              </ion-textarea>
+            </ion-item>
+          </div>
         </div>
 
+        <!-- Imagen de la Ruta -->
         <div class="form-section">
           <h3>Imagen de la Ruta</h3>
-          <div class="image-upload">
-            <ion-button class="upload-button" (click)="fileInput.click()">
-              <ion-icon name="image-outline" slot="start"></ion-icon>
-              Seleccionar Imagen
-            </ion-button>
-            <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
-          </div>
-          <div class="image-preview" *ngIf="imagePreview">
-            <img [src]="imagePreview" alt="Preview">
+          <div class="image-section">
+            <div class="image-upload">
+              <ion-button class="upload-button" (click)="fileInput.click()">
+                <ion-icon name="image-outline" slot="start"></ion-icon>
+                Seleccionar Imagen
+              </ion-button>
+              <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
+            </div>
+            <div class="image-preview" *ngIf="imagePreview">
+              <img [src]="imagePreview" alt="Vista previa de la imagen">
+            </div>
           </div>
         </div>
 
+        <!-- Ubicación -->
         <div class="form-section">
           <h3>Ubicación</h3>
-          <div class="location-point">
-            <h4>Punto de Inicio</h4>
-            <ion-button expand="block" class="map-button" (click)="openMapModal('start')">
-              <ion-icon name="map-outline" slot="start"></ion-icon>
-              Seleccionar punto de inicio en el mapa
-            </ion-button>
-            <ion-item class="custom-input">
-              <ion-label position="floating">Dirección</ion-label>
-              <input formControlName="puntoInicioDireccion" readonly>
-            </ion-item>
-            <div class="coordinates-container">
-              <ion-item class="custom-input">
-                <ion-label position="floating">Latitud</ion-label>
-                <input formControlName="puntoInicioLat" type="number" readonly>
-              </ion-item>
-              <ion-item class="custom-input">
-                <ion-label position="floating">Longitud</ion-label>
-                <input formControlName="puntoInicioLng" type="number" readonly>
-              </ion-item>
+          <div class="location-container">
+            <!-- Punto de Inicio -->
+            <div class="location-point">
+              <h4>Punto de Inicio</h4>
+              <ion-button expand="block" class="map-button" (click)="openMapModal('start')">
+                <ion-icon name="map-outline" slot="start"></ion-icon>
+                Seleccionar en el mapa
+              </ion-button>
+              <div class="location-details">
+                <ion-item class="custom-input">
+                  <ion-label position="floating">Dirección</ion-label>
+                  <ion-input formControlName="puntoInicioDireccion" readonly></ion-input>
+                </ion-item>
+                <div class="coordinates-container">
+                  <ion-item class="custom-input">
+                    <ion-label position="floating">Latitud</ion-label>
+                    <ion-input formControlName="puntoInicioLat" type="number" readonly></ion-input>
+                  </ion-item>
+                  <ion-item class="custom-input">
+                    <ion-label position="floating">Longitud</ion-label>
+                    <ion-input formControlName="puntoInicioLng" type="number" readonly></ion-input>
+                  </ion-item>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div class="location-point">
-            <h4>Punto de Término</h4>
-            <ion-button expand="block" class="map-button" (click)="openMapModal('end')">
-              <ion-icon name="map-outline" slot="start"></ion-icon>
-              Seleccionar punto de término en el mapa
-            </ion-button>
-            <ion-item class="custom-input">
-              <ion-label position="floating">Dirección</ion-label>
-              <input formControlName="puntoTerminoDireccion" readonly>
-            </ion-item>
-            <div class="coordinates-container">
-              <ion-item class="custom-input">
-                <ion-label position="floating">Latitud</ion-label>
-                <input formControlName="puntoTerminoLat" type="number" readonly>
-              </ion-item>
-              <ion-item class="custom-input">
-                <ion-label position="floating">Longitud</ion-label>
-                <input formControlName="puntoTerminoLng" type="number" readonly>
-              </ion-item>
+            <!-- Punto de Término -->
+            <div class="location-point">
+              <h4>Punto de Término</h4>
+              <ion-button expand="block" class="map-button" (click)="openMapModal('end')">
+                <ion-icon name="map-outline" slot="start"></ion-icon>
+                Seleccionar en el mapa
+              </ion-button>
+              <div class="location-details">
+                <ion-item class="custom-input">
+                  <ion-label position="floating">Dirección</ion-label>
+                  <ion-input formControlName="puntoTerminoDireccion" readonly></ion-input>
+                </ion-item>
+                <div class="coordinates-container">
+                  <ion-item class="custom-input">
+                    <ion-label position="floating">Latitud</ion-label>
+                    <ion-input formControlName="puntoTerminoLat" type="number" readonly></ion-input>
+                  </ion-item>
+                  <ion-item class="custom-input">
+                    <ion-label position="floating">Longitud</ion-label>
+                    <ion-input formControlName="puntoTerminoLng" type="number" readonly></ion-input>
+                  </ion-item>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <ion-button expand="block" type="submit" class="submit-button" [disabled]="!routeForm.valid || !selectedFile">
-          <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-          Crear Ruta
-        </ion-button>
+        <!-- Botón de Envío -->
+        <div class="submit-section">
+          <ion-button expand="block" type="submit" class="submit-button" [disabled]="!routeForm.valid || !selectedFile">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            Crear Ruta
+          </ion-button>
+        </div>
       </div>
     </form>
   </div>
 </ion-content>
+
 <app-footer></app-footer>
 
 <!-- Map Modal -->

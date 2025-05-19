@@ -5,11 +5,12 @@ import { HeaderComponent } from '../components/header/header.component';
 import {
   IonContent,
   IonHeader,
-  IonTitle,
-  IonToolbar,
   IonAvatar,
   IonButton,
-  AlertController
+  AlertController,
+  IonList,
+  IonItem,
+  IonLabel,
 } from '@ionic/angular/standalone';
 import { FooterComponent } from '../components/footer/footer.component';
 import { AuthService } from '../services/auth.service';
@@ -18,9 +19,9 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sos',
+  standalone: true,
   templateUrl: './sos.page.html',
   styleUrls: ['./sos.page.scss'],
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -28,14 +29,39 @@ import { Router } from '@angular/router';
     IonContent,
     IonHeader,
     IonAvatar,
+    IonButton,
+    IonList,
     FooterComponent,
-  ],
+    IonItem,
+    IonLabel
+  ]
 })
 export class SosPage implements OnInit, OnDestroy {
-  userPhoto = 'assets/img/userLogo.png';
-  userName = 'Invitado';
-  userLastName = '';
+  userPhoto: string = 'assets/img/userLogo.png';
+  userName: string = 'Invitado';
+  userLastName: string = '';
   private userSubscription?: Subscription;
+
+  popupVisible: boolean = false;
+  cuentaRegresiva: number = 90;
+  intervalo: any;
+  mensajeSeleccionado: string | null = null;
+
+  mensajesEmergencia = [
+    'Estoy incapacitado y necesito rescate inmediato',
+    'Estoy perdido y no puedo regresar',
+    'Hay un obstaculo en la ruta',
+    'Hay un animal que necesita asistencia medica en la ruta',
+    'Incendio en la zona',
+  ];
+
+  instruccionesPorMensaje: { [key: string]: string } = {
+    'Estoy incapacitado y necesito rescate inmediato': 'Permanece en el lugar, intenta estabilizarte y haz señales visibles.',
+    'Estoy perdido y no puedo regresar': 'Quédate donde estás, no camines más. Las autoridades rastrearán tu última ubicación conocida.',
+    'Hay un obstaculo en la ruta': 'Detalla el obstáculo a los rescatistas y espera en una zona segura.',
+    'Hay un animal que necesita asistencia medica en la ruta': 'Evita acercarte al animal y reporta su ubicación exacta.',
+    'Incendio en la zona': 'Aléjate del fuego y muévete hacia un área despejada, preferiblemente cuesta abajo o contra el viento.',
+  };
 
   constructor(
     private alertController: AlertController,
@@ -58,33 +84,64 @@ export class SosPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
+    this.userSubscription?.unsubscribe();
+    if (this.intervalo) {
+      clearInterval(this.intervalo);
     }
-  }
-
-  async sendSOSAlert() {
-    const alert = await this.alertController.create({
-      header: 'SOS Enviado',
-      message: 'Enviando una alerta SOS con tus datos a las autoridades. Mantén la calma y permanece visible.',
-      buttons: ['OK'],
-      cssClass: 'custom-alert'
-    });
-    await alert.present();
-  }
-
-  async notifyGroup() {
-    const alert = await this.alertController.create({
-      header: 'Grupo Avisado',
-      message: 'Tu grupo ha sido notificado de tu paradero. Quédate en tu ubicación actual.',
-      buttons: ['OK'],
-      cssClass: 'custom-alert'
-    });
-    await alert.present();
   }
 
   goToProfile() {
     this.router.navigate(['/profile']);
     console.log('Ir al perfil desde SOS');
+  }
+
+  mostrarPopup() {
+    this.popupVisible = true;
+    this.cuentaRegresiva = 90;
+    this.mensajeSeleccionado = null;
+
+    this.intervalo = setInterval(() => {
+      this.cuentaRegresiva--;
+      if (this.cuentaRegresiva === 0) {
+        clearInterval(this.intervalo);
+        this.enviarAlerta();
+      }
+    }, 1000);
+  }
+
+  cancelarSOS() {
+    this.popupVisible = false;
+    if (this.intervalo) {
+      clearInterval(this.intervalo);
+    }
+  }
+
+  seleccionarMensaje(mensaje: string) {
+    this.mensajeSeleccionado = mensaje;
+  }
+
+  obtenerInstruccion(mensaje: string): string {
+    return this.instruccionesPorMensaje[mensaje] || 'Sigue las indicaciones generales y espera ayuda.';
+  }
+
+  enviarAlerta() {
+    const mensaje = this.mensajeSeleccionado || 'Necesito ayuda médica urgente';
+    this.popupVisible = false;
+    this.presentAlert('Alerta enviada', `Mensaje enviado: ${mensaje}`);
+  }
+
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK'],
+      cssClass: 'custom-alert'
+    });
+
+    await alert.present();
+  }
+
+  avisarGrupo() {
+    this.presentAlert('Grupo notificado', 'Se ha enviado un aviso a tu grupo.');
   }
 }

@@ -7,7 +7,7 @@
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
         </ion-buttons>
-        <ion-title>Búsqueda de Grupos</ion-title>
+        <ion-title class="titulo-header">Búsqueda de Grupos</ion-title>
       </ion-toolbar>
     </ion-header>    
 
@@ -74,7 +74,7 @@
 </ion-content>
 
 <!-- Modal de comentarios -->
-<ion-modal [isOpen]="isComentariosModalOpen" class="comentarios-modal">
+<ion-modal [isOpen]="isComentariosModalOpen" class="comentarios-modal" (ionBackdropTap)="cerrarComentarios()">
   <ng-template>
     <ion-header class="comentarios-header">
       <ion-toolbar class="headercomentarios">
@@ -86,7 +86,7 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding comentarios-content">
+    <ion-content class="ion-padding comentarios-content" [scrollEvents]="true" (ionScroll)="onContentScroll($event)">
       <div *ngIf="publicacionSeleccionada" class="comentarios-container">
         <div class="publicacion-info" >
           <h4>Ruta: {{publicacionSeleccionada.nombre}}</h4>
@@ -169,7 +169,7 @@
         </div>
         
         <!-- Formulario para añadir comentario o respuesta -->
-        <div class="comentario-form">
+        <div class="comentario-form" #comentarioForm>
           <ion-card>
             <ion-card-header>
               <ion-card-title *ngIf="!modoRespuesta">Deja tu comentario</ion-card-title>
@@ -188,7 +188,9 @@
                   [(ngModel)]="nuevoComentario" 
                   placeholder="{{ modoRespuesta ? 'Escribe tu respuesta aquí...' : 'Escribe tu comentario aquí...' }}"
                   rows="4"
-                  maxlength="500"></ion-textarea>
+                  maxlength="500"
+                  (ionFocus)="onTextareaFocus()"
+                  #comentarioTextarea></ion-textarea>
               </ion-item>
               
               <!-- Botón para enviar -->
@@ -205,3 +207,4 @@
     </ion-content>
   </ng-template>
 </ion-modal>
+<app-footer></app-footer>

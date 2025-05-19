@@ -14,16 +14,25 @@
         </div>
       </div>
 
-      <!-- Search bar con autocompletado -->
+      <!-- Search bar con autocompletado en HTML puro -->
       <div class="search-container">
-        <ion-searchbar placeholder="Buscar rutas" [(ngModel)]="searchTerm" (ionInput)="onSearch($event)" [animated]="true" class="custom-searchbar">
-        </ion-searchbar>
+        <div class="custom-searchbar">
+          <input 
+            type="text" 
+            placeholder="Buscar rutas" 
+            [(ngModel)]="searchTerm" 
+            (input)="onSearch($event)" 
+            class="search-input">
+          <button class="search-button" *ngIf="searchTerm" (click)="searchTerm=''; onSearch($event)">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
         <div class="autocomplete-container" *ngIf="sugerencias.length > 0">
-          <ion-list class="autocomplete-list">
-            <ion-item *ngFor="let sugerencia of sugerencias" (click)="seleccionarSugerencia(sugerencia)" button>
-              <ion-label>{{sugerencia}}</ion-label>
-            </ion-item>
-          </ion-list>
+          <ul class="autocomplete-list">
+            <li *ngFor="let sugerencia of sugerencias" (click)="seleccionarSugerencia(sugerencia)" class="autocomplete-item">
+              {{sugerencia}}
+            </li>
+          </ul>
         </div>
       </div>
 

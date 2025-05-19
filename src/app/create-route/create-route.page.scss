@@ -94,19 +94,23 @@ ion-content {
 .form-container {
   background: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
-  padding: 20px;
+  padding: 25px;
   position: relative;
   z-index: 2;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   margin-bottom: 25px;
   width: 100%;
   backdrop-filter: blur(5px);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .form-section {
-  margin-bottom: 30px;
   position: relative;
   z-index: 2;
+  width: 100%;
 
   h3 {
     color: white;
@@ -132,46 +136,82 @@ ion-content {
   h4 {
     color: rgba(255, 255, 255, 0.9);
     font-size: 17px;
-    margin: 20px 0 15px;
+    margin: 0 0 15px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .description-textarea {
+    margin-top: 5px;
   }
 }
 
 .custom-input {
-  --background: rgba(20, 20, 20, 0.904);
-  --border-radius: 25px;
+  --background: rgba(20, 20, 20, 0.85);
+  --border-radius: 12px;
   --border-style: none;
   --padding-start: 16px;
   --padding-end: 16px;
   margin-bottom: 18px;
   --color: white;
   --placeholder-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 3px 3px 6px rgb(0, 0, 0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   position: relative;
   z-index: 2;
   transition: all 0.3s ease;
+  overflow: hidden;
   
   &:hover, &:focus-within {
     --background: rgba(20, 20, 20, 0.95);
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   }
+  
+  ion-label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  ion-input, ion-textarea, ion-select {
+    --padding-start: 0;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    font-size: 15px;
+  }
+}
+
+.image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .image-upload {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .upload-button, .map-button {
-  --border-radius: 25px;
+  --border-radius: 12px;
   --background: linear-gradient(135deg, #387030 0%, #256e1c 100%);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.603);
-  transition: transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
   padding: 12px 20px;
   height: auto;
   font-weight: 500;
   --color: white;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto 15px;
+  overflow: hidden;
 
   ion-icon {
     margin-right: 8px;
@@ -184,21 +224,25 @@ ion-content {
 
   &:hover {
     --background: linear-gradient(135deg, #3d7c34 0%, #2a7a20 100%);
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    opacity: 0.95;
   }
 }
 
 .image-preview {
   text-align: center;
-  margin: 20px 0;
-  background: rgba(0, 0, 0, 0.2);
+  margin: 15px auto;
+  background: rgba(0, 0, 0, 0.3);
   padding: 15px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  max-width: 400px;
+  transition: all 0.3s ease;
   
   img {
-    max-width: 100%;
-    max-height: 220px;
+    width: 100%;
+    height: 220px;
     border-radius: 8px;
     object-fit: cover;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
@@ -210,6 +254,13 @@ ion-content {
   }
 }
 
+.location-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
 .coordinates-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -219,11 +270,18 @@ ion-content {
 
 .location-point {
   position: relative;
-  margin-bottom: 30px;
-  background: rgba(0, 0, 0, 0.664);
-  border-radius: 21px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.603);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+  }
   
   h4 {
     margin-top: 0;
@@ -231,36 +289,70 @@ ion-content {
     font-size: 17px;
     margin: 0 0 15px 0;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    position: relative;
+    padding-left: 15px;
+    
+    &:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6px;
+      height: 16px;
+      background: linear-gradient(135deg, #387030 0%, #256e1c 100%);
+      border-radius: 3px;
+    }
   }
-  
-  ion-button {
-    margin-bottom: 15px;
+
+  .location-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 }
 
+.submit-section {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 10px;
+}
+
 .submit-button {
-  margin-top: 30px;
-  --border-radius: 25px;
-  font-weight: 500;
+  --border-radius: 12px;
+  font-weight: 600;
   font-size: 18px;
   --background: linear-gradient(135deg, #387030 0%, #256e1c 100%);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.603);
-  transition: transform 0.3s ease;
-  padding: 15px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  padding: 18px 0;
   height: auto;
   --color: white;
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto;
+  letter-spacing: 0.5px;
+  overflow: hidden;
 
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.97);
   }
   
   &:hover {
     --background: linear-gradient(135deg, #3d7c34 0%, #2a7a20 100%);
-    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+    transform: translateY(-2px);
   }
   
   &[disabled] {
-    opacity: 0.7;
+    opacity: 0.6;
+    filter: grayscale(30%);
+  }
+  
+  ion-icon {
+    font-size: 20px;
+    margin-right: 8px;
   }
 }
 
@@ -414,8 +506,8 @@ ion-select {
 ion-modal {
   --height: 85%;
   --width: 92%;
-  --border-radius: 20px;
-  --background: rgba(0, 0, 0, 0.85);
+  --border-radius: 16px;
+  --background: rgba(0, 0, 0, 0.9);
   
   ion-header ion-toolbar {
     --background: linear-gradient(135deg, #387030 0%, #256e1c 100%);
@@ -472,9 +564,63 @@ ion-modal {
   }
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .container {
     padding: 15px 10px;
+  }
+  
+  .form-container {
+    padding: 20px 15px;
+    gap: 20px;
+  }
+  
+  .form-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  .form-section h4 {
+    font-size: 16px;
+  }
+  
+  .header-content h1 {
+    font-size: 22px;
+  }
+  
+  .location-container {
+    gap: 15px;
+  }
+  
+  .location-point {
+    padding: 15px;
+  }
+  
+  .image-preview {
+    max-width: 100%;
+  }
+  
+  .submit-button {
+    max-width: 100%;
+    padding: 15px 0;
+  }
+  
+  .custom-input {
+    --border-radius: 10px;
+  }
+  
+  .upload-button, .map-button, .submit-button {
+    --border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-content h1 {
+    font-size: 20px;
+  }
+  
+  .form-container {
+    padding: 15px 12px;
+    gap: 15px;
   }
   
   .form-section h3 {
@@ -485,28 +631,32 @@ ion-modal {
     font-size: 14px;
   }
   
-  .header-container .header-content h1 {
-    font-size: 22px;
-  }
-}
-
-@media (max-width: 360px) {
-  .header-container .header-content h1 {
-    font-size: 20px;
+  .coordinates-container {
+    gap: 10px;
   }
   
-  .form-container {
-    padding: 15px;
+  .custom-input {
+    margin-bottom: 12px;
+  }
+  
+  .location-point {
+    padding: 12px;
   }
 }
 
 ion-button {
-    --border-radius: 25px;
-    transition: transform 0.3s ease;
-    --color: white;
-    font-weight: 500;
+  --border-radius: 12px;
+  transition: all 0.3s ease;
+  --color: white;
+  font-weight: 500;
+  overflow: hidden;
 
-    &:active {
-      transform: scale(0.95);
-    }
+  &:active {
+    transform: scale(0.95);
   }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

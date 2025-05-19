@@ -3,7 +3,7 @@
 
 <div class="header-contain" style="color: red;">
   <ion-toolbar class="perfil_contain" style="background-color: trasparent;">
-    <h3 class="perfil" style="background-color: trasparent; color: white;">Mi Perfil</h3>
+    <h3 class="perfil" style="background-color: trasparent; color: white;" class="titulo-header">Mi Perfil</h3>
     <ion-buttons slot="start" style="background-color: trasparent ; color: white;">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
@@ -16,10 +16,7 @@
       <ion-avatar class="profile-avatar">
         <img [src]="userProfile.photo" alt="Profile photo">
       </ion-avatar>
-      <ion-button *ngIf="isEditing" fill="clear" class="change-photo-btn">
-        <input type="file" (change)="onPhotoSelect($event)" accept="image/*">
-        <ion-icon name="camera"></ion-icon>
-      </ion-button>
+        <input *ngIf="isEditing" fill="clear" class="change-photo-btn" type="file" (change)="onPhotoSelect($event)" accept="image/*" class="change-photo-btn" >
     </div>
 
     <ion-list class="lista_datos">

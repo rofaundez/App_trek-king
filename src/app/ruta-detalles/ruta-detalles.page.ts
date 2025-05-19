@@ -48,8 +48,6 @@ interface RutaInfo {
     IonIcon,
     IonText,
     IonTextarea,
-    IonInput,
-    IonRange,
     CommonModule, 
     FormsModule,
     FooterComponent

@@ -65,7 +65,13 @@ option{
     color: rgb(0, 0, 0);
 }
 
-.ion-padding {
-    padding: 10px; 
+.header-container{
+    padding-top: 50px;
 }
 
+.titulo-header{
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgb(0, 0, 0);
+}
