@@ -8,6 +8,12 @@ export interface Rutas {
     dificultad: string;            // Simplificado para permitir el formato personalizado
     localidad?: string;            // Cambiado a opcional
     categorias: string[];          // Cambiado a requerido para el sistema de filtrado
+    caracteristicas?: {            // Añadido para la vista de detalles
+        tipoTerreno?: string;
+        mejorEpoca?: string;
+        recomendaciones?: string;
+    };
+    puntosInteres?: string;        // Añadido para la vista de detalles
     creador?: {                    // Cambiado a opcional ya que no siempre se necesita
         id: string;
         nombre: string;

@@ -29,8 +29,7 @@ export class DatabaseService {
         const userStore = db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
         userStore.createIndex('email', 'email', { unique: true });
       }
-      
-      // Create Autoridades store
+
       if (!db.objectStoreNames.contains('autoridades')) {
         const autoridadStore = db.createObjectStore('autoridades', { keyPath: 'id', autoIncrement: true });
         autoridadStore.createIndex('email', 'email', { unique: true });

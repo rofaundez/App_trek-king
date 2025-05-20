@@ -199,11 +199,13 @@ export class RutaDetallesPage implements OnInit {
    * Carga la información específica de la ruta seleccionada
    */
   cargarInformacionRuta() {
-    // Primero verificamos si tenemos la información en los parámetros de la URL (cuando viene de la agenda)
+    // Primero verificamos si tenemos la información en los parámetros de la URL (cuando viene de la agenda o rutas creadas)
     this.route.queryParams.subscribe(params => {
-      if (params['descripcion'] && params['puntosInteres']) {
-        // Si tenemos la información en los parámetros, la usamos
+      if (params['descripcion']) {
+        // Si tenemos la descripción en los parámetros, la usamos
         this.rutaDescripcion = params['descripcion'];
+        
+        // Intentamos parsear las características si existen
         try {
           this.rutaCaracteristicas = params['caracteristicas'] ? JSON.parse(params['caracteristicas']) : {
             tipoTerreno: 'No especificado',
@@ -218,7 +220,9 @@ export class RutaDetallesPage implements OnInit {
             recomendaciones: 'No especificado'
           };
         }
-        this.rutaPuntosInteres = params['puntosInteres'];
+        
+        // Usamos los puntos de interés si existen, o un valor por defecto
+        this.rutaPuntosInteres = params['puntosInteres'] || 'No hay puntos de interés registrados para esta ruta.';
       } else if (this.rutaId && this.rutasInfo[this.rutaId]) {
         // Si no tenemos la información en los parámetros, la buscamos en la base de datos local
         const infoRuta = this.rutasInfo[this.rutaId];
@@ -236,7 +240,6 @@ export class RutaDetallesPage implements OnInit {
         this.rutaPuntosInteres = 'No hay puntos de interés registrados para esta ruta.';
       }
     });
-
   }
 
   volver() {
