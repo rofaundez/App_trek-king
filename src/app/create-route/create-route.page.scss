@@ -3,6 +3,7 @@ ion-content {
   --padding-end: 0;
   --background: none;
   position: relative;
+  --padding-bottom: 80px; /* Espacio para el footer */
 }
 
 .content-background {
@@ -37,6 +38,7 @@ ion-content {
   position: relative;
   z-index: 2;
   min-height: 100%;
+  padding-bottom: 100px; /* Espacio adicional para evitar que el footer oculte contenido */
 }
 
 .header-container {
@@ -317,6 +319,7 @@ ion-content {
   justify-content: center;
   width: 100%;
   padding-top: 10px;
+  margin-bottom: 30px; /* Añadir espacio adicional al final */
 }
 
 .submit-button {

@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { OsmMapService } from '../services/osm-map.service';
 import { FooterComponent } from '../components/footer/footer.component';
+import { RutasGuardadasService } from '../services/rutas-guardadas.service';
 
 @Component({
   selector: 'app-create-route',
@@ -33,7 +34,8 @@ export class CreateRoutePage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private osmMapService: OsmMapService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private rutasGuardadasService: RutasGuardadasService
   ) {
     this.initForm();
     this.imagePreview = 'assets/img/cerro_santa_lucia.jpg';
@@ -116,7 +118,13 @@ export class CreateRoutePage implements OnInit {
           puntosDescanso: []
         };
 
+        // Guardar la ruta en IndexedDB (mantener la funcionalidad existente)
         await this.dbService.addRoute(newRoute);
+        
+        // Guardar la ruta en Firebase en la colección 'creacion-de-rutas'
+        await this.rutasGuardadasService.guardarRutaCreada(newRoute);
+        console.log('Ruta guardada en ambas bases de datos correctamente');
+        
         await this.showAlert('Éxito', 'Ruta creada correctamente');
         this.router.navigate(['/my-routes']);
       } catch (error) {

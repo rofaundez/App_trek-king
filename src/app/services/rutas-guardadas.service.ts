@@ -168,4 +168,33 @@ export class RutasGuardadasService {
       throw error;
     }
   }
+
+  /**
+   * Guarda una ruta creada en la colección 'creacion-de-rutas'
+   * @param ruta Datos de la ruta creada
+   * @returns Promise con el ID del documento creado
+   */
+  async guardarRutaCreada(ruta: any): Promise<string> {
+    try {
+      // Asegurarse de que la ruta tenga el ID del usuario actual
+      const userId = this.getCurrentUserId();
+      if (!userId) {
+        throw new Error('No hay un usuario logueado para guardar la ruta');
+      }
+      
+      // Añadir el ID del usuario a la ruta
+      const rutaConUsuario = {
+        ...ruta,
+        userId: userId
+      };
+      
+      const rutasRef = collection(this.db, 'creacion-de-rutas');
+      const docRef = await addDoc(rutasRef, rutaConUsuario);
+      console.log('Ruta creada guardada correctamente en Firebase:', docRef.id);
+      return docRef.id;
+    } catch (error) {
+      console.error('Error al guardar la ruta creada:', error);
+      throw error;
+    }
+  }
 }
