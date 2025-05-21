@@ -127,8 +127,12 @@ export class CreateRoutePage implements OnInit {
           tipoTerreno = 'Boscoso';
         }
 
+        // Generar un ID único para la ruta
+        const uniqueId = 'ruta_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+
         // Crear el objeto de ruta con toda la información necesaria
         const newRoute = {
+          id: uniqueId, // Asignar un ID único para facilitar la eliminación
           ...this.routeForm.value,
           foto: photoUrl,
           creador: {
@@ -167,7 +171,29 @@ export class CreateRoutePage implements OnInit {
         await loading.dismiss();
         
         await this.showAlert('Éxito', 'Ruta creada correctamente');
-        this.router.navigate(['/my-routes']);
+        
+        // Limpiar el formulario para permitir crear otra ruta
+        this.resetForm();
+        
+        // Preguntar al usuario si desea crear otra ruta o ir a Mis Rutas
+        const actionAlert = await this.alertController.create({
+          header: '¿Qué deseas hacer ahora?',
+          message: 'Has creado una ruta exitosamente',
+          buttons: [
+            {
+              text: 'Crear otra ruta',
+              role: 'cancel'
+            },
+            {
+              text: 'Ver mis rutas',
+              handler: () => {
+                this.router.navigate(['/my-routes']);
+              }
+            }
+          ]
+        });
+        
+        await actionAlert.present();
       } catch (error) {
         console.error('Error creating route:', error);
         const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
@@ -176,6 +202,29 @@ export class CreateRoutePage implements OnInit {
     } else {
       await this.showAlert('Error', 'Por favor completa todos los campos requeridos');
     }
+  }
+  
+  /**
+   * Reinicia el formulario para crear una nueva ruta
+   */
+  private resetForm() {
+    // Reiniciar el formulario pero mantener algunos valores por defecto
+    this.routeForm.reset({
+      nombre: '',
+      descripcion: '',
+      localidad: '',
+      dificultad: 'Fácil',
+      puntoInicioDireccion: '',
+      puntoInicioLat: null,
+      puntoInicioLng: null,
+      puntoTerminoDireccion: '',
+      puntoTerminoLat: null,
+      puntoTerminoLng: null
+    });
+    
+    // Reiniciar la imagen de vista previa
+    this.selectedFile = null;
+    this.imagePreview = 'assets/img/default-route.jpg';
   }
 
   private convertFileToBase64(file: File): Promise<string> {

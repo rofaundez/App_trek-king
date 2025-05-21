@@ -122,6 +122,10 @@
   
 }
 
+.contenido{
+  
+}
+
 .autocomplete-list {
   margin-top: 15px;
   margin-bottom: 15px;
@@ -229,6 +233,7 @@
   display: flex;
   flex-direction: column; // Cambiado a column para apilar elementos
   position: relative;
+  padding-bottom: 15%;
 
   &::before {
     content: "";

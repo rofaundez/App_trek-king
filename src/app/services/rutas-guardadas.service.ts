@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs, query, where, Firestore, DocumentData } from 'firebase/firestore';
+import { Subject } from 'rxjs';
 
 // Interfaz para las rutas agendadas
 export interface RutaAgendada {
@@ -28,6 +29,16 @@ export interface RutaAgendada {
 export class RutasGuardadasService {
   private db: Firestore;
   private currentUserId: string | null = null;
+  
+  // Subject para emitir eventos cuando se crea una nueva ruta
+  private rutaCreadaSubject = new Subject<void>();
+  
+  // Subject para emitir eventos cuando se elimina una ruta
+  private rutaEliminadaSubject = new Subject<string>();
+  
+  // Observables públicos que los componentes pueden suscribirse
+  public rutaCreada$ = this.rutaCreadaSubject.asObservable();
+  public rutaEliminada$ = this.rutaEliminadaSubject.asObservable();
 
   constructor() {
     // Configuración de Firebase obtenida del archivo main.ts
@@ -170,6 +181,178 @@ export class RutasGuardadasService {
   }
 
   /**
+   * Elimina una ruta creada por el usuario de IndexedDB y de Firebase, así como cualquier referencia en otras colecciones
+   * @param rutaId ID de la ruta a eliminar
+   * @returns Promise que se resuelve cuando la ruta ha sido eliminada
+   */
+  async eliminarRutaCreada(rutaId: string): Promise<void> {
+    try {
+      const userId = this.getCurrentUserId();
+      if (!userId) {
+        throw new Error('No hay un usuario logueado para eliminar la ruta');
+      }
+      
+      console.log('Eliminando ruta creada con ID:', rutaId);
+      
+      // Importar las funciones necesarias de Firebase
+      const { doc, deleteDoc, collection, query, where, getDocs, getFirestore, getDoc } = await import('firebase/firestore');
+      
+      // Verificar primero si la ruta existe en la colección 'creacion-de-rutas'
+      const docRef = doc(this.db, 'creacion-de-rutas', rutaId);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        console.warn(`La ruta con ID ${rutaId} no existe en la colección creacion-de-rutas`);
+      } else {
+        console.log(`Ruta encontrada en Firebase: ${JSON.stringify(docSnap.data())}`);
+      }
+      
+      // Eliminar la ruta de la colección 'creacion-de-rutas'
+      await deleteDoc(docRef);
+      console.log('Ruta eliminada correctamente de la colección creacion-de-rutas');
+      
+      // Buscar y eliminar cualquier referencia a esta ruta en la colección 'rutas-guardadas'
+      try {
+        // Buscar todas las rutas guardadas que tengan este rutaId
+        const rutasGuardadasRef = collection(this.db, 'rutas-guardadas');
+        const q = query(rutasGuardadasRef, where('rutaId', '==', rutaId));
+        const querySnapshot = await getDocs(q);
+        
+        console.log(`Se encontraron ${querySnapshot.size} referencias en rutas-guardadas para eliminar`);
+        
+        // Eliminar cada documento encontrado
+        const eliminacionPromises: any[] = [];
+        querySnapshot.forEach((doc) => {
+          console.log('Eliminando referencia en rutas-guardadas:', doc.id, 'con datos:', JSON.stringify(doc.data()));
+          eliminacionPromises.push(deleteDoc(doc.ref));
+        });
+        
+        // Esperar a que todas las eliminaciones se completen
+        if (eliminacionPromises.length > 0) {
+          await Promise.all(eliminacionPromises);
+          console.log(`Se eliminaron ${eliminacionPromises.length} referencias en rutas-guardadas`);
+        } else {
+          console.log('No se encontraron referencias en rutas-guardadas para eliminar');
+        }
+      } catch (referencesError) {
+        console.error('Error al eliminar referencias en rutas-guardadas:', referencesError);
+        // No lanzamos el error para continuar con el proceso de eliminación
+        // pero registramos el error para depuración
+        console.warn('Continuando con el proceso de eliminación a pesar del error en rutas-guardadas');
+      }
+      
+      // Eliminar comentarios asociados a la ruta
+      try {
+        const comentariosRef = collection(this.db, 'comentarios-rutas');
+        const qComentarios = query(comentariosRef, where('rutaId', '==', rutaId));
+        const comentariosSnapshot = await getDocs(qComentarios);
+        
+        const eliminarComentariosPromises: any[] = [];
+        comentariosSnapshot.forEach((doc) => {
+          console.log('Eliminando comentario:', doc.id);
+          eliminarComentariosPromises.push(deleteDoc(doc.ref));
+        });
+        
+        if (eliminarComentariosPromises.length > 0) {
+          await Promise.all(eliminarComentariosPromises);
+          console.log(`Se eliminaron ${eliminarComentariosPromises.length} comentarios de la ruta`);
+        }
+      } catch (comentariosError) {
+        console.error('Error al eliminar comentarios de la ruta:', comentariosError);
+        // No lanzamos el error para continuar con el proceso de eliminación
+      }
+      
+      // Eliminar publicaciones de búsqueda de grupo asociadas a la ruta
+      try {
+        const gruposRef = collection(this.db, 'buscar-grupo');
+        const qGrupos = query(gruposRef, where('rutaId', '==', rutaId));
+        const gruposSnapshot = await getDocs(qGrupos);
+        
+        console.log(`Se encontraron ${gruposSnapshot.size} publicaciones de búsqueda de grupo para eliminar`);
+        
+        // Para cada publicación de grupo, también necesitamos eliminar sus comentarios
+        for (const docGrupo of gruposSnapshot.docs) {
+          const publicacionId = docGrupo.id;
+          console.log('Eliminando publicación de grupo:', publicacionId, 'con datos:', JSON.stringify(docGrupo.data()));
+          
+          // Eliminar comentarios de la publicación
+          try {
+            const comentariosGrupoRef = collection(this.db, 'comentarios-grupo');
+            const qComentariosGrupo = query(comentariosGrupoRef, where('publicacionId', '==', publicacionId));
+            const comentariosGrupoSnapshot = await getDocs(qComentariosGrupo);
+            
+            console.log(`Se encontraron ${comentariosGrupoSnapshot.size} comentarios para la publicación ${publicacionId}`);
+            
+            const eliminarComentariosGrupoPromises: any[] = [];
+            comentariosGrupoSnapshot.forEach((docComentario) => {
+              console.log('Eliminando comentario de grupo:', docComentario.id, 'con datos:', JSON.stringify(docComentario.data()));
+              eliminarComentariosGrupoPromises.push(deleteDoc(docComentario.ref));
+            });
+            
+            if (eliminarComentariosGrupoPromises.length > 0) {
+              await Promise.all(eliminarComentariosGrupoPromises);
+              console.log(`Se eliminaron ${eliminarComentariosGrupoPromises.length} comentarios de la publicación de grupo`);
+            } else {
+              console.log(`No se encontraron comentarios para eliminar en la publicación ${publicacionId}`);
+            }
+          } catch (comentariosError) {
+            console.error(`Error al eliminar comentarios de la publicación ${publicacionId}:`, comentariosError);
+            console.warn('Continuando con la eliminación de la publicación a pesar del error en comentarios');
+          }
+          
+          // Eliminar la publicación de grupo
+          try {
+            await deleteDoc(docGrupo.ref);
+            console.log(`Publicación de grupo ${publicacionId} eliminada correctamente`);
+          } catch (deleteError) {
+            console.error(`Error al eliminar la publicación de grupo ${publicacionId}:`, deleteError);
+            console.warn('Continuando con el proceso de eliminación a pesar del error');
+          }
+        }
+        
+        console.log(`Se eliminaron ${gruposSnapshot.size} publicaciones de búsqueda de grupo`);
+      } catch (gruposError) {
+        console.error('Error al eliminar publicaciones de búsqueda de grupo:', gruposError);
+        // No lanzamos el error para continuar con el proceso de eliminación
+        console.warn('Continuando con el proceso de eliminación a pesar del error en publicaciones de grupo');
+      }
+      
+      // Verificar que la ruta se haya eliminado correctamente
+      try {
+        const { doc, getDoc } = await import('firebase/firestore');
+        const docRef = doc(this.db, 'creacion-de-rutas', rutaId);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          console.error(`¡ALERTA! La ruta con ID ${rutaId} todavía existe en Firebase después de intentar eliminarla`);
+          throw new Error(`No se pudo eliminar la ruta con ID ${rutaId} de Firebase`);
+        } else {
+          console.log(`Verificación exitosa: La ruta con ID ${rutaId} ya no existe en Firebase`);
+        }
+      } catch (verificationError) {
+        if (verificationError instanceof Error && verificationError.message.includes('No se pudo eliminar')) {
+          throw verificationError;
+        }
+        // Si el error es de otro tipo (como un error de conexión), asumimos que la eliminación fue exitosa
+        console.warn('Error al verificar la eliminación de la ruta, pero continuamos:', verificationError);
+      }
+      
+      // Notificar a los componentes que la ruta ha sido eliminada completamente
+      this.rutaEliminadaSubject.next(rutaId);
+      
+      console.log('Ruta y todas sus referencias eliminadas correctamente');
+    } catch (error) {
+      console.error('Error al eliminar la ruta creada:', error);
+      // Registrar información adicional para depuración
+      if (error instanceof Error) {
+        console.error('Mensaje de error:', error.message);
+        console.error('Stack trace:', error.stack);
+      }
+      throw error;
+    }
+  }
+
+  /**
    * Guarda una ruta creada en la colección 'creacion-de-rutas'
    * @param ruta Datos de la ruta creada
    * @returns Promise con el ID del documento creado
@@ -241,6 +424,10 @@ export class RutasGuardadasService {
       const rutasRef = collection(this.db, 'creacion-de-rutas');
       const docRef = await addDoc(rutasRef, rutaParaGuardar);
       console.log('Ruta creada guardada correctamente en Firebase:', docRef.id);
+      
+      // Emitir evento para notificar que se ha creado una nueva ruta
+      this.rutaCreadaSubject.next();
+      
       return docRef.id;
     } catch (error) {
       console.error('Error al guardar la ruta creada:', error);
@@ -543,11 +730,41 @@ export class RutasGuardadasService {
         rutas.push(rutaFormateada);
       });
       
-      console.log('Rutas creadas recuperadas de Firebase:', rutas);
+      // Verificar si hay rutas eliminadas localmente en IndexedDB
+      // para filtrarlas de los resultados
+      try {
+        const dbService = await this.getDBService();
+        if (dbService) {
+          const rutasLocales = await dbService.getRoutes();
+          const idsLocales = new Set(rutasLocales.map((r: { id: any; }) => r.id));
+          
+          // Filtrar las rutas que ya no existen en IndexedDB (fueron eliminadas)
+          return rutas.filter(ruta => idsLocales.has(ruta.id));
+        }
+      } catch (err) {
+        console.warn('No se pudo verificar rutas eliminadas localmente:', err);
+      }
+      
       return rutas;
     } catch (error) {
       console.error('Error al obtener las rutas creadas:', error);
       return [];
+    }
+  }
+  
+  /**
+   * Obtiene una instancia del servicio DatabaseService
+   * @returns Promise con el servicio DatabaseService
+   */
+  private async getDBService(): Promise<any> {
+    try {
+      // Importar el servicio dinámicamente para evitar dependencias circulares
+      const { DatabaseService } = await import('../services/database.service');
+      // Crear una instancia del servicio
+      return new DatabaseService();
+    } catch (error) {
+      console.error('Error al obtener DatabaseService:', error);
+      return null;
     }
   }
 }

@@ -80,6 +80,8 @@ export class HomePage implements OnInit, OnDestroy {
   private startX = 0;
   private scrollLeft = 0;
   private userSubscription?: Subscription;
+  private rutaCreadaSubscription?: Subscription;
+  private rutaEliminadaSubscription?: Subscription;
 
   constructor(
     private dbService: DatabaseService,
@@ -98,6 +100,12 @@ export class HomePage implements OnInit, OnDestroy {
         this.userLastName = '';
         this.userPhoto = 'assets/img/userLogo.png';
       }
+    });
+    
+    // Nos suscribimos al evento de creación de ruta
+    this.rutaCreadaSubscription = this.rutasGuardadasService.rutaCreada$.subscribe(() => {
+      console.log('Se detectó una nueva ruta creada, actualizando lista de rutas...');
+      this.cargarRutasCreadas();
     });
   }
 
@@ -120,6 +128,14 @@ export class HomePage implements OnInit, OnDestroy {
     
     // Cargamos las rutas creadas por usuarios desde Firebase
     await this.cargarRutasCreadas();
+    
+    // Suscribirse al evento de eliminación de rutas
+    this.rutaEliminadaSubscription = this.rutasGuardadasService.rutaEliminada$.subscribe((rutaId) => {
+      console.log('Se detectó una ruta eliminada con ID:', rutaId);
+      // Eliminar la ruta de las listas locales
+      this.allRoutes = this.allRoutes.filter(ruta => ruta.id !== rutaId);
+      this.rutasRecomendadas = this.rutasRecomendadas.filter(ruta => ruta.id !== rutaId);
+    });
   }
 
   /**
@@ -217,6 +233,16 @@ export class HomePage implements OnInit, OnDestroy {
     // Nos desuscribimos para evitar memory leaks
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
+    }
+    
+    // Nos desuscribimos del evento de creación de ruta
+    if (this.rutaCreadaSubscription) {
+      this.rutaCreadaSubscription.unsubscribe();
+    }
+    
+    // Nos desuscribimos del evento de eliminación de ruta
+    if (this.rutaEliminadaSubscription) {
+      this.rutaEliminadaSubscription.unsubscribe();
     }
   }
 
