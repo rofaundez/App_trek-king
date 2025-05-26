@@ -181,6 +181,45 @@ export class RutasGuardadasService {
   }
 
   /**
+   * Obtiene todas las rutas creadas por el usuario actual desde Firebase
+   * @returns Promise con un array de rutas creadas
+   */
+  async obtenerRutasCreadas(): Promise<any[]> {
+    try {
+      const userId = this.getCurrentUserId();
+      if (!userId) {
+        console.warn('No hay un usuario logueado para obtener rutas creadas');
+        return [];
+      }
+      
+      // Importar las funciones necesarias de Firebase
+      const { collection, query, where, getDocs } = await import('firebase/firestore');
+      
+      // Referencia a la colección de rutas creadas
+      const rutasRef = collection(this.db, 'creacion-de-rutas');
+      
+      // Filtrar por el ID del usuario actual
+      const q = query(rutasRef, where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      
+      const rutas: any[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        rutas.push({
+          ...data,
+          id: doc.id // Aseguramos que el ID del documento esté incluido
+        });
+      });
+      
+      console.log(`Se encontraron ${rutas.length} rutas creadas por el usuario ${userId}`);
+      return rutas;
+    } catch (error) {
+      console.error('Error al obtener las rutas creadas:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Elimina una ruta creada por el usuario de IndexedDB y de Firebase, así como cualquier referencia en otras colecciones
    * @param rutaId ID de la ruta a eliminar
    * @returns Promise que se resuelve cuando la ruta ha sido eliminada
@@ -541,216 +580,7 @@ export class RutasGuardadasService {
     }
   }
 
-  /**
-   * Obtiene todas las rutas creadas por los usuarios
-   * @returns Promise con un array de rutas creadas
-   */
-  async obtenerRutasCreadas(): Promise<any[]> {
-    try {
-      const rutasRef = collection(this.db, 'creacion-de-rutas');
-      const querySnapshot = await getDocs(rutasRef);
-      
-      const rutas: any[] = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data() as DocumentData;
-        
-        // Determinar categorías basadas en la dificultad o tipo de terreno
-        let categorias = ['Rutas de Usuario'];
-        
-        // Si hay datos de características, usarlos para determinar categorías adicionales
-        if (data['caracteristicas'] && data['caracteristicas'].tipoTerreno) {
-          const tipoTerreno = data['caracteristicas'].tipoTerreno.toLowerCase();
-          
-          if (tipoTerreno.includes('montaña') || tipoTerreno.includes('montana') || tipoTerreno.includes('cerro') || tipoTerreno.includes('montañoso')) {
-            categorias.push('Montañas');
-          }
-          
-          if (tipoTerreno.includes('río') || tipoTerreno.includes('rio') || tipoTerreno.includes('agua') || tipoTerreno.includes('ribereño')) {
-            categorias.push('Rios');
-          }
-          
-          if (tipoTerreno.includes('lago') || tipoTerreno.includes('laguna') || tipoTerreno.includes('lacustre')) {
-            categorias.push('Lagos');
-          }
-          
-          if (tipoTerreno.includes('cascada') || tipoTerreno.includes('salto')) {
-            categorias.push('Cascadas');
-          }
-          
-          if (tipoTerreno.includes('nieve') || tipoTerreno.includes('glaciar')) {
-            categorias.push('Nieve');
-          }
-          
-          if (tipoTerreno.includes('parque') || tipoTerreno.includes('urbano')) {
-            categorias.push('Parques');
-          }
-          
-          if (tipoTerreno.includes('playa') || tipoTerreno.includes('costa') || tipoTerreno.includes('costero')) {
-            categorias.push('Playas');
-          }
-
-          if (tipoTerreno.includes('bosque') || tipoTerreno.includes('forestal') || tipoTerreno.includes('boscoso')) {
-            categorias.push('Parques');
-          }
-        }
-        
-        // Si hay descripción, también la usamos para inferir categorías
-        if (data['descripcion']) {
-          const descripcion = data['descripcion'].toLowerCase();
-          
-          if (!categorias.includes('Montañas') && 
-              (descripcion.includes('montaña') || descripcion.includes('montana') || descripcion.includes('cerro'))) {
-            categorias.push('Montañas');
-          }
-          
-          if (!categorias.includes('Rios') && 
-              (descripcion.includes('río') || descripcion.includes('rio'))) {
-            categorias.push('Rios');
-          }
-          
-          if (!categorias.includes('Lagos') && 
-              (descripcion.includes('lago') || descripcion.includes('laguna'))) {
-            categorias.push('Lagos');
-          }
-          
-          if (!categorias.includes('Cascadas') && 
-              (descripcion.includes('cascada') || descripcion.includes('salto'))) {
-            categorias.push('Cascadas');
-          }
-          
-          if (!categorias.includes('Nieve') && 
-              (descripcion.includes('nieve') || descripcion.includes('glaciar'))) {
-            categorias.push('Nieve');
-          }
-          
-          if (!categorias.includes('Parques') && 
-              (descripcion.includes('parque') || descripcion.includes('urbano') || descripcion.includes('bosque'))) {
-            categorias.push('Parques');
-          }
-          
-          if (!categorias.includes('Playas') && 
-              (descripcion.includes('playa') || descripcion.includes('costa'))) {
-            categorias.push('Playas');
-          }
-        }
-
-        // Si hay nombre, también lo usamos para inferir categorías
-        if (data['nombre']) {
-          const nombre = data['nombre'].toLowerCase();
-          
-          if (!categorias.includes('Montañas') && 
-              (nombre.includes('montaña') || nombre.includes('montana') || nombre.includes('cerro'))) {
-            categorias.push('Montañas');
-          }
-          
-          if (!categorias.includes('Rios') && 
-              (nombre.includes('río') || nombre.includes('rio'))) {
-            categorias.push('Rios');
-          }
-          
-          if (!categorias.includes('Lagos') && 
-              (nombre.includes('lago') || nombre.includes('laguna'))) {
-            categorias.push('Lagos');
-          }
-          
-          if (!categorias.includes('Cascadas') && 
-              (nombre.includes('cascada') || nombre.includes('salto'))) {
-            categorias.push('Cascadas');
-          }
-          
-          if (!categorias.includes('Nieve') && 
-              (nombre.includes('nieve') || nombre.includes('glaciar'))) {
-            categorias.push('Nieve');
-          }
-          
-          if (!categorias.includes('Parques') && 
-              (nombre.includes('parque') || nombre.includes('urbano') || nombre.includes('bosque'))) {
-            categorias.push('Parques');
-          }
-          
-          if (!categorias.includes('Playas') && 
-              (nombre.includes('playa') || nombre.includes('costa'))) {
-            categorias.push('Playas');
-          }
-        }
-        
-        // Formatear la dificultad para que coincida con el formato de las rutas predefinidas
-        let dificultadFormateada = data['dificultad'] || 'Fácil';
-        if (dificultadFormateada === 'Fácil') {
-          dificultadFormateada = 'Facil | 1-5km | Est. 1-2h';
-        } else if (dificultadFormateada === 'Moderada') {
-          dificultadFormateada = 'Media | 5-15km | Est. 2-5h';
-        } else if (dificultadFormateada === 'Difícil') {
-          dificultadFormateada = 'Dificil | 15-25km | Est. 5-10h';
-        } else if (dificultadFormateada === 'Muy Difícil') {
-          dificultadFormateada = 'Muy Dificil | +25km | Est. +10h';
-        }
-        
-        // Asegurarnos de que la imagen tenga un valor válido
-        let imagenRuta = 'assets/img/default-route.jpg';
-        if (data['foto'] && typeof data['foto'] === 'string' && data['foto'].trim() !== '') {
-          imagenRuta = data['foto'];
-        }
-        
-        // Crear objeto de ruta con la estructura correcta para mostrar en home
-        const rutaFormateada = {
-          id: doc.id,
-          nombre: data['nombre'] || 'Ruta sin nombre',
-          ubicacion: data['localidad'] || 'Sin ubicación especificada',
-          dificultad: dificultadFormateada,
-          imagen: imagenRuta,
-          foto: imagenRuta, // Aseguramos que tanto imagen como foto tengan el mismo valor
-          categorias: categorias,
-          creador: data['creador'] || {
-            id: 'usuario',
-            nombre: 'Usuario',
-            email: 'usuario@example.com'
-          },
-          descripcion: data['descripcion'] || 'Ruta creada por usuario',
-          caracteristicas: data['caracteristicas'] || {
-            tipoTerreno: 'Variado',
-            mejorEpoca: 'Todo el año',
-            recomendaciones: 'Llevar agua y calzado adecuado'
-          },
-          puntosInteres: data['puntosInteres'] || 'Ruta creada por usuario',
-          puntoInicio: data['puntoInicio'] || {
-            direccion: 'Punto de inicio no especificado',
-            lat: -33.4489,
-            lng: -70.6693
-          },
-          puntoTermino: data['puntoTermino'] || {
-            direccion: 'Punto de término no especificado',
-            lat: -33.4489,
-            lng: -70.6693
-          },
-          fechaCreacion: data['fechaCreacion'] || new Date()
-        };
-        
-        console.log('Ruta formateada para mostrar:', rutaFormateada);
-        rutas.push(rutaFormateada);
-      });
-      
-      // Verificar si hay rutas eliminadas localmente en IndexedDB
-      // para filtrarlas de los resultados
-      try {
-        const dbService = await this.getDBService();
-        if (dbService) {
-          const rutasLocales = await dbService.getRoutes();
-          const idsLocales = new Set(rutasLocales.map((r: { id: any; }) => r.id));
-          
-          // Filtrar las rutas que ya no existen en IndexedDB (fueron eliminadas)
-          return rutas.filter(ruta => idsLocales.has(ruta.id));
-        }
-      } catch (err) {
-        console.warn('No se pudo verificar rutas eliminadas localmente:', err);
-      }
-      
-      return rutas;
-    } catch (error) {
-      console.error('Error al obtener las rutas creadas:', error);
-      return [];
-    }
-  }
+  // El método obtenerRutasCreadas ya está definido anteriormente en el servicio
   
   /**
    * Obtiene una instancia del servicio DatabaseService

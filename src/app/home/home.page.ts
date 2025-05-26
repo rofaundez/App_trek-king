@@ -146,9 +146,9 @@ export class HomePage implements OnInit, OnDestroy {
       // Mostrar mensaje de carga en consola
       console.log('Cargando rutas creadas por usuarios desde Firebase...');
       
-      // Obtener rutas creadas desde el servicio
+      // Obtener rutas creadas desde el servicio de Firebase
       const rutasCreadas = await this.rutasGuardadasService.obtenerRutasCreadas();
-      console.log('Rutas creadas por usuarios obtenidas:', rutasCreadas);
+      console.log('Rutas creadas por usuarios obtenidas desde Firebase:', rutasCreadas);
       
       if (rutasCreadas && rutasCreadas.length > 0) {
         // Verificamos que cada ruta tenga las propiedades necesarias

@@ -54,9 +54,24 @@ export class MyRoutesPage implements OnInit {
   async loadRoutes() {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
-      // Convert id to string if it exists, otherwise use empty string
-      const creatorId = currentUser.id ? currentUser.id.toString() : '';
-      this.myRoutes = await this.dbService.getRoutesByCreator(creatorId);
+      try {
+        // Obtener el servicio de rutas guardadas
+        const rutasService = this.injector.get(RutasGuardadasService);
+        
+        // Obtener las rutas creadas desde Firebase
+        this.myRoutes = await rutasService.obtenerRutasCreadas();
+        
+        console.log('Rutas cargadas desde Firebase:', this.myRoutes.length);
+      } catch (error) {
+        console.error('Error al cargar rutas desde Firebase:', error);
+        // Mostrar mensaje de error al usuario
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'No se pudieron cargar tus rutas. Por favor, intenta nuevamente.',
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
     }
   }
 
@@ -108,14 +123,12 @@ export class MyRoutesPage implements OnInit {
       const rutasService = this.injector.get(RutasGuardadasService);
       
       try {
-        // Primero eliminamos la ruta de Firebase completamente (incluyendo referencias)
-        // Esto asegura que la ruta se elimine de Firebase y no aparezca en la página de inicio
+        // Eliminamos la ruta de Firebase completamente (incluyendo referencias)
         console.log('Iniciando eliminación de ruta en Firebase con ID:', routeId);
         await rutasService.eliminarRutaCreada(routeId);
         console.log('Ruta eliminada exitosamente de Firebase con ID:', routeId);
         
         // Verificar que la ruta se haya eliminado correctamente de Firebase
-        // Importamos las funciones necesarias de Firebase
         const { getFirestore, doc, getDoc } = await import('firebase/firestore');
         const db = getFirestore();
         const docRef = doc(db, 'creacion-de-rutas', routeId);
@@ -128,15 +141,13 @@ export class MyRoutesPage implements OnInit {
           console.log('Verificación exitosa: La ruta ya no existe en Firebase');
         }
         
-        // Luego eliminamos la ruta de IndexedDB local (opcional, podemos omitir esto si solo usamos Firebase)
-        await this.dbService.deleteRoute(routeId);
-        console.log('Ruta eliminada de la base de datos local');
+        // Ya no eliminamos de la base de datos local, solo trabajamos con Firebase
       } catch (firebaseError) {
         console.error('Error específico al eliminar de Firebase:', firebaseError);
         throw firebaseError; // Relanzamos el error para manejarlo en el catch exterior
       }
       
-      // Recargar las rutas del usuario
+      // Recargar las rutas del usuario desde Firebase
       await this.loadRoutes();
       
       // Cerrar el indicador de carga

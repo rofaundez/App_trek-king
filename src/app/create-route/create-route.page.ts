@@ -127,12 +127,8 @@ export class CreateRoutePage implements OnInit {
           tipoTerreno = 'Boscoso';
         }
 
-        // Generar un ID único para la ruta
-        const uniqueId = 'ruta_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-
         // Crear el objeto de ruta con toda la información necesaria
         const newRoute = {
-          id: uniqueId, // Asignar un ID único para facilitar la eliminación
           ...this.routeForm.value,
           foto: photoUrl,
           creador: {
@@ -160,12 +156,9 @@ export class CreateRoutePage implements OnInit {
           puntosInteres: 'Ruta creada por usuario'
         };
 
-        // Guardar la ruta en IndexedDB (mantener la funcionalidad existente)
-        await this.dbService.addRoute(newRoute);
-        
-        // Guardar la ruta en Firebase en la colección 'creacion-de-rutas'
+        // Guardar la ruta solo en Firebase en la colección 'creacion-de-rutas'
         await this.rutasGuardadasService.guardarRutaCreada(newRoute);
-        console.log('Ruta guardada en ambas bases de datos correctamente');
+        console.log('Ruta guardada en Firebase correctamente');
         
         // Cerrar el indicador de carga
         await loading.dismiss();
