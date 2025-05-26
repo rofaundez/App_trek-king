@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '../components/header/header.component';
 import { AuthService } from '../services/auth.service';
 import { Firestore, collection, query, where, getDocs } from '@angular/fire/firestore';
 
@@ -12,7 +13,7 @@ import { Firestore, collection, query, where, getDocs } from '@angular/fire/fire
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [HeaderComponent,CommonModule, FormsModule, IonicModule]
 })
 export class LoginPage implements OnInit {
   email: string = '';

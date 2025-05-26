@@ -6,13 +6,14 @@ import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
+import { HeaderComponent } from '../components/header/header.component';
 
 @Component({
   selector: 'app-recover',
   templateUrl: './recover.page.html',
   styleUrls: ['./recover.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [HeaderComponent,IonicModule, CommonModule, FormsModule]
 })
 export class RecoverPage {
   email: string = '';

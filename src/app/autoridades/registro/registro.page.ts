@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { addIcons } from 'ionicons';
 import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 import { Firestore, getDocs, addDoc, collection,query,where } from '@angular/fire/firestore';
 
 @Component({
@@ -16,7 +17,8 @@ import { Firestore, getDocs, addDoc, collection,query,where } from '@angular/fir
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule
+    IonicModule,
+    HeaderComponent
   ]
 })
 export class RegistroPage implements OnInit {

@@ -5,13 +5,14 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { Firestore,collection,query,where,getDocs } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 
 @Component({
   selector: 'app-autoridad-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent]
 })
 export class AutoridadLoginPage implements OnInit {
   email: string = '';

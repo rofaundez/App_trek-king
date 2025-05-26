@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
 import { FooterComponent } from '../components/footer/footer.component';
 import { RutasGuardadasService } from '../services/rutas-guardadas.service';
+import { HeaderComponent } from "../components/header/header.component";
 
 @Component({
   selector: 'app-home',
@@ -16,11 +17,12 @@ import { RutasGuardadasService } from '../services/rutas-guardadas.service';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
-    IonicModule, 
-    CommonModule, 
+    IonicModule,
+    CommonModule,
     FormsModule,
-    FooterComponent
-  ]
+    FooterComponent,
+    HeaderComponent
+]
 })
 export class HomePage implements OnInit, OnDestroy {
   userName: string = '';

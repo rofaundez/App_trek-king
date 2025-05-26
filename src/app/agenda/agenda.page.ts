@@ -8,6 +8,7 @@ import { addIcons } from 'ionicons';
 import { calendarOutline, timeOutline, trashOutline } from 'ionicons/icons';
 import { RutasGuardadasService, RutaAgendada } from '../services/rutas-guardadas.service';
 import { AuthService } from '../services/auth.service';
+import { HeaderComponent } from "../components/header/header.component";
 
 // Nota: Ahora usamos la interfaz RutaAgendada importada desde el servicio
 
@@ -26,11 +27,9 @@ import { AuthService } from '../services/auth.service';
     IonButton,
     IonIcon,
     IonButtons,
-    CommonModule, 
+    CommonModule,
     FormsModule,
-    FooterComponent
-    
-  ]
+    FooterComponent, HeaderComponent]
 })
 export class AgendaPage implements OnInit {
   // Array para almacenar las rutas agendadas

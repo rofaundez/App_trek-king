@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 import { User } from '../models/user.model';
+import { HeaderComponent } from '../components/header/header.component';
 
 @Component({
   selector: 'app-listado-usuario',
   templateUrl: './listado-usuario.page.html',
   styleUrls: ['./listado-usuario.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [HeaderComponent,IonicModule, CommonModule, FormsModule]
 })
 export class ListadoUsuarioPage implements OnInit {
   users: any[] = [];

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from '../components/header/header.component';
 import {
   IonContent,
   IonHeader,
@@ -24,6 +25,7 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     FormsModule,
+    HeaderComponent,
     IonContent,
     IonHeader,
     IonAvatar,

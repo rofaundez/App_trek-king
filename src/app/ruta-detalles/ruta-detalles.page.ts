@@ -9,6 +9,7 @@ import { calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sen
 import { RutasGuardadasService, RutaAgendada } from '../services/rutas-guardadas.service';
 import { AuthService } from '../services/auth.service';
 import { ComentariosService, Comentario } from '../services/comentarios.service';
+import { HeaderComponent } from '../components/header/header.component';
 import { BuscarGrupoService, PublicacionGrupo } from '../services/buscar-grupo.service';
 
 interface RutaInfo {
@@ -26,7 +27,7 @@ interface RutaInfo {
   templateUrl: './ruta-detalles.page.html',
   styleUrls: ['./ruta-detalles.page.scss'],
   standalone: true,
-  imports: [
+  imports: [HeaderComponent,
     IonContent, 
     IonHeader, 
     IonTitle, 

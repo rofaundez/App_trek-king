@@ -8,13 +8,14 @@ import { Router } from '@angular/router';
 import { OsmMapService } from '../services/osm-map.service';
 import { FooterComponent } from '../components/footer/footer.component';
 import { RutasGuardadasService } from '../services/rutas-guardadas.service';
+import { HeaderComponent } from '../components/header/header.component';
 
 @Component({
   selector: 'app-create-route',
   templateUrl: './create-route.page.html',
   styleUrls: ['./create-route.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule, FooterComponent]
+  imports: [HeaderComponent,IonicModule, CommonModule, ReactiveFormsModule, FooterComponent]
 })
 export class CreateRoutePage implements OnInit {
   routeForm!: FormGroup;

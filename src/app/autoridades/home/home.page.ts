@@ -7,6 +7,7 @@ import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircleOutline } from 'ionicons/icons';
+import { HeaderComponent } from 'src/app/components/header/header.component';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircle
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    HeaderComponent,
     IonContent, 
     IonHeader, 
     IonTitle, 
