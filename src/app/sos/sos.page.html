@@ -1,5 +1,5 @@
 <app-header></app-header>
-<ion-header class="header-container">
+<div class="header-container">
   <div class="user-welcome">
     <ion-avatar (click)="goToProfile()" class="imagen_usuario">
       <img [src]="userPhoto">
@@ -9,7 +9,7 @@
       <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
     </div>
   </div>
-</ion-header>
+</div>
 
 <ion-content class="sos-content">
   <div class="sos-overlay"></div>

@@ -1,5 +1,5 @@
 <app-header></app-header>
-<ion-header class="header-container">
+<div class="header-container">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/my-routes"></ion-back-button>
@@ -11,7 +11,7 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
+</div>
 
 <ion-content>
   <div class="content-background"></div>
@@ -147,7 +147,7 @@
 <!-- Map Modal -->
 <ion-modal [isOpen]="isMapModalOpen" (didDismiss)="closeMapModal()">
   <ng-template>
-    <ion-header>
+    <div>
       <ion-toolbar>
         <ion-title>{{currentLocationType === 'start' ? 'Seleccionar Punto de Inicio' : 'Seleccionar Punto de Término'}}</ion-title>
         <ion-buttons slot="end">
@@ -157,7 +157,7 @@
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-    </ion-header>
+    </div>
     <ion-content>
       <div class="map-container">
         <div id="map" *ngIf="!mapError"></div>

@@ -2,14 +2,14 @@
 <ion-content>
   <div class="contenedor-grupos">
     <!-- Header con fondo de hojas -->
-    <ion-header [translucent]="true" class="header-container">
+    <div  class="header-container">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
         </ion-buttons>
         <ion-title class="titulo-header">Búsqueda de Grupos</ion-title>
       </ion-toolbar>
-    </ion-header>    
+    </div>    
 
     <!-- Contenido de publicaciones de búsqueda de grupo -->
     <div class="publicaciones-container">
@@ -76,7 +76,7 @@
 <!-- Modal de comentarios -->
 <ion-modal [isOpen]="isComentariosModalOpen" class="comentarios-modal" (ionBackdropTap)="cerrarComentarios()">
   <ng-template>
-    <ion-header class="comentarios-header">
+    <div class="comentarios-header">
       <ion-toolbar class="headercomentarios">
         <ion-title>Comentarios</ion-title>
         <ion-buttons slot="end">
@@ -85,7 +85,7 @@
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
-    </ion-header>
+    </div>
     <ion-content class="ion-padding comentarios-content" [scrollEvents]="true" (ionScroll)="onContentScroll($event)">
       <div *ngIf="publicacionSeleccionada" class="comentarios-container">
         <div class="publicacion-info" >

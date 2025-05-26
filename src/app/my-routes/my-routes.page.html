@@ -1,7 +1,7 @@
 <app-header></app-header>
 <ion-content>
   <div class="content-background">
-    <ion-header class="header-container">
+    <div class="header-container">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button defaultHref="/home"></ion-back-button>
@@ -17,7 +17,7 @@
         <h1>Mis Rutas Creadas</h1>
         <p>Gestiona tus rutas de senderismo</p>
       </div>
-    </ion-header>
+    </div>
     <div class="container">
       <ion-list *ngIf="myRoutes.length > 0">
         <ion-item-sliding *ngFor="let route of myRoutes">
