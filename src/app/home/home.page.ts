@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
 import { FooterComponent } from '../components/footer/footer.component';
+import { RutasGuardadasService } from '../services/rutas-guardadas.service';
 import { HeaderComponent } from "../components/header/header.component";
 
 @Component({
@@ -85,7 +86,8 @@ export class HomePage implements OnInit, OnDestroy {
   constructor(
     private dbService: DatabaseService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private rutasGuardadasService: RutasGuardadasService
   ) {
     // Nos suscribimos a los cambios del usuario
     this.userSubscription = this.authService.user$.subscribe(user => {
@@ -101,7 +103,7 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // Obtenemos el estado inicial del usuario
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
@@ -114,9 +116,103 @@ export class HomePage implements OnInit, OnDestroy {
       this.userPhoto = 'assets/img/userLogo.png';
     }
     
-    // Inicializamos las rutas recomendadas con todas las rutas
+    // Inicializamos las rutas recomendadas con todas las rutas predefinidas
     this.rutasRecomendadas = [...this.rutasConCategorias];
     this.allRoutes = [...this.rutasConCategorias];
+    
+    // Cargamos las rutas creadas por usuarios desde Firebase
+    await this.cargarRutasCreadas();
+  }
+
+  /**
+   * Carga las rutas creadas por usuarios desde Firebase
+   */
+  async cargarRutasCreadas() {
+    try {
+      // Mostrar mensaje de carga en consola
+      console.log('Cargando rutas creadas por usuarios desde Firebase...');
+      
+      // Obtener rutas creadas desde el servicio
+      const rutasCreadas = await this.rutasGuardadasService.obtenerRutasCreadas();
+      console.log('Rutas creadas por usuarios obtenidas:', rutasCreadas);
+      
+      if (rutasCreadas && rutasCreadas.length > 0) {
+        // Verificamos que cada ruta tenga las propiedades necesarias
+        const rutasValidadas = rutasCreadas.map(ruta => {
+          // Creamos un nuevo objeto para evitar modificar el original
+          const rutaValidada = { ...ruta };
+          
+          // Aseguramos que cada ruta tenga la propiedad categorias como array
+          if (!rutaValidada.categorias || !Array.isArray(rutaValidada.categorias)) {
+            rutaValidada.categorias = ['Rutas de Usuario'];
+          }
+          
+          // Aseguramos que la ubicación esté correctamente asignada
+          if (!rutaValidada.ubicacion && rutaValidada.localidad) {
+            rutaValidada.ubicacion = rutaValidada.localidad;
+          } else if (!rutaValidada.ubicacion) {
+            rutaValidada.ubicacion = 'Sin ubicación especificada';
+          }
+          
+          // Aseguramos que la imagen tenga un valor válido
+          if (!rutaValidada.imagen && rutaValidada.foto) {
+            rutaValidada.imagen = rutaValidada.foto;
+          } else if (!rutaValidada.imagen) {
+            rutaValidada.imagen = 'assets/img/default-route.jpg';
+          }
+          
+          // Verificamos que la imagen sea una cadena válida
+          if (typeof rutaValidada.imagen !== 'string' || rutaValidada.imagen.trim() === '') {
+            rutaValidada.imagen = 'assets/img/default-route.jpg';
+          }
+
+          // Aseguramos que la dificultad tenga el formato correcto
+          if (rutaValidada.dificultad && typeof rutaValidada.dificultad === 'string' && 
+              (rutaValidada.dificultad.includes('|') || rutaValidada.dificultad.includes('Est.'))) {
+            // La dificultad ya está formateada correctamente
+          } else {
+            // Formatear la dificultad
+            let dificultadBase = rutaValidada.dificultad || 'Fácil';
+            if (typeof dificultadBase !== 'string') {
+              dificultadBase = 'Fácil';
+            }
+            
+            if (dificultadBase === 'Fácil') {
+              rutaValidada.dificultad = 'Facil | 1-5km | Est. 1-2h';
+            } else if (dificultadBase === 'Moderada') {
+              rutaValidada.dificultad = 'Media | 5-15km | Est. 2-5h';
+            } else if (dificultadBase === 'Difícil') {
+              rutaValidada.dificultad = 'Dificil | 15-25km | Est. 5-10h';
+            } else {
+              rutaValidada.dificultad = 'Media | 5-15km | Est. 2-5h';
+            }
+          }
+          
+          // Aseguramos que el nombre sea válido
+          if (!rutaValidada.nombre || typeof rutaValidada.nombre !== 'string') {
+            rutaValidada.nombre = 'Ruta sin nombre';
+          }
+          
+          // Aseguramos que el ID sea válido
+          if (!rutaValidada.id) {
+            rutaValidada.id = 'ruta_' + Math.random().toString(36).substring(2, 9);
+          }
+          
+          console.log('Ruta validada para mostrar:', rutaValidada);
+          return rutaValidada;
+        });
+        
+        // Añadimos las rutas creadas por usuarios a las rutas existentes
+        this.allRoutes = [...this.allRoutes, ...rutasValidadas];
+        this.rutasRecomendadas = [...this.rutasRecomendadas, ...rutasValidadas];
+        
+        console.log('Rutas totales después de cargar desde Firebase:', this.allRoutes.length);
+      } else {
+        console.log('No se encontraron rutas creadas por usuarios en Firebase');
+      }
+    } catch (error) {
+      console.error('Error al cargar las rutas creadas por usuarios:', error);
+    }
   }
 
   ngOnDestroy() {
@@ -194,17 +290,62 @@ export class HomePage implements OnInit, OnDestroy {
     slider.scrollLeft = this.scrollLeft - walk;
   }
 
-  goToRouteDetails(id: string, nombre: string, ubicacion: string, dificultad: string, imagen: string) {
+  goToRouteDetails(id: string, nombre: string, ubicacion: string, dificultad: string, imagen: string, descripcion?: string, caracteristicas?: any, puntosInteres?: string) {
+    // Validamos los parámetros antes de navegar
+    const rutaId = id || 'ruta_' + Math.random().toString(36).substring(2, 9);
+    const rutaNombre = nombre || 'Ruta sin nombre';
+    const rutaUbicacion = ubicacion || 'Sin ubicación especificada';
+    const rutaDificultad = dificultad || 'Media | 5-15km | Est. 2-5h';
+    
+    // Aseguramos que la imagen sea válida
+    let rutaImagen = 'assets/img/default-route.jpg';
+    if (imagen && typeof imagen === 'string' && imagen.trim() !== '') {
+      rutaImagen = imagen;
+    }
+    
     // Navegamos a la página de detalles con los parámetros de la ruta
-    this.router.navigate(['/ruta-detalles'], {
-      queryParams: {
-        id: id,
-        nombre: nombre,
-        ubicacion: ubicacion,
-        dificultad: dificultad,
-        imagen: imagen
+    const queryParams: any = {
+      id: rutaId,
+      nombre: rutaNombre,
+      ubicacion: rutaUbicacion,
+      dificultad: rutaDificultad,
+      imagen: rutaImagen
+    };
+    
+    // Añadimos parámetros adicionales si están disponibles (para rutas creadas por usuarios)
+    if (descripcion) queryParams.descripcion = descripcion;
+    
+    // Procesamos las características
+    if (caracteristicas) {
+      // Si caracteristicas es un string, intentamos parsearlo
+      if (typeof caracteristicas === 'string') {
+        try {
+          caracteristicas = JSON.parse(caracteristicas);
+        } catch (e) {
+          console.error('Error al parsear características:', e);
+          // Si hay error, creamos un objeto de características por defecto
+          caracteristicas = {
+            tipoTerreno: 'Variado',
+            mejorEpoca: 'Todo el año',
+            recomendaciones: 'Llevar agua y calzado adecuado'
+          };
+        }
       }
-    });
+      // Si no es un objeto, creamos uno por defecto
+      if (!caracteristicas || typeof caracteristicas !== 'object') {
+        caracteristicas = {
+          tipoTerreno: 'Variado',
+          mejorEpoca: 'Todo el año',
+          recomendaciones: 'Llevar agua y calzado adecuado'
+        };
+      }
+      queryParams.caracteristicas = JSON.stringify(caracteristicas);
+    }
+    
+    if (puntosInteres) queryParams.puntosInteres = puntosInteres;
+    
+    console.log('Navegando a detalles de ruta con parámetros:', queryParams);
+    this.router.navigate(['/ruta-detalles'], { queryParams });
   }
   
   // Método para generar sugerencias basadas en el texto de búsqueda
