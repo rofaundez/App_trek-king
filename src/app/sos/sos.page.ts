@@ -10,8 +10,7 @@ import {
   AlertController,
   IonList,
   IonItem,
-  IonLabel,
-} from '@ionic/angular/standalone';
+  IonLabel, IonToolbar, IonButtons, IonBackButton, IonTitle } from '@ionic/angular/standalone';
 import { FooterComponent } from '../components/footer/footer.component';
 import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
@@ -22,18 +21,12 @@ import { Router } from '@angular/router';
   standalone: true,
   templateUrl: './sos.page.html',
   styleUrls: ['./sos.page.scss'],
-  imports: [
+  imports: [IonTitle, IonBackButton, IonButtons, IonToolbar, 
     CommonModule,
     FormsModule,
-    HeaderComponent,
     IonContent,
-    IonHeader,
-    IonAvatar,
     IonButton,
-    IonList,
     FooterComponent,
-    IonItem,
-    IonLabel
   ]
 })
 export class SosPage implements OnInit, OnDestroy {
@@ -51,7 +44,6 @@ export class SosPage implements OnInit, OnDestroy {
     'Estoy incapacitado y necesito rescate inmediato',
     'Estoy perdido y no puedo regresar',
     'Hay un obstaculo en la ruta',
-    'Hay un animal que necesita asistencia medica en la ruta',
     'Incendio en la zona',
   ];
 
@@ -59,7 +51,6 @@ export class SosPage implements OnInit, OnDestroy {
     'Estoy incapacitado y necesito rescate inmediato': 'Permanece en el lugar, intenta estabilizarte y haz señales visibles.',
     'Estoy perdido y no puedo regresar': 'Quédate donde estás, no camines más. Las autoridades rastrearán tu última ubicación conocida.',
     'Hay un obstaculo en la ruta': 'Detalla el obstáculo a los rescatistas y espera en una zona segura.',
-    'Hay un animal que necesita asistencia medica en la ruta': 'Evita acercarte al animal y reporta su ubicación exacta.',
     'Incendio en la zona': 'Aléjate del fuego y muévete hacia un área despejada, preferiblemente cuesta abajo o contra el viento.',
   };
 
@@ -143,5 +134,10 @@ export class SosPage implements OnInit, OnDestroy {
 
   avisarGrupo() {
     this.presentAlert('Grupo notificado', 'Se ha enviado un aviso a tu grupo.');
+  }
+
+  volver()
+  {
+    this.router.navigate(['/home']);
   }
 }

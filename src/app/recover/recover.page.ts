@@ -13,7 +13,7 @@ import { HeaderComponent } from '../components/header/header.component';
   templateUrl: './recover.page.html',
   styleUrls: ['./recover.page.scss'],
   standalone: true,
-  imports: [HeaderComponent,IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class RecoverPage {
   email: string = '';

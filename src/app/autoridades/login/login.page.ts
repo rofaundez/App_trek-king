@@ -12,7 +12,7 @@ import { HeaderComponent } from 'src/app/components/header/header.component';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, HeaderComponent]
+  imports: [CommonModule, FormsModule, IonicModule]
 })
 export class AutoridadLoginPage implements OnInit {
   email: string = '';

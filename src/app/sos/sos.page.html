@@ -1,14 +1,10 @@
-<app-header></app-header>
-<div class="header-container">
-  <div class="user-welcome">
-    <ion-avatar (click)="goToProfile()" class="imagen_usuario">
-      <img [src]="userPhoto">
-    </ion-avatar>
-    <div class="welcome-text">
-      <h2>Bienvenido!</h2>
-      <h3>{{userName || "no hay usuario"}} {{userLastName || ""}}</h3>
-    </div>
-  </div>
+<div  class="header-container">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="titulo-header" >Boton de emergencia</ion-title>
+  </ion-toolbar>
 </div>
 
 <ion-content class="sos-content">

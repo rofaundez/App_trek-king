@@ -20,8 +20,7 @@ import { HeaderComponent } from "../components/header/header.component";
     IonicModule,
     CommonModule,
     FormsModule,
-    FooterComponent,
-    HeaderComponent
+    FooterComponent
 ]
 })
 export class HomePage implements OnInit, OnDestroy {

@@ -11,7 +11,7 @@ import { HeaderComponent } from '../components/header/header.component';
   templateUrl: './listado-usuario.page.html',
   styleUrls: ['./listado-usuario.page.scss'],
   standalone: true,
-  imports: [HeaderComponent,IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class ListadoUsuarioPage implements OnInit {
   users: any[] = [];

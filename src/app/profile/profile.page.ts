@@ -17,7 +17,7 @@ import { Firestore, doc, getDoc, updateDoc, collection, query, where, getDocs } 
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   standalone: true,
-  imports: [HeaderComponent,IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class ProfilePage implements OnInit, OnDestroy {
   userProfile: any = {

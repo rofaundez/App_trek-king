@@ -27,9 +27,8 @@ interface RutaInfo {
   templateUrl: './ruta-detalles.page.html',
   styleUrls: ['./ruta-detalles.page.scss'],
   standalone: true,
-  imports: [HeaderComponent,
+  imports: [
     IonContent, 
-    IonHeader, 
     IonTitle, 
     IonToolbar, 
     IonBackButton, 

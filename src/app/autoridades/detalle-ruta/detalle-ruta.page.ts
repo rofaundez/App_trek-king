@@ -9,7 +9,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
   templateUrl: './detalle-ruta.page.html',
   styleUrls: ['./detalle-ruta.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule,HeaderComponent]
+  imports: [IonContent, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class DetalleRutaPage implements OnInit {
 

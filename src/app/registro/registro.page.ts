@@ -17,7 +17,6 @@ import { Firestore, collection, addDoc, getDocs, query, where, updateDoc, doc } 
     CommonModule,
     FormsModule,
     IonicModule,
-    HeaderComponent
   ]
 })
 export class RegistroPage implements OnInit {

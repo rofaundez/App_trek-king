@@ -13,7 +13,7 @@ import { Firestore, collection, query, where, getDocs } from '@angular/fire/fire
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [HeaderComponent,CommonModule, FormsModule, IonicModule]
+  imports: [CommonModule, FormsModule, IonicModule]
 })
 export class LoginPage implements OnInit {
   email: string = '';

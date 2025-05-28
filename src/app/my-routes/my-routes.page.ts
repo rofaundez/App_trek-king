@@ -20,8 +20,7 @@ import { RutasGuardadasService } from '../services/rutas-guardadas.service';
     CommonModule, 
     FormsModule, 
     RouterModule,
-    FooterComponent,
-    HeaderComponent
+    FooterComponent
   ]
 })
 export class MyRoutesPage implements OnInit {

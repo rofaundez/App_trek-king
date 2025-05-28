@@ -1,61 +1,125 @@
-<app-header></app-header>
-<div >
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Panel de Autoridad</ion-title>
-    <ion-buttons slot="end">
-      <ion-button *ngIf="puedeCrearAutoridades()" (click)="crearAutoridad()">
-        <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-      <ion-button (click)="verPerfil()">
-        <ion-icon name="person-circle-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-      <ion-button (click)="logout()">
-        <ion-icon name="log-out-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</div>
 
-<ion-content [fullscreen]="true">
-
-
-  <ion-list class="rutas-list">
-    <ion-card *ngFor="let ruta of rutas" class="ruta-card">
-      <ion-card-header>
-        <ion-card-title>{{ ruta.nombre }}</ion-card-title>
-      </ion-card-header>
-      
-      <ion-card-content>
-        <p class="descripcion">{{ ruta.descripcion }}</p>
-        <div class="info-container">
-          <ion-badge [color]="getDificultadColor(ruta.dificultad)">
-            {{ ruta.dificultad }}
-          </ion-badge>
-          <span class="duracion">{{ ruta.duracion }} horas</span>
+<ion-content>
+  <div class="contenedor-rutas">
+    <!-- Header con fondo de hojas -->
+    <div class="header-container">
+      <div class="user-welcome">
+        <ion-avatar (click)="verPerfil()" class="imagen_usuario">
+          <img alt src="assets/default-avatar.jpg">
+        </ion-avatar>
+        <div class="welcome-text">
+          <h2>Panel de Autoridad</h2>
+          <h3>{{autoridadActual?.nombre || "Autoridad"}} {{autoridadActual?.apellido || ""}}</h3>
         </div>
-        
-        <div class="button-container">
-          <ion-button fill="clear" (click)="verRuta(ruta)">
-            <ion-icon name="eye-outline" slot="start"></ion-icon>
-            Ver
+        <div class="header-buttons">
+          <ion-button *ngIf="puedeCrearAutoridades()" (click)="crearAutoridad()" class="action-button">
+            <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
           </ion-button>
-          <ion-button fill="clear" (click)="editarRuta(ruta)">
-            <ion-icon name="create-outline" slot="start"></ion-icon>
-            Editar
-          </ion-button>
-          <ion-button fill="clear" color="danger" (click)="eliminarRuta(ruta)">
-            <ion-icon name="trash-outline" slot="start"></ion-icon>
-            Eliminar
+          <ion-button (click)="logout()" class="action-button">
+            <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </div>
-      </ion-card-content>
-    </ion-card>
-  </ion-list>
+      </div>
 
-  <div *ngIf="rutas.length === 0" class="no-rutas">
-    <p>No hay rutas disponibles</p>
+      <!-- Search bar con autocompletado -->
+      <div class="search-container">
+        <div class="custom-searchbar">
+          <input 
+            type="text" 
+            placeholder="Buscar rutas agendadas" 
+            [(ngModel)]="searchTerm" 
+            (input)="onSearch($event)" 
+            class="search-input">
+          <button class="search-button" *ngIf="searchTerm" (click)="searchTerm=''; onSearch($event)">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="autocomplete-container" *ngIf="sugerencias && sugerencias.length > 0">
+          <ul class="autocomplete-list">
+            <li *ngFor="let sugerencia of sugerencias" (click)="seleccionarSugerencia(sugerencia)" class="autocomplete-item">
+              {{sugerencia}}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Filtros para rutas agendadas -->
+      <div class="contenedor_filtro" 
+           (mousedown)="isMouseDown($event)" 
+           (mousemove)="onMouseMove($event)"
+           (mouseup)="isMouseUp($event)"
+           (mouseleave)="isMouseUp($event)">
+
+        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Hoy'" (click)="filtrarPorFecha('Hoy')">
+          <ion-icon name="today-outline" class="imagen_filtro"></ion-icon>
+          <span class="nombre_filtro">Hoy</span>
+        </ion-button>
+
+        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Semana'" (click)="filtrarPorFecha('Semana')">
+          <ion-icon name="calendar-outline" class="imagen_filtro"></ion-icon>
+          <span class="nombre_filtro">Esta semana</span>
+        </ion-button>
+
+        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Mes'" (click)="filtrarPorFecha('Mes')">
+          <ion-icon name="calendar-number-outline" class="imagen_filtro"></ion-icon>
+          <span class="nombre_filtro">Este mes</span>
+        </ion-button>
+
+        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Todas'" (click)="filtrarPorFecha('Todas')">
+          <ion-icon name="infinite-outline" class="imagen_filtro"></ion-icon>
+          <span class="nombre_filtro">Todas</span>
+        </ion-button>
+      </div>
+    </div>
+
+    <!-- Contenido de rutas agendadas -->
+    <ion-list class="lista-rutas">
+      <ng-container *ngIf="rutasFiltradas.length > 0; else noRutas">
+        <ion-item *ngFor="let ruta of rutasFiltradas" 
+                  class="item-ruta" 
+                  button 
+                  lines="none" 
+                  (click)="verRuta(ruta)">
+          <div class="contenido-ruta">
+            <div class="imagen-container">
+              <img alt [src]="ruta.imagen || 'assets/img/default-route.jpg'" class="imagen_ruta">
+            </div>
+            <div class="info-ruta">
+              <h2 class="nombre_ruta">{{ruta.nombre}}</h2>
+              <p class="descripcion_ruta">{{ruta.ubicacion}}</p>
+              <div class="fecha-container">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span class="fecha_agendada">{{ruta.fechaAgendada | date:'dd/MM/yyyy'}}</span>
+              </div>
+              <div class="info-adicional">
+                <ion-badge [color]="getDificultadColor(ruta.dificultad)" class="dificultad-badge">
+                  {{ruta.dificultad}}
+                </ion-badge>
+                <span class="duracion">{{ruta.duracion}} horas</span>
+              </div>
+              <div class="button-container">
+                <ion-button fill="clear" (click)="verRuta(ruta); $event.stopPropagation()">
+                  <ion-icon name="eye-outline" slot="start"></ion-icon>
+                  Ver
+                </ion-button>
+                <ion-button fill="clear" (click)="editarRuta(ruta); $event.stopPropagation()">
+                  <ion-icon name="create-outline" slot="start"></ion-icon>
+                  Editar
+                </ion-button>
+                <ion-button fill="clear" color="danger" (click)="eliminarRuta(ruta); $event.stopPropagation()">
+                  <ion-icon name="trash-outline" slot="start"></ion-icon>
+                  Eliminar
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </ion-item>
+      </ng-container>
+      <ng-template #noRutas>
+        <div class="no-rutas-mensaje">
+          <p>No hay rutas agendadas disponibles</p>
+        </div>
+      </ng-template>
+    </ion-list>
   </div>
 </ion-content>

@@ -17,8 +17,7 @@ import { HeaderComponent } from '../../components/header/header.component';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
-    HeaderComponent
+    IonicModule
   ]
 })
 export class PerfilPage implements OnInit {

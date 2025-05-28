@@ -15,7 +15,7 @@ import { HeaderComponent } from '../components/header/header.component';
   templateUrl: './create-route.page.html',
   styleUrls: ['./create-route.page.scss'],
   standalone: true,
-  imports: [HeaderComponent,IonicModule, CommonModule, ReactiveFormsModule, FooterComponent]
+  imports: [IonicModule, CommonModule, ReactiveFormsModule, FooterComponent]
 })
 export class CreateRoutePage implements OnInit {
   routeForm!: FormGroup;

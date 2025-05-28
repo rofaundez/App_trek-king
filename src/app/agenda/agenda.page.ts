@@ -19,7 +19,6 @@ import { HeaderComponent } from "../components/header/header.component";
   standalone: true,
   imports: [IonButtons, IonBackButton, 
     IonContent, 
-    IonHeader, 
     IonTitle, 
     IonToolbar, 
     IonList, 
@@ -29,7 +28,8 @@ import { HeaderComponent } from "../components/header/header.component";
     IonButtons,
     CommonModule,
     FormsModule,
-    FooterComponent, HeaderComponent]
+    FooterComponent,
+  ]
 })
 export class AgendaPage implements OnInit {
   // Array para almacenar las rutas agendadas
