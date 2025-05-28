@@ -194,6 +194,38 @@ export class DatabaseService {
     });
   }
 
+  // Get user by ID
+  async getUserById(id: string): Promise<User | null> {
+    return new Promise((resolve, reject) => {
+      if (!this.db) {
+        reject('Database not initialized');
+        return;
+      }
+
+      // Convertir el ID a número si es necesario para IndexedDB
+      const numericId = parseInt(id);
+      const idToUse = isNaN(numericId) ? id : numericId;
+      
+      const transaction = this.db.transaction('users', 'readonly');
+      const store = transaction.objectStore('users');
+      const request = store.get(idToUse);
+
+      request.onsuccess = () => {
+        if (request.result) {
+          const user = {...request.result}; // Creamos una copia para no modificar el original
+          // Aseguramos que el ID sea siempre un string para Firebase
+          if (user.id !== undefined) {
+            user.id = String(user.id);
+          }
+          resolve(user);
+        } else {
+          resolve(null);
+        }
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
   // Get all autoridades
   async getAllAutoridades(): Promise<Autoridad[]> {
     return new Promise((resolve, reject) => {

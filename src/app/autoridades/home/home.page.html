@@ -5,7 +5,7 @@
     <div class="header-container">
       <div class="user-welcome">
         <ion-avatar (click)="verPerfil()" class="imagen_usuario">
-          <img alt src="assets/default-avatar.jpg">
+          <img alt="Avatar" src="assets/default-avatar.jpg">
         </ion-avatar>
         <div class="welcome-text">
           <h2>Panel de Autoridad</h2>
@@ -72,54 +72,54 @@
       </div>
     </div>
 
-    <!-- Contenido de rutas agendadas -->
-    <ion-list class="lista-rutas">
-      <ng-container *ngIf="rutasFiltradas.length > 0; else noRutas">
-        <ion-item *ngFor="let ruta of rutasFiltradas" 
-                  class="item-ruta" 
-                  button 
-                  lines="none" 
-                  (click)="verRuta(ruta)">
-          <div class="contenido-ruta">
-            <div class="imagen-container">
-              <img alt [src]="ruta.imagen || 'assets/img/default-route.jpg'" class="imagen_ruta">
+    <!-- Contenido de rutas agendadas -->  
+    <div class="info-panel">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <div class="info-text">
+        <h4>Rutas Agendadas por Usuarios</h4>
+        <p>Aquí puede ver todas las rutas que los usuarios han agendado para realizar. Esta información le ayudará a estar preparado para brindar asistencia en caso de emergencia.</p>
+      </div>
+    </div>
+        <div class="rutas-container">
+          <div class="ruta-card" *ngFor="let ruta of rutasFiltradas">
+            <div class="ruta-imagen">
+              <img [src]="ruta.imagen" [alt]="ruta.nombre" />
+              <div class="dificultad-badge" [style.background-color]="getDificultadColor(ruta.dificultad)">
+                {{ ruta.dificultad }}
+              </div>
             </div>
-            <div class="info-ruta">
-              <h2 class="nombre_ruta">{{ruta.nombre}}</h2>
-              <p class="descripcion_ruta">{{ruta.ubicacion}}</p>
-              <div class="fecha-container">
+            <div class="ruta-info">
+              <h3>{{ ruta.nombre }}</h3>
+              <p class="ubicacion">{{ ruta.ubicacion }}</p>
+              <p class="fecha-agendada" *ngIf="ruta.fechaProgramada">
                 <ion-icon name="calendar-outline"></ion-icon>
-                <span class="fecha_agendada">{{ruta.fechaAgendada | date:'dd/MM/yyyy'}}</span>
-              </div>
-              <div class="info-adicional">
-                <ion-badge [color]="getDificultadColor(ruta.dificultad)" class="dificultad-badge">
-                  {{ruta.dificultad}}
-                </ion-badge>
-                <span class="duracion">{{ruta.duracion}} horas</span>
-              </div>
-              <div class="button-container">
-                <ion-button fill="clear" (click)="verRuta(ruta); $event.stopPropagation()">
-                  <ion-icon name="eye-outline" slot="start"></ion-icon>
-                  Ver
+                Agendada para: {{ ruta.fechaProgramada }}
+              </p>
+              <p class="hora-agendada" *ngIf="ruta.horaProgramada">
+                <ion-icon name="time-outline"></ion-icon>
+                Hora: {{ ruta.horaProgramada }}
+              </p>
+              <p class="usuario-info" *ngIf="ruta.userId">
+                <ion-icon name="person-outline"></ion-icon>
+                Usuario: {{ ruta['nombreUsuario'] || ruta.userId }}
+              </p>
+              <div class="acciones">
+                <ion-button fill="clear" size="small" (click)="verRuta(ruta)" title="Ver ruta en mapa">
+                  <ion-icon name="map-outline" slot="start"></ion-icon>
+                  Ver Ruta
                 </ion-button>
-                <ion-button fill="clear" (click)="editarRuta(ruta); $event.stopPropagation()">
-                  <ion-icon name="create-outline" slot="start"></ion-icon>
-                  Editar
-                </ion-button>
-                <ion-button fill="clear" color="danger" (click)="eliminarRuta(ruta); $event.stopPropagation()">
-                  <ion-icon name="trash-outline" slot="start"></ion-icon>
-                  Eliminar
+                <ion-button fill="clear" size="small" (click)="verDetallesRuta(ruta)" title="Ver detalles">
+                  <ion-icon name="information-circle-outline" slot="start"></ion-icon>
+                  Detalles
                 </ion-button>
               </div>
             </div>
           </div>
-        </ion-item>
-      </ng-container>
-      <ng-template #noRutas>
-        <div class="no-rutas-mensaje">
-          <p>No hay rutas agendadas disponibles</p>
         </div>
-      </ng-template>
-    </ion-list>
+        <div class="mensaje-vacio" *ngIf="rutasFiltradas.length === 0">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <h3>No hay rutas agendadas disponibles</h3>
+          <p>No se encontraron rutas agendadas que coincidan con los filtros seleccionados.</p>
+        </div>
   </div>
 </ion-content>

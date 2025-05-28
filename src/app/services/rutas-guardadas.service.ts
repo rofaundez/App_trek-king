@@ -21,6 +21,9 @@ export interface RutaAgendada {
     recomendaciones: string;
   };
   puntosInteres?: string;
+  fechaAgendada?: Date; // Fecha convertida para filtros y ordenamiento
+  nombreUsuario?: string; // Nombre completo del usuario que agendó la ruta
+  [key: string]: any; // Para permitir propiedades adicionales
 }
 
 @Injectable({
@@ -149,6 +152,69 @@ export class RutasGuardadasService {
     } catch (error) {
       console.error('Error al obtener las rutas guardadas:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Obtiene todas las rutas agendadas de todos los usuarios (para autoridades)
+   * @returns Promise con un array de todas las rutas agendadas
+   */
+  async obtenerTodasLasRutasAgendadas(): Promise<RutaAgendada[]> {
+    try {
+      const rutasRef = collection(this.db, 'rutas-guardadas');
+      // No filtrar por usuario - obtener todas las rutas agendadas
+      const querySnapshot = await getDocs(rutasRef);
+      
+      const rutas: RutaAgendada[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data() as DocumentData;
+        rutas.push({
+          id: doc.id,
+          userId: data['userId'],
+          rutaId: data['rutaId'],
+          nombre: data['nombre'],
+          ubicacion: data['ubicacion'],
+          dificultad: data['dificultad'],
+          imagen: data['imagen'],
+          fechaProgramada: data['fechaProgramada'],
+          horaProgramada: data['horaProgramada'],
+          descripcion: data['descripcion'],
+          caracteristicas: data['caracteristicas'],
+          puntosInteres: data['puntosInteres']
+        });
+      });
+      
+      console.log(`Se encontraron ${rutas.length} rutas agendadas en total`);
+      return rutas;
+    } catch (error) {
+      console.error('Error al obtener todas las rutas agendadas:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene la información del usuario que agendó la ruta
+   * @param userId ID del usuario
+   * @returns Promise con la información del usuario o null si no se encuentra
+   */
+  async obtenerInfoUsuario(userId: string): Promise<any | null> {
+    try {
+      if (!userId) {
+        return null;
+      }
+      
+      // Obtener el servicio de base de datos
+      const dbService = await this.getDBService();
+      if (!dbService) {
+        throw new Error('No se pudo obtener el servicio de base de datos');
+      }
+      
+      // Obtener la información del usuario
+      const usuario = await dbService.getUserById(userId);
+      return usuario;
+    } catch (error) {
+      console.error('Error al obtener información del usuario:', error);
+      return null;
     }
   }
 
