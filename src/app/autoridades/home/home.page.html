@@ -44,6 +44,7 @@
       </div>
 
       <!-- Filtros para rutas agendadas -->
+      <ng-container *ngIf="rutasFiltradas.length > 0; else SinRutas">
       <div class="contenedor_filtro" 
            (mousedown)="isMouseDown($event)" 
            (mousemove)="onMouseMove($event)"
@@ -70,6 +71,12 @@
           <span class="nombre_filtro">Todas</span>
         </ion-button>
       </div>
+      
+    </ng-container>
+    <ng-template #SinRutas>
+      <div class="no-rutas-mensaje1">   
+      </div>
+    </ng-template>
     </div>
 
     <!-- Contenido de rutas agendadas -->
