@@ -48,14 +48,27 @@
       margin: 0 0 4px 0;
       font-size: 16px;
       font-weight: 600;
-      color: var(--ion-color-dark);
     }
+  }
+}
 
+// Estilos para el alert de detalles de ruta
+.alert-detalles-ruta {
+  --background: #1e1e1e;
+  --color: white;
+
+  .alert-message {
+    font-size: 14px;
+    line-height: 1.5;
+    color: white;
+    
     p {
-      margin: 0;
-      font-size: 14px;
-      color: var(--ion-color-medium);
-      line-height: 1.4;
+      margin: 8px 0;
+    }
+    
+    strong {
+      font-weight: 600;
+      color: #3880ff;
     }
   }
 }
@@ -98,6 +111,22 @@ ion-content {
 
 // Estilos para el contenedor principal
 
+// Estilos para el alert de detalles de ruta
+::ng-deep .alert-detalles-ruta {
+  .alert-message {
+    overflow-y: auto;
+    max-height: 60vh;
+    
+    p {
+      margin: 8px 0;
+      text-align: left;
+    }
+    
+    strong {
+      font-weight: 600;
+    }
+  }
+}
 
 // Estilos para el saludo del usuario
 .user-welcome {

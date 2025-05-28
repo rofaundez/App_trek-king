@@ -14,7 +14,7 @@ export class DatabaseService {
     this.initDB();
   }
 
-  private async initDB(): Promise<void> {
+  public async initDB(): Promise<void> {
     const request = indexedDB.open(this.dbName, 1);
 
     request.onerror = (event) => {
@@ -195,16 +195,21 @@ export class DatabaseService {
   }
 
   // Get user by ID
-  async getUserById(id: string): Promise<User | null> {
+  async getUserById(id: string | number): Promise<User | null> {
     return new Promise((resolve, reject) => {
       if (!this.db) {
+        console.error('getUserById: Database not initialized');
         reject('Database not initialized');
         return;
       }
 
+      console.log(`getUserById: Buscando usuario con ID ${id}`);
+
       // Convertir el ID a número si es necesario para IndexedDB
-      const numericId = parseInt(id);
+      const numericId = parseInt(id as string);
       const idToUse = isNaN(numericId) ? id : numericId;
+      
+      console.log(`getUserById: ID a utilizar: ${idToUse}, tipo: ${typeof idToUse}`);
       
       const transaction = this.db.transaction('users', 'readonly');
       const store = transaction.objectStore('users');
@@ -217,13 +222,46 @@ export class DatabaseService {
           if (user.id !== undefined) {
             user.id = String(user.id);
           }
+          console.log(`getUserById: Usuario encontrado:`, user);
           resolve(user);
         } else {
-          resolve(null);
+          console.warn(`getUserById: No se encontró usuario con ID ${idToUse}`);
+          
+          // Intentar buscar en Firebase si no se encuentra en IndexedDB
+          this.getUserFromFirebase(id)
+            .then(user => {
+              if (user) {
+                console.log(`getUserById: Usuario encontrado en Firebase:`, user);
+                resolve(user);
+              } else {
+                console.warn(`getUserById: Usuario no encontrado en Firebase tampoco`);
+                resolve(null);
+              }
+            })
+            .catch(error => {
+              console.error(`getUserById: Error al buscar en Firebase:`, error);
+              resolve(null);
+            });
         }
       };
-      request.onerror = () => reject(request.error);
+      request.onerror = (event) => {
+        console.error(`getUserById: Error al buscar usuario:`, event);
+        reject(request.error);
+      };
     });
+  }
+  
+  // Método para obtener usuario desde Firebase
+  private async getUserFromFirebase(id: string | number): Promise<User | null> {
+    try {
+      console.log(`getUserFromFirebase: Intentando obtener usuario con ID ${id} desde Firebase`);
+      // Aquí implementaríamos la lógica para obtener el usuario desde Firebase
+      // Por ahora, solo es un placeholder
+      return null;
+    } catch (error) {
+      console.error('Error al obtener usuario desde Firebase:', error);
+      return null;
+    }
   }
 
   // Get all autoridades

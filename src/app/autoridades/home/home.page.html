@@ -108,7 +108,7 @@
               </p>
               <p class="usuario-info" *ngIf="ruta.userId">
                 <ion-icon name="person-outline"></ion-icon>
-                Usuario: {{ ruta['nombreUsuario'] || ruta.userId }}
+                Usuario: {{ ruta.nombreUsuario || 'Nombre no disponible' }}
               </p>
               <div class="acciones">
                 <ion-button fill="clear" size="small" (click)="verRuta(ruta)" title="Ver ruta en mapa">

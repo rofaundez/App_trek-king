@@ -200,8 +200,11 @@ export class RutasGuardadasService {
   async obtenerInfoUsuario(userId: string): Promise<any | null> {
     try {
       if (!userId) {
+        console.warn('obtenerInfoUsuario: userId es null o vacío');
         return null;
       }
+      
+      console.log(`obtenerInfoUsuario: Buscando información para el usuario con ID ${userId}`);
       
       // Obtener el servicio de base de datos
       const dbService = await this.getDBService();
@@ -211,9 +214,16 @@ export class RutasGuardadasService {
       
       // Obtener la información del usuario
       const usuario = await dbService.getUserById(userId);
+      
+      if (usuario) {
+        console.log(`obtenerInfoUsuario: Información obtenida para el usuario ${userId}:`, usuario);
+      } else {
+        console.warn(`obtenerInfoUsuario: No se encontró información para el usuario ${userId}`);
+      }
+      
       return usuario;
     } catch (error) {
-      console.error('Error al obtener información del usuario:', error);
+      console.error(`Error al obtener información del usuario ${userId}:`, error);
       return null;
     }
   }
@@ -656,8 +666,10 @@ export class RutasGuardadasService {
     try {
       // Importar el servicio dinámicamente para evitar dependencias circulares
       const { DatabaseService } = await import('../services/database.service');
-      // Crear una instancia del servicio
-      return new DatabaseService();
+      // Crear una instancia del servicio y asegurarse de que la base de datos esté inicializada
+      const dbService = new DatabaseService();
+      await dbService.initDB(); // Inicializar la base de datos
+      return dbService;
     } catch (error) {
       console.error('Error al obtener DatabaseService:', error);
       return null;

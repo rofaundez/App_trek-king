@@ -140,13 +140,23 @@ export class HomePage implements OnInit {
             const usuario = await this.rutasGuardadasService.obtenerInfoUsuario(ruta.userId);
             if (usuario) {
               // Agregar el nombre del usuario a la ruta
-              ruta['nombreUsuario'] = `${usuario.nombre || ''} ${usuario.apellido || ''}`.trim();
-              if (!ruta['nombreUsuario']) {
-                ruta['nombreUsuario'] = usuario.email || 'Usuario';
+              const nombre = usuario.nombre || '';
+              const apellido = usuario.apellido || '';
+              
+              // Asignar el nombre completo o usar alternativas si no está disponible
+              if (nombre || apellido) {
+                ruta.nombreUsuario = `${nombre} ${apellido}`.trim();
+                console.log(`Nombre de usuario obtenido para ${ruta.userId}: ${ruta.nombreUsuario}`);
+              } else if (usuario.email) {
+                ruta.nombreUsuario = usuario.email;
+                console.log(`Email de usuario obtenido para ${ruta.userId}: ${ruta.nombreUsuario}`);
               }
+              // No asignar ID abreviado si no hay nombre ni email
             }
+            // No asignar ID abreviado si no se encuentra información del usuario
           } catch (error) {
             console.error(`Error al obtener información del usuario ${ruta.userId}:`, error);
+            // No asignar ID abreviado en caso de error
           }
         }
       }
@@ -242,11 +252,10 @@ export class HomePage implements OnInit {
     const { AlertController } = await import('@ionic/angular/standalone');
     const alertController = new AlertController();
     
-    let usuarioInfo = 'No disponible';
-    if (ruta['nombreUsuario']) {
+    let usuarioInfo = 'Nombre no disponible';
+    if (ruta['nombreUsuario'] && !ruta['nombreUsuario'].startsWith('Usuario ')) {
+      // Solo usar nombreUsuario si no es un ID formateado (que comienza con 'Usuario ')
       usuarioInfo = ruta['nombreUsuario'];
-    } else if (ruta.userId) {
-      usuarioInfo = ruta.userId;
     }
     
     const alert = await alertController.create({
@@ -260,8 +269,13 @@ export class HomePage implements OnInit {
         <p><strong>Usuario:</strong> ${usuarioInfo}</p>
         ${ruta.descripcion ? `<p><strong>Descripción:</strong> ${ruta.descripcion}</p>` : ''}
       `,
-      buttons: ['Cerrar']
+      buttons: ['Cerrar'],
+      cssClass: 'alert-detalles-ruta',
+      htmlAttributes: {
+        'data-allow-html': 'true'
+      }
     });
+
     
     await alert.present();
   }
