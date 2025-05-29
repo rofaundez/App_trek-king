@@ -1,4 +1,3 @@
-
 <ion-content>
   <div class="contenedor-rutas">
     <!-- Header con fondo de hojas -->
@@ -19,6 +18,22 @@
             <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </div>
+      </div>
+
+      <!-- Vista buttons -->
+      <div class="view-buttons">
+        <ion-button fill="clear" class="view-button" [class.active-view]="vistaActiva === 'rutas'" (click)="cambiarVista('rutas')">
+          <ion-icon name="map-outline"></ion-icon>
+          <span>Rutas Guardadas</span>
+        </ion-button>
+        <ion-button fill="clear" class="view-button alert-button" [class.active-view]="vistaActiva === 'alertas'" (click)="cambiarVista('alertas')">
+          <ion-icon name="warning-outline"></ion-icon>
+          <span>Alertas</span>
+        </ion-button>
+        <ion-button fill="clear" class="view-button" [class.active-view]="vistaActiva === 'peticiones'" (click)="cambiarVista('peticiones')">
+          <ion-icon name="mail-outline"></ion-icon>
+          <span>Peticiones</span>
+        </ion-button>
       </div>
 
       <!-- Search bar con autocompletado -->
@@ -42,51 +57,56 @@
           </ul>
         </div>
       </div>
-
-      <!-- Filtros para rutas agendadas -->
-      <ng-container *ngIf="rutasFiltradas.length > 0; else SinRutas">
-      <div class="contenedor_filtro" 
-           (mousedown)="isMouseDown($event)" 
-           (mousemove)="onMouseMove($event)"
-           (mouseup)="isMouseUp($event)"
-           (mouseleave)="isMouseUp($event)">
-
-        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Hoy'" (click)="filtrarPorFecha('Hoy')">
-          <ion-icon name="today-outline" class="imagen_filtro"></ion-icon>
-          <span class="nombre_filtro">Hoy</span>
-        </ion-button>
-
-        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Semana'" (click)="filtrarPorFecha('Semana')">
-          <ion-icon name="calendar-outline" class="imagen_filtro"></ion-icon>
-          <span class="nombre_filtro">Esta semana</span>
-        </ion-button>
-
-        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Mes'" (click)="filtrarPorFecha('Mes')">
-          <ion-icon name="calendar-number-outline" class="imagen_filtro"></ion-icon>
-          <span class="nombre_filtro">Este mes</span>
-        </ion-button>
-
-        <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Todas'" (click)="filtrarPorFecha('Todas')">
-          <ion-icon name="infinite-outline" class="imagen_filtro"></ion-icon>
-          <span class="nombre_filtro">Todas</span>
-        </ion-button>
-      </div>
-      
-    </ng-container>
-    <ng-template #SinRutas>
-      <div class="no-rutas-mensaje1">   
-      </div>
-    </ng-template>
     </div>
 
-    <!-- Contenido de rutas agendadas -->  
-    <div class="info-panel">
-      <ion-icon name="information-circle-outline"></ion-icon>
-      <div class="info-text">
-        <h4>Rutas Agendadas por Usuarios</h4>
-        <p>Aquí puede ver todas las rutas que los usuarios han agendado para realizar. Esta información le ayudará a estar preparado para brindar asistencia en caso de emergencia.</p>
-      </div>
-    </div>
+    <!-- Contenido según la vista activa -->
+    <ng-container [ngSwitch]="vistaActiva">
+      <!-- Vista de Rutas Guardadas -->
+      <ng-container *ngSwitchCase="'rutas'">
+        <!-- Filtros para rutas agendadas -->
+        <ng-container *ngIf="rutasFiltradas.length > 0; else SinRutas">
+          <div class="filtros-container">
+            <div class="contenedor_filtro" 
+                 (mousedown)="isMouseDown($event)" 
+                 (mousemove)="onMouseMove($event)"
+                 (mouseup)="isMouseUp($event)"
+                 (mouseleave)="isMouseUp($event)">
+
+              <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Hoy'" (click)="filtrarPorFecha('Hoy')">
+                <ion-icon name="today-outline" class="imagen_filtro"></ion-icon>
+                <span class="nombre_filtro">Hoy</span>
+              </ion-button>
+
+              <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Semana'" (click)="filtrarPorFecha('Semana')">
+                <ion-icon name="calendar-outline" class="imagen_filtro"></ion-icon>
+                <span class="nombre_filtro">Esta semana</span>
+              </ion-button>
+
+              <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Mes'" (click)="filtrarPorFecha('Mes')">
+                <ion-icon name="calendar-number-outline" class="imagen_filtro"></ion-icon>
+                <span class="nombre_filtro">Este mes</span>
+              </ion-button>
+
+              <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Todas'" (click)="filtrarPorFecha('Todas')">
+                <ion-icon name="infinite-outline" class="imagen_filtro"></ion-icon>
+                <span class="nombre_filtro">Todas</span>
+              </ion-button>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #SinRutas>
+          <div class="no-rutas-mensaje1">   
+          </div>
+        </ng-template>
+
+        <!-- Contenido de rutas agendadas -->
+        <div class="info-panel">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <div class="info-text">
+            <h4>Rutas Agendadas por Usuarios</h4>
+            <p>Aquí puede ver todas las rutas que los usuarios han agendado para realizar. Esta información le ayudará a estar preparado para brindar asistencia en caso de emergencia.</p>
+          </div>
+        </div>
         <div class="rutas-container">
           <div class="ruta-card" *ngFor="let ruta of rutasFiltradas">
             <div class="ruta-imagen">
@@ -128,5 +148,102 @@
           <h3>No hay rutas agendadas disponibles</h3>
           <p>No se encontraron rutas agendadas que coincidan con los filtros seleccionados.</p>
         </div>
+      </ng-container>
+
+      <!-- Vista de Alertas -->
+      <ng-container *ngSwitchCase="'alertas'">
+        <div class="alertas-container">
+          <div class="info-panel">
+            <ion-icon name="warning-outline"></ion-icon>
+            <div class="info-text">
+              <h4>Alertas del Sistema</h4>
+              <p>Aquí puede ver y gestionar todas las alertas reportadas por los usuarios. Actualice el estado de cada alerta según corresponda.</p>
+            </div>
+          </div>
+
+          <div class="alertas-list" *ngIf="!loading">
+            <div class="alerta-card" *ngFor="let alerta of alertas">
+              <div class="alerta-header">
+                <h3>{{alerta.titulo}}</h3>
+                <span class="estado-badge" [ngClass]="getEstadoAlertaClass(alerta.estado)">
+                  {{alerta.estado}}
+                </span>
+              </div>
+              <p class="alerta-descripcion">{{alerta.descripcion}}</p>
+              <div class="alerta-info">
+                <p><ion-icon name="location-outline"></ion-icon> {{alerta.ubicacion}}</p>
+                <p><ion-icon name="time-outline"></ion-icon> {{alerta.fecha | date:'medium'}}</p>
+              </div>
+              <div class="alerta-acciones">
+                <ion-button fill="clear" size="small" (click)="actualizarEstadoAlerta(alerta.id, 'solucionado')" [disabled]="alerta.estado === 'solucionado'">
+                  <ion-icon name="checkmark-circle-outline"></ion-icon>
+                  Solucionado
+                </ion-button>
+                <ion-button fill="clear" size="small" (click)="actualizarEstadoAlerta(alerta.id, 'en proceso')" [disabled]="alerta.estado === 'en proceso'">
+                  <ion-icon name="hourglass-outline"></ion-icon>
+                  En Proceso
+                </ion-button>
+                <ion-button fill="clear" size="small" (click)="actualizarEstadoAlerta(alerta.id, 'pendiente')" [disabled]="alerta.estado === 'pendiente'">
+                  <ion-icon name="alert-circle-outline"></ion-icon>
+                  Pendiente
+                </ion-button>
+              </div>
+            </div>
+          </div>
+          <div class="mensaje-vacio" *ngIf="alertas.length === 0 && !loading">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <h3>No hay alertas activas</h3>
+            <p>Todas las alertas han sido atendidas.</p>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Vista de Peticiones de Rutas -->
+      <ng-container *ngSwitchCase="'peticiones'">
+        <div class="peticiones-container">
+          <div class="info-panel">
+            <ion-icon name="mail-outline"></ion-icon>
+            <div class="info-text">
+              <h4>Solicitudes de Rutas</h4>
+              <p>Aquí puede revisar y gestionar las solicitudes de nuevas rutas propuestas por los usuarios.</p>
+            </div>
+          </div>
+
+          <div class="peticiones-list" *ngIf="!loading">
+            <div class="peticion-card" *ngFor="let ruta of rutasSolicitadas">
+              <div class="peticion-header">
+                <h3>{{ruta.nombre}}</h3>
+                <span class="estado-badge" [ngClass]="ruta.estado">
+                  {{ruta.estado}}
+                </span>
+              </div>
+              <div class="peticion-info">
+                <p><ion-icon name="location-outline"></ion-icon> {{ruta.ubicacion}}</p>
+                <p><ion-icon name="time-outline"></ion-icon> {{ruta.fechaCreacion | date:'medium'}}</p>
+                <p><ion-icon name="person-outline"></ion-icon> Propuesto por: {{ruta.nombreUsuario}}</p>
+              </div>
+              <div class="peticion-descripcion">
+                <p>{{ruta.descripcion}}</p>
+              </div>
+              <div class="peticion-acciones" *ngIf="!ruta.estado">
+                <ion-button fill="clear" size="small" color="success" (click)="aprobarRuta(ruta.id)">
+                  <ion-icon name="checkmark-circle-outline"></ion-icon>
+                  Aprobar
+                </ion-button>
+                <ion-button fill="clear" size="small" color="danger" (click)="rechazarRuta(ruta.id)">
+                  <ion-icon name="close-circle-outline"></ion-icon>
+                  Rechazar
+                </ion-button>
+              </div>
+            </div>
+          </div>
+          <div class="mensaje-vacio" *ngIf="rutasSolicitadas.length === 0 && !loading">
+            <ion-icon name="mail-outline"></ion-icon>
+            <h3>No hay solicitudes pendientes</h3>
+            <p>No hay nuevas solicitudes de rutas para revisar.</p>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
   </div>
 </ion-content>

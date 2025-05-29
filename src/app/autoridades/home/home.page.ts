@@ -10,6 +10,10 @@ import { addIcons } from 'ionicons';
 import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircleOutline, logOutOutline, closeOutline, calendarOutline, todayOutline, calendarNumberOutline, infiniteOutline, mapOutline, timeOutline, informationCircleOutline } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { DatePipe } from '@angular/common';
+import { AlertController } from '@ionic/angular/standalone';
+import { collection, query, orderBy, getDocs } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
+import { updateDoc, doc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-home',
@@ -51,12 +55,18 @@ export class HomePage implements OnInit {
   isDragging: boolean = false;
   startX: number = 0;
   scrollLeft: number = 0;
+  vistaActiva: 'rutas' | 'alertas' | 'peticiones' = 'rutas';
+  alertas: any[] = [];
+  rutasSolicitadas: any[] = [];
+  loading = false;
 
   constructor(
     private authService: AuthService,
     private dbService: DatabaseService,
     private rutasGuardadasService: RutasGuardadasService,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController,
+    private firestore: Firestore
   ) {
     addIcons({ 
       trashOutline,       createOutline, 
@@ -82,6 +92,7 @@ export class HomePage implements OnInit {
 
     // Cargar las rutas
     this.cargarRutas();
+    this.cargarDatosVista();
   }
 
   async cargarRutas() {
@@ -424,5 +435,119 @@ export class HomePage implements OnInit {
 
   isMouseUp(event: MouseEvent) {
     this.isDragging = false;
+  }
+
+  cambiarVista(vista: 'rutas' | 'alertas' | 'peticiones') {
+    this.vistaActiva = vista;
+    this.cargarDatosVista();
+  }
+
+  async cargarDatosVista() {
+    this.loading = true;
+    try {
+      switch (this.vistaActiva) {
+        case 'alertas':
+          await this.cargarAlertas();
+          break;
+        case 'peticiones':
+          await this.cargarRutasSolicitadas();
+          break;
+        case 'rutas':
+        default:
+          // No se necesita cargar datos adicionales para la vista de rutas
+          break;
+      }
+    } catch (error) {
+      console.error('Error al cargar datos:', error);
+      this.mostrarError('Error al cargar los datos');
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async cargarAlertas() {
+    const alertasRef = collection(this.firestore, 'alertas');
+    const q = query(alertasRef, orderBy('fecha', 'desc'));
+    
+    const snapshot = await getDocs(q);
+    this.alertas = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
+
+  async cargarRutasSolicitadas() {
+    const rutasRef = collection(this.firestore, 'creacion-de-rutas');
+    const q = query(rutasRef, orderBy('fechaCreacion', 'desc'));
+    
+    const snapshot = await getDocs(q);
+    this.rutasSolicitadas = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  }
+
+  getEstadoAlertaClass(estado: string): string {
+    switch (estado.toLowerCase()) {
+      case 'solucionado':
+        return 'estado-solucionado';
+      case 'en proceso':
+        return 'estado-proceso';
+      case 'pendiente':
+        return 'estado-pendiente';
+      default:
+        return '';
+    }
+  }
+
+  async actualizarEstadoAlerta(alertaId: string, nuevoEstado: string) {
+    try {
+      const alertaRef = doc(this.firestore, 'alertas', alertaId);
+      await updateDoc(alertaRef, {
+        estado: nuevoEstado,
+        fechaActualizacion: new Date()
+      });
+      await this.cargarAlertas();
+    } catch (error) {
+      console.error('Error al actualizar estado:', error);
+      this.mostrarError('Error al actualizar el estado de la alerta');
+    }
+  }
+
+  async aprobarRuta(rutaId: string) {
+    try {
+      const rutaRef = doc(this.firestore, 'creacion-de-rutas', rutaId);
+      await updateDoc(rutaRef, {
+        estado: 'aprobada',
+        fechaAprobacion: new Date()
+      });
+      await this.cargarRutasSolicitadas();
+    } catch (error) {
+      console.error('Error al aprobar ruta:', error);
+      this.mostrarError('Error al aprobar la ruta');
+    }
+  }
+
+  async rechazarRuta(rutaId: string) {
+    try {
+      const rutaRef = doc(this.firestore, 'creacion-de-rutas', rutaId);
+      await updateDoc(rutaRef, {
+        estado: 'rechazada',
+        fechaRechazo: new Date()
+      });
+      await this.cargarRutasSolicitadas();
+    } catch (error) {
+      console.error('Error al rechazar ruta:', error);
+      this.mostrarError('Error al rechazar la ruta');
+    }
+  }
+
+  private async mostrarError(mensaje: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: mensaje,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }

@@ -511,3 +511,254 @@ ion-content {
     max-width: 1000px;
   }
 }
+
+.view-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+
+  .view-button {
+    --color: var(--ion-color-medium);
+    --color-activated: var(--ion-color-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    ion-icon {
+      font-size: 1.2rem;
+    }
+
+    &.active-view {
+      --color: var(--ion-color-primary);
+      font-weight: 600;
+    }
+
+    &.alert-button {
+      --color: var(--ion-color-danger);
+      --color-activated: var(--ion-color-danger);
+    }
+  }
+}
+
+.filtros-container {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  margin: 1rem auto;
+  max-width: 800px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .contenedor_filtro {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .boton-filtro {
+      --color: var(--ion-color-medium);
+      --color-activated: var(--ion-color-primary);
+      white-space: nowrap;
+      min-width: auto;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+
+      &.active-filter {
+        --color: var(--ion-color-primary);
+        --background: var(--ion-color-primary-tint);
+        font-weight: 600;
+      }
+
+      .imagen_filtro {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+// Estilos para las alertas
+.alertas-container {
+  padding: 1rem;
+
+  .alertas-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .alerta-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .alerta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+    }
+
+    .estado-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+
+      &.estado-solucionado {
+        background-color: var(--ion-color-success-tint);
+        color: var(--ion-color-success);
+      }
+
+      &.estado-proceso {
+        background-color: var(--ion-color-warning-tint);
+        color: var(--ion-color-warning);
+      }
+
+      &.estado-pendiente {
+        background-color: var(--ion-color-danger-tint);
+        color: var(--ion-color-danger);
+      }
+    }
+
+    .alerta-descripcion {
+      color: var(--ion-color-medium);
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+
+    .alerta-info {
+      p {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--ion-color-medium);
+        font-size: 0.9rem;
+        margin: 0.25rem 0;
+
+        ion-icon {
+          color: var(--ion-color-primary);
+        }
+      }
+    }
+
+    .alerta-acciones {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--ion-color-light);
+
+      ion-button {
+        flex: 1;
+        --padding-start: 0.5rem;
+        --padding-end: 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Estilos para las peticiones de rutas
+.peticiones-container {
+  padding: 1rem;
+
+  .peticiones-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .peticion-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .peticion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+    }
+
+    .estado-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+
+      &.aprobada {
+        background-color: var(--ion-color-success-tint);
+        color: var(--ion-color-success);
+      }
+
+      &.rechazada {
+        background-color: var(--ion-color-danger-tint);
+        color: var(--ion-color-danger);
+      }
+    }
+
+    .peticion-info {
+      p {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--ion-color-medium);
+        font-size: 0.9rem;
+        margin: 0.25rem 0;
+
+        ion-icon {
+          color: var(--ion-color-primary);
+        }
+      }
+    }
+
+    .peticion-descripcion {
+      margin: 0.5rem 0;
+      color: var(--ion-color-medium);
+      font-size: 0.9rem;
+    }
+
+    .peticion-acciones {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--ion-color-light);
+
+      ion-button {
+        flex: 1;
+        --padding-start: 0.5rem;
+        --padding-end: 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
