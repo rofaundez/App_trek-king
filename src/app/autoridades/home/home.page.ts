@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBadge, IonButtons, IonMenuButton, IonAvatar, IonInput, IonSearchbar } from '@ionic/angular/standalone';
 import { AuthService } from '../../services/auth.service';
-import { DatabaseService } from '../../services/database.service';
 import { RutasGuardadasService, RutaAgendada } from '../../services/rutas-guardadas.service';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
@@ -62,7 +61,6 @@ export class HomePage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private dbService: DatabaseService,
     private rutasGuardadasService: RutasGuardadasService,
     private router: Router,
     private alertController: AlertController,
