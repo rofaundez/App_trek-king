@@ -152,8 +152,12 @@ export class HomePage implements OnInit, OnDestroy {
       console.log('Rutas creadas por usuarios obtenidas desde Firebase:', rutasCreadas);
       
       if (rutasCreadas && rutasCreadas.length > 0) {
+        // Filtramos solo las rutas con estado "aceptado"
+        const rutasAceptadas = rutasCreadas.filter(ruta => ruta.estado === 'aceptado');
+        console.log('Rutas aceptadas:', rutasAceptadas);
+
         // Verificamos que cada ruta tenga las propiedades necesarias
-        const rutasValidadas = rutasCreadas.map(ruta => {
+        const rutasValidadas = rutasAceptadas.map(ruta => {
           // Creamos un nuevo objeto para evitar modificar el original
           const rutaValidada = { ...ruta };
           
