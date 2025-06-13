@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { RutasGuardadasService, RutaAgendada } from '../../services/rutas-guardadas.service';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircleOutline, logOutOutline, closeOutline, calendarOutline, todayOutline, calendarNumberOutline, infiniteOutline, mapOutline, timeOutline, informationCircleOutline } from 'ionicons/icons';
+import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircleOutline, logOutOutline, closeOutline, calendarOutline, todayOutline, calendarNumberOutline, infiniteOutline, mapOutline, timeOutline, informationCircleOutline, warningOutline, mailOutline, personOutline, locationOutline, checkmarkCircleOutline, hourglassOutline, alertCircleOutline, closeCircleOutline } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { DatePipe } from '@angular/common';
 import { AlertController } from '@ionic/angular/standalone';
@@ -66,18 +66,7 @@ export class HomePage implements OnInit {
     private alertController: AlertController,
     private firestore: Firestore
   ) {
-    addIcons({ 
-      trashOutline,       createOutline, 
-      eyeOutline, 
-      personAddOutline, 
-      personCircleOutline, 
-      logOutOutline,
-      closeOutline,
-      calendarOutline,
-      todayOutline,
-      calendarNumberOutline,
-      infiniteOutline
-    });
+    addIcons({personAddOutline,logOutOutline,mapOutline,warningOutline,mailOutline,closeOutline,todayOutline,calendarOutline,calendarNumberOutline,infiniteOutline,informationCircleOutline,timeOutline,personOutline,locationOutline,checkmarkCircleOutline,hourglassOutline,alertCircleOutline,closeCircleOutline,trashOutline,createOutline,eyeOutline,personCircleOutline});
   }
 
   ngOnInit() {
