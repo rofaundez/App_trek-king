@@ -150,14 +150,25 @@
                             <p>Aquí puede ver y gestionar todas las alertas reportadas por los usuarios. Actualice el estado de cada alerta según corresponda.</p>
                         </div>
                     </div>
-
+                    <div class="alertas-actions" style="text-align:right; margin-bottom: 1rem;">
+                        <ion-button color="primary" (click)="descargarUltimasAlertas()">
+                            <ion-icon name="download-outline" slot="start"></ion-icon>
+                            Descargar alertas
+                        </ion-button>
+                    </div>
                     <div class="alertas-list" *ngIf="!loading">
                         <div class="alerta-card" *ngFor="let alerta of alertas">
                             <div class="alerta-header">
+                                <ion-avatar *ngIf="alerta.fotoUsuario" class="alerta-avatar">
+                                    <img [src]="alerta.fotoUsuario" alt="Foto usuario" />
+                                </ion-avatar>
+                                <div class="alerta-user-info">
+                                    <span class="alerta-nombre">{{alerta.nombreUsuario}}</span>
+                                </div>
                                 <h3>{{alerta.titulo}}</h3>
                                 <span class="estado-badge" [ngClass]="getEstadoAlertaClass(alerta.estado)">
-                  {{alerta.estado}}
-                </span>
+                                    {{alerta.estado}}
+                                </span>
                             </div>
                             <p class="alerta-descripcion">{{alerta.descripcion}}</p>
                             <div class="alerta-info">
@@ -166,7 +177,9 @@
                                     <strong>Ubicación:</strong> Latitud: {{alerta.ubicacion.lat}}, Longitud: {{alerta.ubicacion.lng}}
                                 </p>
                                 <p>
-                                    <ion-icon name="time-outline"></ion-icon> {{alerta.fecha | date:'medium'}}</p>
+                                    <ion-icon name="time-outline"></ion-icon>
+                                    {{alerta.fecha | timeAgo}}
+                                </p>
                             </div>
                             <div class="alerta-acciones">
                                 <ion-button fill="clear" size="small" (click)="actualizarEstadoAlerta(alerta.id, 'solucionado')" [disabled]="alerta.estado === 'solucionado'">
@@ -217,7 +230,7 @@
                                 <p>
                                     <ion-icon name="time-outline"></ion-icon> {{ruta.fechaCreacion | date:'medium'}}</p>
                                 <p>
-                                    <ion-icon name="person-outline"></ion-icon> Propuesto por: {{ruta.nombreUsuario}}</p>
+                                    <ion-icon name="person-outline"></ion-icon> Propuesto por: {{ruta.creador?.nombre || ruta.nombreUsuario}}</p>
                             </div>
                             <div class="peticion-descripcion">
                                 <p>{{ruta.descripcion}}</p>
@@ -230,6 +243,10 @@
                                 <ion-button fill="clear" size="small" color="danger" (click)="rechazarRuta(ruta.id)">
                                     <ion-icon name="close-circle-outline"></ion-icon>
                                     Rechazar
+                                </ion-button>
+                                <ion-button fill="clear" size="small" color="primary" (click)="abrirModalDetallesRuta(ruta)">
+                                    <ion-icon name="eye-outline"></ion-icon>
+                                    Ver detalles
                                 </ion-button>
                             </div>
                         </div>

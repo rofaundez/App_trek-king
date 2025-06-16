@@ -152,8 +152,8 @@ export class HomePage implements OnInit, OnDestroy {
       console.log('Rutas creadas por usuarios obtenidas desde Firebase:', rutasCreadas);
       
       if (rutasCreadas && rutasCreadas.length > 0) {
-        // Filtramos solo las rutas con estado "aceptado"
-        const rutasAceptadas = rutasCreadas.filter(ruta => ruta.estado === 'aceptado');
+        // Filtramos solo las rutas con estado "aprobada"
+        const rutasAceptadas = rutasCreadas.filter(ruta => ruta.estado === 'aprobada');
         console.log('Rutas aceptadas:', rutasAceptadas);
 
         // Verificamos que cada ruta tenga las propiedades necesarias
@@ -319,29 +319,15 @@ export class HomePage implements OnInit, OnDestroy {
     slider.scrollLeft = this.scrollLeft - walk;
   }
 
-  goToRouteDetails(id: string, nombre: string, ubicacion: string, dificultad: string, imagen: string, descripcion?: string, caracteristicas?: any, puntosInteres?: string) {
-    // Validamos los parámetros antes de navegar
-    const rutaId = id || 'ruta_' + Math.random().toString(36).substring(2, 9);
-    const rutaNombre = nombre || 'Ruta sin nombre';
-    const rutaUbicacion = ubicacion || 'Sin ubicación especificada';
-    const rutaDificultad = dificultad || 'Media | 5-15km | Est. 2-5h';
-    
-    // Aseguramos que la imagen sea válida
-    let rutaImagen = 'assets/img/default-route.jpg';
-    if (imagen && typeof imagen === 'string' && imagen.trim() !== '') {
-      rutaImagen = imagen;
-    }
-    
-    // Navegamos a la página de detalles con los parámetros de la ruta
+  goToRouteDetails(id: string, nombre: string, ubicacion: string, dificultad: string, imagen: string, descripcion?: string, caracteristicas?: any, puntosInteres?: any) {
     const queryParams: any = {
-      id: rutaId,
-      nombre: rutaNombre,
-      ubicacion: rutaUbicacion,
-      dificultad: rutaDificultad,
-      imagen: rutaImagen
+      id,
+      nombre,
+      ubicacion,
+      dificultad,
+      imagen
     };
     
-    // Añadimos parámetros adicionales si están disponibles (para rutas creadas por usuarios)
     if (descripcion) queryParams.descripcion = descripcion;
     
     // Procesamos las características
@@ -371,7 +357,25 @@ export class HomePage implements OnInit, OnDestroy {
       queryParams.caracteristicas = JSON.stringify(caracteristicas);
     }
     
-    if (puntosInteres) queryParams.puntosInteres = puntosInteres;
+    // Procesamos los puntos de interés
+    if (puntosInteres) {
+      // Si puntosInteres es un string, intentamos parsearlo
+      if (typeof puntosInteres === 'string') {
+        try {
+          puntosInteres = JSON.parse(puntosInteres);
+        } catch (e) {
+          console.error('Error al parsear puntos de interés:', e);
+          puntosInteres = [];
+        }
+      }
+      // Si no es un array, creamos uno vacío
+      if (!Array.isArray(puntosInteres)) {
+        puntosInteres = [];
+      }
+      queryParams.puntosInteres = JSON.stringify(puntosInteres);
+    } else {
+      queryParams.puntosInteres = JSON.stringify([]);
+    }
     
     console.log('Navegando a detalles de ruta con parámetros:', queryParams);
     this.router.navigate(['/ruta-detalles'], { queryParams });

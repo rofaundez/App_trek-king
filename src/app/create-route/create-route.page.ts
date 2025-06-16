@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, AlertController, ModalController } from '@ionic/angular';
@@ -9,13 +9,20 @@ import { OsmMapService } from '../services/osm-map.service';
 import { FooterComponent } from '../components/footer/footer.component';
 import { RutasGuardadasService } from '../services/rutas-guardadas.service';
 import { HeaderComponent } from '../components/header/header.component';
+import { FormsModule } from '@angular/forms';
+
+interface PuntoInteres {
+  nombre: string;
+  descripcion: string;
+  imagenes: string[];
+}
 
 @Component({
   selector: 'app-create-route',
   templateUrl: './create-route.page.html',
   styleUrls: ['./create-route.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule, FooterComponent]
+  imports: [IonicModule, CommonModule, ReactiveFormsModule, FormsModule, FooterComponent]
 })
 export class CreateRoutePage implements OnInit {
   routeForm!: FormGroup;
@@ -27,6 +34,8 @@ export class CreateRoutePage implements OnInit {
   currentLocationType: 'start' | 'end' | null = null;
   isMapLoading = false;
   mapError = false;
+  puntosInteres: PuntoInteres[] = [];
+  @ViewChildren('fileInputPunto') fileInputs!: QueryList<ElementRef>;
 
   constructor(
     private fb: FormBuilder,
@@ -82,6 +91,33 @@ export class CreateRoutePage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  agregarPuntoInteres() {
+    this.puntosInteres.push({ nombre: '', descripcion: '', imagenes: [] });
+  }
+
+  eliminarPuntoInteres(idx: number) {
+    this.puntosInteres.splice(idx, 1);
+  }
+
+  async onPuntoInteresImageSelected(event: any, idx: number) {
+    const files: FileList = event.target.files;
+    if (files && files.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.match(/image\/*/) && file.size <= 5000000) {
+          const base64 = await this.convertFileToBase64(file);
+          this.puntosInteres[idx].imagenes.push(base64);
+        } else {
+          this.showAlert('Error', 'Por favor selecciona una imagen válida (máximo 5MB)');
+        }
+      }
+    }
+  }
+
+  eliminarImagenPuntoInteres(idxPunto: number, idxImg: number) {
+    this.puntosInteres[idxPunto].imagenes.splice(idxImg, 1);
   }
 
   async onSubmit() {
@@ -154,7 +190,7 @@ export class CreateRoutePage implements OnInit {
             mejorEpoca: 'Todo el año',
             recomendaciones: 'Llevar agua y calzado adecuado'
           },
-          puntosInteres: 'Ruta creada por usuario'
+          puntosInteres: this.puntosInteres
         };
 
         // Guardar la ruta solo en Firebase en la colección 'creacion-de-rutas'

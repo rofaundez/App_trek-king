@@ -195,6 +195,7 @@ export class SosPage implements OnInit, OnDestroy {
           nombreUsuario: currentUser.nombre && currentUser.apellido 
             ? `${currentUser.nombre} ${currentUser.apellido}`
             : currentUser.nombre || currentUser.email || 'Usuario',
+          fotoUsuario: currentUser.photo || '',
           titulo: 'Alerta SOS',
           descripcion: mensaje,
           ubicacion: ubicacion,

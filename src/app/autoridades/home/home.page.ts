@@ -6,13 +6,18 @@ import { AuthService } from '../../services/auth.service';
 import { RutasGuardadasService, RutaAgendada } from '../../services/rutas-guardadas.service';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircleOutline, logOutOutline, closeOutline, calendarOutline, todayOutline, calendarNumberOutline, infiniteOutline, mapOutline, timeOutline, informationCircleOutline, warningOutline, mailOutline, personOutline, locationOutline, checkmarkCircleOutline, hourglassOutline, alertCircleOutline, closeCircleOutline } from 'ionicons/icons';
+import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircleOutline, logOutOutline, closeOutline, calendarOutline, todayOutline, calendarNumberOutline, infiniteOutline, mapOutline, timeOutline, informationCircleOutline, warningOutline, mailOutline, personOutline, locationOutline, checkmarkCircleOutline, hourglassOutline, alertCircleOutline, closeCircleOutline, downloadOutline } from 'ionicons/icons';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { DatePipe } from '@angular/common';
 import { AlertController } from '@ionic/angular/standalone';
 import { collection, query, orderBy, getDocs } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { updateDoc, doc } from '@angular/fire/firestore';
+import { TimeAgoPipe } from '../pipes/time-ago.pipe';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { ModalController } from '@ionic/angular';
+import { DetalleRutaModalComponent } from '../../components/detalle-ruta-modal/detalle-ruta-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -41,7 +46,9 @@ import { updateDoc, doc } from '@angular/fire/firestore';
     IonSearchbar,
     CommonModule, 
     FormsModule,
-    DatePipe
+    DatePipe,
+    TimeAgoPipe,
+    DetalleRutaModalComponent
   ]
 })
 export class HomePage implements OnInit {
@@ -64,9 +71,10 @@ export class HomePage implements OnInit {
     private rutasGuardadasService: RutasGuardadasService,
     private router: Router,
     private alertController: AlertController,
-    private firestore: Firestore
+    private firestore: Firestore,
+    private modalController: ModalController
   ) {
-    addIcons({personAddOutline,logOutOutline,mapOutline,warningOutline,mailOutline,closeOutline,todayOutline,calendarOutline,calendarNumberOutline,infiniteOutline,informationCircleOutline,timeOutline,personOutline,locationOutline,checkmarkCircleOutline,hourglassOutline,alertCircleOutline,closeCircleOutline,trashOutline,createOutline,eyeOutline,personCircleOutline});
+    addIcons({personAddOutline,logOutOutline,mapOutline,warningOutline,mailOutline,closeOutline,todayOutline,calendarOutline,calendarNumberOutline,infiniteOutline,informationCircleOutline,timeOutline,personOutline,downloadOutline,locationOutline,checkmarkCircleOutline,hourglassOutline,alertCircleOutline,closeCircleOutline,trashOutline,createOutline,eyeOutline,personCircleOutline});
   }
 
   ngOnInit() {
@@ -536,5 +544,33 @@ export class HomePage implements OnInit {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  descargarUltimasAlertas() {
+    // Tomar las 5 alertas más recientes
+    const ultimas = this.alertas.slice(0, 5);
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Reporte de Últimas 5 Alertas SOS', 14, 18);
+    const rows = ultimas.map(alerta => [
+      alerta.nombreUsuario || 'Desconocido',
+      alerta.descripcion || '',
+      alerta.ubicacion?.lat ?? '',
+      alerta.ubicacion?.lng ?? ''
+    ]);
+    autoTable(doc, {
+      head: [['Nombre', 'Tipo de emergencia', 'Latitud', 'Longitud']],
+      body: rows,
+      startY: 24,
+    });
+    doc.save('ultimas_alertas.pdf');
+  }
+
+  async abrirModalDetallesRuta(ruta: any) {
+    const modal = await this.modalController.create({
+      component: DetalleRutaModalComponent,
+      componentProps: { ruta }
+    });
+    await modal.present();
   }
 }

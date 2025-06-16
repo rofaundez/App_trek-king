@@ -11,6 +11,7 @@ export interface Alerta {
   id?: string;
   userId: string;
   nombreUsuario: string;
+  fotoUsuario?: string;
   titulo: string;
   descripcion: string;
   ubicacion: Ubicacion;

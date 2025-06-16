@@ -1,237 +1,215 @@
-<div  class="header-container">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
-    </ion-buttons>
-    <ion-title class="titulo-header">Detalles de la Ruta</ion-title>
-  </ion-toolbar>
+<div class="header-container">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
+        </ion-buttons>
+        <ion-title class="titulo-header">Detalles de la Ruta</ion-title>
+    </ion-toolbar>
 </div>
 
 <ion-content [fullscreen]="true">
-  <div class="ion-padding">
-    <!-- Imagen principal de la ruta -->
-    <div class="ruta-imagen-container">
-      <img [src]="rutaImagen" alt="{{rutaNombre}}" class="ruta-imagen">
+    <div class="ion-padding">
+        <!-- Imagen principal de la ruta -->
+        <div class="ruta-imagen-container">
+            <img [src]="rutaImagen" alt="{{rutaNombre}}" class="ruta-imagen">
+        </div>
+
+        <!-- Información básica de la ruta -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>{{rutaNombre}}</ion-card-title>
+                <ion-card-subtitle>{{rutaUbicacion}}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-chip color="primary">
+                    <ion-label>{{rutaDificultad}}</ion-label>
+                </ion-chip>
+
+                <!-- Calificación promedio -->
+                <div class="calificacion-promedio" *ngIf="calificacionPromedio > 0">
+                    <div class="estrellas-container">
+                        <ion-icon *ngFor="let estrella of generarEstrellas(calificacionPromedio)" [name]="estrella ? 'star' : 'star-outline'" color="warning"></ion-icon>
+                        <span class="calificacion-texto">{{ calificacionPromedio.toFixed(1) }} ({{ comentarios.length }} opiniones)</span>
+                    </div>
+                </div>
+
+                <!-- Descripción de la ruta -->
+                <div class="descripcion-container">
+                    <h3>Descripción</h3>
+                    <p>{{rutaDescripcion}}</p>
+                </div>
+
+                <!-- Características de la ruta -->
+                <div class="caracteristicas-container">
+                    <h3>Características</h3>
+                    <ion-item lines="none">
+                        <ion-label>
+                            <h4>Tipo de terreno</h4>
+                            <p>{{rutaCaracteristicas.tipoTerreno}}</p>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-label>
+                            <h4>Mejor época para visitar</h4>
+                            <p>{{rutaCaracteristicas.mejorEpoca}}</p>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-label>
+                            <h4>Recomendaciones</h4>
+                            <p>{{rutaCaracteristicas.recomendaciones}}</p>
+                        </ion-label>
+                    </ion-item>
+                </div>
+
+                <!-- Puntos de interés -->
+                <div class="puntos-interes-container">
+                    <h3>Puntos de interés</h3>
+                    <div *ngIf="rutaPuntosInteres.length > 0">
+                        <div *ngFor="let punto of rutaPuntosInteres" class="punto-interes">
+                            <h4>{{punto.nombre}}</h4>
+                            <p>{{punto.descripcion}}</p>
+                            <div class="punto-imagenes" *ngIf="punto.imagenes && punto.imagenes.length">
+                                <img *ngFor="let img of punto.imagenes" [src]="img" alt="Imagen punto de interés" class="punto-img">
+                            </div>
+                        </div>
+                    </div>
+                    <p *ngIf="rutaPuntosInteres.length === 0">No hay puntos de interés registrados para esta ruta.</p>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="botones-accion">
+                    <div class="botones-container">
+                        <ion-button *ngIf="!rutaYaGuardada" color="medium" class="boton" fill="outline" (click)="abrirCalendario()">
+                            <ion-icon name="calendar-outline" style="margin-right: 8px"></ion-icon>
+                            Guardar en Mis Rutas
+                        </ion-button>
+                        <ion-button *ngIf="rutaYaGuardada" color="success" class="boton" fill="outline" disabled>
+                            <ion-icon name="checkmark-outline" style="margin-right: 8px"></ion-icon>
+                            Ruta ya guardada
+                        </ion-button>
+                        <ion-button color="tertiary" class="boton" fill="outline" (click)="buscarGrupo()">
+                            <ion-icon name="people-outline" style="margin-right: 8px"></ion-icon>
+                            Buscar Grupo
+                        </ion-button>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Sección de comentarios -->
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>Opiniones de usuarios</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <!-- Formulario para añadir comentario -->
+                <div class="comentario-form">
+                    <h4>Deja tu opinión</h4>
+
+                    <!-- Selector de calificación -->
+                    <div class="calificacion-selector">
+                        <p>¿Cómo calificarías esta ruta?</p>
+                        <div class="estrellas-selector">
+                            <ion-icon *ngFor="let _ of [1,2,3,4,5]; let i = index" [name]="i < calificacion ? 'star' : 'star-outline'" color="warning" (click)="calificacion = i+1"></ion-icon>
+                        </div>
+                    </div>
+
+                    <!-- Área de texto para el comentario -->
+                    <ion-item class="comentario-textarea">
+                        <ion-textarea [(ngModel)]="nuevoComentario" placeholder="Comparte tu experiencia en esta ruta..." rows="4" maxlength="500"></ion-textarea>
+                    </ion-item>
+
+                    <!-- Botón para enviar -->
+                    <div class="ion-text-end">
+                        <ion-button (click)="enviarComentario()" [disabled]="!nuevoComentario.trim() || calificacion === 0">
+                            <ion-icon name="send-outline" slot="start"></ion-icon>
+                            Publicar
+                        </ion-button>
+                    </div>
+                </div>
+
+                <!-- Lista de comentarios -->
+                <div class="comentarios-lista" *ngIf="comentarios.length > 0">
+                    <h4>{{ comentarios.length }} {{ comentarios.length === 1 ? 'opinión' : 'opiniones' }}</h4>
+
+                    <ion-item *ngFor="let comentario of comentarios" lines="full" class="comentario-item">
+                        <div class="comentario-container">
+                            <div class="comentario-header">
+                                <div class="usuario-info">
+                                    <ion-icon name="person-circle-outline" class="usuario-icon"></ion-icon>
+                                    <span class="usuario-nombre">{{ comentario.nombreUsuario }}</span>
+                                </div>
+                                <div class="comentario-fecha">
+                                    <ion-icon name="time-outline" size="small"></ion-icon>
+                                    <span>{{ formatearFecha(comentario.fecha) }}</span>
+                                </div>
+                            </div>
+
+                            <div class="comentario-estrellas">
+                                <ion-icon *ngFor="let estrella of generarEstrellas(comentario.calificacion)" [name]="estrella ? 'star' : 'star-outline'" color="warning" size="small"></ion-icon>
+                            </div>
+
+                            <div class="comentario-texto">
+                                <p>{{ comentario.texto }}</p>
+                            </div>
+                        </div>
+                    </ion-item>
+                </div>
+
+                <!-- Mensaje cuando no hay comentarios -->
+                <div class="sin-comentarios" *ngIf="comentarios.length === 0">
+                    <p>Aún no hay opiniones para esta ruta. ¡Sé el primero en compartir tu experiencia!</p>
+                </div>
+            </ion-card-content>
+        </ion-card>
     </div>
-
-    <!-- Información básica de la ruta -->
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>{{rutaNombre}}</ion-card-title>
-        <ion-card-subtitle>{{rutaUbicacion}}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-      <ion-chip color="primary">
-        <ion-label>{{rutaDificultad}}</ion-label>
-      </ion-chip>
-      
-      <!-- Calificación promedio -->
-      <div class="calificacion-promedio" *ngIf="calificacionPromedio > 0">
-        <div class="estrellas-container">
-          <ion-icon *ngFor="let estrella of generarEstrellas(calificacionPromedio)" 
-                    [name]="estrella ? 'star' : 'star-outline'" 
-                    color="warning"></ion-icon>
-          <span class="calificacion-texto">{{ calificacionPromedio.toFixed(1) }} ({{ comentarios.length }} opiniones)</span>
-        </div>
-      </div>
-      
-      <!-- Descripción de la ruta -->
-      <div class="descripcion-container">
-        <h3>Descripción</h3>
-        <p>{{rutaDescripcion}}</p>
-      </div>
-
-      <!-- Características de la ruta -->
-      <div class="caracteristicas-container">
-        <h3>Características</h3>
-        <ion-item lines="none">
-          <ion-label>
-            <h4>Tipo de terreno</h4>
-            <p>{{rutaCaracteristicas.tipoTerreno}}</p>
-          </ion-label>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label>
-            <h4>Mejor época para visitar</h4>
-            <p>{{rutaCaracteristicas.mejorEpoca}}</p>
-          </ion-label>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-label> 
-            <h4>Recomendaciones</h4>
-            <p>{{rutaCaracteristicas.recomendaciones}}</p>
-          </ion-label>
-        </ion-item>
-      </div>
-
-      <!-- Puntos de interés -->
-      <div class="puntos-interes-container">
-        <h3>Puntos de interés</h3>
-        <p>{{rutaPuntosInteres}}</p>
-      </div>
-
-      <!-- Botones de acción -->
-      <div class="botones-accion">
-        <div class="botones-container">
-          <ion-button *ngIf="!rutaYaGuardada" color="medium" class="boton" fill="outline" (click)="abrirCalendario()">
-            <ion-icon name="calendar-outline" style="margin-right: 8px"></ion-icon>
-            Guardar en Mis Rutas
-          </ion-button>
-          <ion-button *ngIf="rutaYaGuardada" color="success" class="boton" fill="outline" disabled>
-            <ion-icon name="checkmark-outline" style="margin-right: 8px"></ion-icon>
-            Ruta ya guardada
-          </ion-button>
-          <ion-button color="tertiary" class="boton" fill="outline" (click)="buscarGrupo()">
-            <ion-icon name="people-outline" style="margin-right: 8px"></ion-icon>
-            Buscar Grupo
-          </ion-button>
-        </div>
-      </div>
-    </ion-card-content>
-  </ion-card>
-  
-  <!-- Sección de comentarios -->
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Opiniones de usuarios</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <!-- Formulario para añadir comentario -->
-      <div class="comentario-form">
-        <h4>Deja tu opinión</h4>
-        
-        <!-- Selector de calificación -->
-        <div class="calificacion-selector">
-          <p>¿Cómo calificarías esta ruta?</p>
-          <div class="estrellas-selector">
-            <ion-icon *ngFor="let _ of [1,2,3,4,5]; let i = index" 
-                      [name]="i < calificacion ? 'star' : 'star-outline'" 
-                      color="warning"
-                      (click)="calificacion = i+1"></ion-icon>
-          </div>
-        </div>
-        
-        <!-- Área de texto para el comentario -->
-        <ion-item class="comentario-textarea">
-          <ion-textarea 
-            [(ngModel)]="nuevoComentario" 
-            placeholder="Comparte tu experiencia en esta ruta..."
-            rows="4"
-            maxlength="500"></ion-textarea>
-        </ion-item>
-        
-        <!-- Botón para enviar -->
-        <div class="ion-text-end">
-          <ion-button (click)="enviarComentario()" [disabled]="!nuevoComentario.trim() || calificacion === 0">
-            <ion-icon name="send-outline" slot="start"></ion-icon>
-            Publicar
-          </ion-button>
-        </div>
-      </div>
-      
-      <!-- Lista de comentarios -->
-      <div class="comentarios-lista" *ngIf="comentarios.length > 0">
-        <h4>{{ comentarios.length }} {{ comentarios.length === 1 ? 'opinión' : 'opiniones' }}</h4>
-        
-        <ion-item *ngFor="let comentario of comentarios" lines="full" class="comentario-item">
-          <div class="comentario-container">
-            <div class="comentario-header">
-              <div class="usuario-info">
-                <ion-icon name="person-circle-outline" class="usuario-icon"></ion-icon>
-                <span class="usuario-nombre">{{ comentario.nombreUsuario }}</span>
-              </div>
-              <div class="comentario-fecha">
-                <ion-icon name="time-outline" size="small"></ion-icon>
-                <span>{{ formatearFecha(comentario.fecha) }}</span>
-              </div>
-            </div>
-            
-            <div class="comentario-estrellas">
-              <ion-icon *ngFor="let estrella of generarEstrellas(comentario.calificacion)" 
-                        [name]="estrella ? 'star' : 'star-outline'" 
-                        color="warning"
-                        size="small"></ion-icon>
-            </div>
-            
-            <div class="comentario-texto">
-              <p>{{ comentario.texto }}</p>
-            </div>
-          </div>
-        </ion-item>
-      </div>
-      
-      <!-- Mensaje cuando no hay comentarios -->
-      <div class="sin-comentarios" *ngIf="comentarios.length === 0">
-        <p>Aún no hay opiniones para esta ruta. ¡Sé el primero en compartir tu experiencia!</p>
-      </div>
-    </ion-card-content>
-  </ion-card>
-  </div>
 </ion-content>
 
 <!-- Modal del calendario -->
 <ion-modal [isOpen]="isCalendarModalOpen">
-  <ng-template>
-    <div>
-      <ion-toolbar>
-        <ion-title>Seleccionar fecha y hora</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="cerrarCalendario()">
-            <ion-icon name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </div>
-    <ion-content class="ion-padding">
-      <div class="calendario-container">
-        <ion-text class="ion-text-center">
-          <h4>¿Cuándo quieres realizar esta ruta?</h4>
-        </ion-text>
-        
-        <div class="selector-container">
-          <div class="fecha-selector">
-            <ion-text>
-              <h5>Selecciona una fecha</h5>
-            </ion-text>
-            <ion-datetime 
-              class="xd"
-              presentation="date"
-              [preferWheel]="false"
-              [showDefaultButtons]="false"
-              [min]="fechaMinima"
-              (ionChange)="cambioFecha($event)"
-              locale="es-ES"
-              min="today"
-              [firstDayOfWeek]="1"
-            ></ion-datetime>
-          </div>
-          
-          <div class="hora-selector">
-            <ion-text>
-              <h5>Selecciona una hora</h5>
-            </ion-text>
-            <ion-datetime
-              class="xd"
-              color="success"
-              presentation="time"
-              [preferWheel]="true"
-              [showDefaultButtons]="false"
-              (ionChange)="cambioHora($event)"
-              locale="es-ES"
-              minuteValues="0, 15, 30, 45"
-            ></ion-datetime>
-          </div>
+    <ng-template>
+        <div>
+            <ion-toolbar>
+                <ion-title>Seleccionar fecha y hora</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button (click)="cerrarCalendario()">
+                        <ion-icon name="close-outline"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
         </div>
-        
-        <div class="ion-padding ion-text-center">
-          <ion-button expand="block" (click)="confirmarFecha()" [disabled]="!fechaSeleccionada || !horaSeleccionada">
-            <ion-icon name="checkmark-outline" slot="start"></ion-icon>
-            GUARDAR EN MIS RUTAS
-          </ion-button>
-        </div>
-      </div>
-    </ion-content>
-  </ng-template>
+        <ion-content class="ion-padding">
+            <div class="calendario-container">
+                <ion-text class="ion-text-center">
+                    <h4>¿Cuándo quieres realizar esta ruta?</h4>
+                </ion-text>
+
+                <div class="selector-container">
+                    <div class="fecha-selector">
+                        <ion-text>
+                            <h5>Selecciona una fecha</h5>
+                        </ion-text>
+                        <ion-datetime class="xd" presentation="date" [preferWheel]="false" [showDefaultButtons]="false" [min]="fechaMinima" (ionChange)="cambioFecha($event)" locale="es-ES" min="today" [firstDayOfWeek]="1"></ion-datetime>
+                    </div>
+
+                    <div class="hora-selector">
+                        <ion-text>
+                            <h5>Selecciona una hora</h5>
+                        </ion-text>
+                        <ion-datetime class="xd" color="success" presentation="time" [preferWheel]="true" [showDefaultButtons]="false" (ionChange)="cambioHora($event)" locale="es-ES" minuteValues="0, 15, 30, 45"></ion-datetime>
+                    </div>
+                </div>
+
+                <div class="ion-padding ion-text-center">
+                    <ion-button expand="block" (click)="confirmarFecha()" [disabled]="!fechaSeleccionada || !horaSeleccionada">
+                        <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+                        GUARDAR EN MIS RUTAS
+                    </ion-button>
+                </div>
+            </div>
+        </ion-content>
+    </ng-template>
 </ion-modal>
 
 

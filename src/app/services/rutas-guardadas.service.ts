@@ -20,7 +20,11 @@ export interface RutaAgendada {
     mejorEpoca: string;
     recomendaciones: string;
   };
-  puntosInteres?: string;
+  puntosInteres?: {
+    nombre: string;
+    descripcion: string;
+    imagenes: string[];
+  }[];
   fechaAgendada?: Date; // Fecha convertida para filtros y ordenamiento
   nombreUsuario?: string; // Nombre completo del usuario que agendó la ruta
   [key: string]: any; // Para permitir propiedades adicionales
@@ -524,9 +528,9 @@ export class RutasGuardadasService {
         puntoInicio: puntoInicio,
         puntoTermino: puntoTermino,
         fechaCreacion: ruta.fechaCreacion || new Date(),
-        puntosDescanso: ruta.puntosDescanso || [],
+        puntosDescanso: [],
         caracteristicas: caracteristicas,
-        puntosInteres: ruta.puntosInteres || 'Ruta creada por usuario',
+        puntosInteres: ruta.puntosInteres || [],
         // Aseguramos que tenga categorías basadas en el tipo de terreno
         categorias: this.determinarCategorias({
           ...ruta,

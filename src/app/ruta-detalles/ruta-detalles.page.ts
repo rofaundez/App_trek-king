@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
 import { ComentariosService, Comentario } from '../services/comentarios.service';
 import { HeaderComponent } from '../components/header/header.component';
 import { BuscarGrupoService, PublicacionGrupo } from '../services/buscar-grupo.service';
+import { AlertController } from '@ionic/angular';
 
 interface RutaInfo {
   descripcion: string;
@@ -19,7 +20,11 @@ interface RutaInfo {
     mejorEpoca: string;
     recomendaciones: string;
   };
-  puntosInteres: string;
+  puntosInteres: {
+    nombre: string;
+    descripcion: string;
+    imagenes: string[];
+  }[];
 }
 
 @Component({
@@ -77,12 +82,8 @@ export class RutaDetallesPage implements OnInit {
   
   // Información específica de la ruta
   rutaDescripcion: string = '';
-  rutaCaracteristicas = {
-    tipoTerreno: '',
-    mejorEpoca: '',
-    recomendaciones: ''
-  };
-  rutaPuntosInteres: string = '';
+  rutaCaracteristicas: any = {};
+  rutaPuntosInteres: any[] = [];
   
   // Base de datos de información de rutas
   private rutasInfo: {[key: string]: RutaInfo} = {
@@ -93,7 +94,12 @@ export class RutaDetallesPage implements OnInit {
         mejorEpoca: 'Todo el año, preferiblemente primavera',
         recomendaciones: 'Llevar agua, protector solar y calzado cómodo.'
       },
-      puntosInteres: 'Terraza Neptuno, Castillo Hidalgo, Fuente Neptuno, Jardines y miradores con vistas panorámicas de Santiago.'
+      puntosInteres: [
+        { nombre: 'Terraza Neptuno', descripcion: 'Vista panorámica de Santiago desde la terraza Neptuno', imagenes: ['terraza_neptuno.jpg'] },
+        { nombre: 'Castillo Hidalgo', descripcion: 'Vista del Castillo Hidalgo desde la terraza Neptuno', imagenes: ['castillo_hidalgo.jpg'] },
+        { nombre: 'Fuente Neptuno', descripcion: 'Vista de la fuente Neptuno', imagenes: ['fuente_neptuno.jpg'] },
+        { nombre: 'Jardines y miradores', descripcion: 'Vistas panorámicas de Santiago desde los jardines y miradores', imagenes: ['jardines_y_miradores.jpg'] }
+      ]
     },
     'cascada_san_juan': {
       descripcion: 'El sendero a la Cascada San Juan es una ruta de dificultad media que atraviesa el Parque Natural San Carlos de Apoquindo. El recorrido ofrece hermosos paisajes de la precordillera andina y culmina en una impresionante cascada. El sendero es variado, con tramos de bosque nativo y zonas rocosas.',
@@ -102,7 +108,12 @@ export class RutaDetallesPage implements OnInit {
         mejorEpoca: 'Primavera y otoño. En invierno puede estar con nieve y en verano muy caluroso',
         recomendaciones: 'Llevar al menos 2 litros de agua, protector solar, sombrero, bastones de trekking y calzado adecuado para montaña.'
       },
-      puntosInteres: 'Mirador del Valle, Bosque de Quillayes, Cascada San Juan, Flora y fauna nativa de la zona central de Chile.'
+      puntosInteres: [
+        { nombre: 'Mirador del Valle', descripcion: 'Vista panorámica del valle desde el mirador del Valle', imagenes: ['mirador_del_valle.jpg'] },
+        { nombre: 'Bosque de Quillayes', descripcion: 'Bosque nativo de Quillayes', imagenes: ['bosque_de_quillayes.jpg'] },
+        { nombre: 'Cascada San Juan', descripcion: 'Vista de la cascada San Juan', imagenes: ['cascada_san_juan.jpg'] },
+        { nombre: 'Flora y fauna', descripcion: 'Flora y fauna nativa de la zona central de Chile', imagenes: ['flora_y_fauna.jpg'] }
+      ]
     },
     'salto_apoquindo': {
       descripcion: 'La ruta al Salto de Apoquindo es un desafiante sendero que recorre la quebrada de Apoquindo hasta llegar a una espectacular caída de agua. El recorrido es exigente, con un desnivel considerable y terreno técnico en algunos tramos. Recomendado para excursionistas con experiencia y buena condición física.',
@@ -111,7 +122,12 @@ export class RutaDetallesPage implements OnInit {
         mejorEpoca: 'Primavera tardía y otoño temprano. Evitar en invierno por crecidas del río',
         recomendaciones: 'Llevar mínimo 3 litros de agua, alimentos energéticos, ropa de abrigo, impermeable, botiquín básico y calzado de trekking con buen agarre.'
       },
-      puntosInteres: 'Mirador de la Quebrada, Bosque Esclerófilo, Salto de Apoquindo, Formaciones geológicas de la cordillera.'
+      puntosInteres: [
+        { nombre: 'Mirador de la Quebrada', descripcion: 'Vista del mirador de la Quebrada', imagenes: ['mirador_de_la_quebrada.jpg'] },
+        { nombre: 'Bosque Esclerófilo', descripcion: 'Bosque de Esclerófilo', imagenes: ['bosque_esclerofil.jpg'] },
+        { nombre: 'Salto de Apoquindo', descripcion: 'Vista del salto de Apoquindo', imagenes: ['salto_de_apoquindo.jpg'] },
+        { nombre: 'Formaciones geológicas', descripcion: 'Formaciones geológicas de la cordillera', imagenes: ['formaciones_geologicas.jpg'] }
+      ]
     },
     'lago_aculeo': {
       descripcion: 'La ruta alrededor de la Laguna de Aculeo ofrece un recorrido de dificultad media por los alrededores de este emblemático cuerpo de agua. Aunque actualmente la laguna está seca debido a la sequía, el paisaje sigue siendo impresionante, con vistas a los cerros circundantes y la cuenca del antiguo lago.',
@@ -120,7 +136,12 @@ export class RutaDetallesPage implements OnInit {
         mejorEpoca: 'Otoño e invierno, cuando las temperaturas son más frescas',
         recomendaciones: 'Llevar suficiente agua, protección solar, sombrero, ropa ligera y calzado cómodo para caminatas largas.'
       },
-      puntosInteres: 'Mirador de la Laguna, Cerro Cantillana, Haciendas históricas, Avistamiento de aves en temporada.'
+      puntosInteres: [
+        { nombre: 'Mirador de la Laguna', descripcion: 'Vista del mirador de la Laguna', imagenes: ['mirador_de_la_laguna.jpg'] },
+        { nombre: 'Cerro Cantillana', descripcion: 'Vista del Cerro Cantillana', imagenes: ['cerro_cantillana.jpg'] },
+        { nombre: 'Haciendas históricas', descripcion: 'Haciendas históricas en la zona', imagenes: ['haciendas_historicas.jpg'] },
+        { nombre: 'Avistamiento de aves', descripcion: 'Avistamiento de aves en temporada', imagenes: ['avistamiento_de_aves.jpg'] }
+      ]
     },
     'cerro_minillas': {
       descripcion: 'La travesía entre el Cerro Minillas y el Cerro Tarapacá es una de las rutas más desafiantes de la Región Metropolitana. Con casi 19 km de recorrido y un desnivel acumulado significativo, esta ruta ofrece vistas espectaculares de la cordillera y el valle de Santiago. Solo recomendada para excursionistas experimentados con excelente condición física.',
@@ -129,7 +150,12 @@ export class RutaDetallesPage implements OnInit {
         mejorEpoca: 'Verano y principios de otoño, cuando hay menos nieve en altura',
         recomendaciones: 'Llevar mínimo 4 litros de agua, alimentos energéticos, ropa técnica de montaña, protección para el sol y el viento, bastones, y equipo de primeros auxilios.'
       },
-      puntosInteres: 'Cumbre del Cerro Minillas, Filo del Diablo, Cumbre del Cerro Tarapacá, Vistas panorámicas de Santiago y la Cordillera de los Andes.'
+      puntosInteres: [
+        { nombre: 'Cumbre del Cerro Minillas', descripcion: 'Vista de la cumbre del Cerro Minillas', imagenes: ['cumbre_del_cerro_minillas.jpg'] },
+        { nombre: 'Filo del Diablo', descripcion: 'Vista del filo del Diablo', imagenes: ['filo_del_diablo.jpg'] },
+        { nombre: 'Cumbre del Cerro Tarapacá', descripcion: 'Vista de la cumbre del Cerro Tarapacá', imagenes: ['cumbre_del_cerro_tarapacá.jpg'] },
+        { nombre: 'Vistas panorámicas', descripcion: 'Vistas panorámicas de Santiago y la Cordillera de los Andes', imagenes: ['vistas_panoramicas.jpg'] }
+      ]
     }
   };
 
@@ -140,7 +166,8 @@ export class RutaDetallesPage implements OnInit {
     private toastController: ToastController,
     private authService: AuthService,
     private comentariosService: ComentariosService,
-    private buscarGrupoService: BuscarGrupoService
+    private buscarGrupoService: BuscarGrupoService,
+    private alertController: AlertController
   ) { 
     // Añadir iconos necesarios
     addIcons({ calendarOutline, closeOutline, checkmarkOutline, starOutline, star, sendOutline, timeOutline, personCircleOutline, peopleOutline });
@@ -221,23 +248,26 @@ export class RutaDetallesPage implements OnInit {
           };
         }
         
-        // Usamos los puntos de interés si existen, o un valor por defecto
-        this.rutaPuntosInteres = params['puntosInteres'] || 'No hay puntos de interés registrados para esta ruta.';
-      } else if (this.rutaId && this.rutasInfo[this.rutaId]) {
-        // Si no tenemos la información en los parámetros, la buscamos en la base de datos local
-        const infoRuta = this.rutasInfo[this.rutaId];
-        this.rutaDescripcion = infoRuta.descripcion;
-        this.rutaCaracteristicas = infoRuta.caracteristicas;
-        this.rutaPuntosInteres = infoRuta.puntosInteres;
+        // Parseamos los puntos de interés si existen
+        try {
+          if (params['puntosInteres']) {
+            const puntosInteres = JSON.parse(params['puntosInteres']);
+            this.rutaPuntosInteres = Array.isArray(puntosInteres) ? puntosInteres : [];
+          } else {
+            this.rutaPuntosInteres = [];
+          }
+        } catch (error) {
+          console.error('Error al parsear puntos de interés:', error);
+          this.rutaPuntosInteres = [];
+        }
       } else {
-        // Información por defecto si no se encuentra la ruta
-        this.rutaDescripcion = 'No hay información disponible para esta ruta.';
-        this.rutaCaracteristicas = {
-          tipoTerreno: 'No especificado',
-          mejorEpoca: 'No especificado',
-          recomendaciones: 'No especificado'
-        };
-        this.rutaPuntosInteres = 'No hay puntos de interés registrados para esta ruta.';
+        // Si no tenemos la información en los parámetros, la buscamos en el objeto rutasInfo
+        const rutaInfo = this.rutasInfo[this.rutaId];
+        if (rutaInfo) {
+          this.rutaDescripcion = rutaInfo.descripcion;
+          this.rutaCaracteristicas = rutaInfo.caracteristicas;
+          this.rutaPuntosInteres = rutaInfo.puntosInteres || [];
+        }
       }
     });
   }
@@ -437,15 +467,12 @@ export class RutaDetallesPage implements OnInit {
    * Crea una publicación de búsqueda de grupo para la ruta actual
    */
   async buscarGrupo() {
-    // Verificar si hay un usuario logueado
-    if (!this.usuarioActual) {
-      this.mostrarToast('Debes iniciar sesión para buscar grupo. Por favor, inicia sesión e intenta nuevamente.');
-      this.router.navigate(['/login']);
-      return;
-    }
-    
     try {
-      // Crear objeto de publicación de grupo
+      const currentUser = await this.authService.getCurrentUser();
+      if (!currentUser || !currentUser.id) {
+        throw new Error('No hay usuario logueado o el ID del usuario no está disponible');
+      }
+
       const publicacion: PublicacionGrupo = {
         rutaId: this.rutaId,
         nombre: this.rutaNombre,
@@ -454,28 +481,27 @@ export class RutaDetallesPage implements OnInit {
         imagen: this.rutaImagen,
         descripcion: this.rutaDescripcion,
         caracteristicas: this.rutaCaracteristicas,
-        puntosInteres: this.rutaPuntosInteres,
-        usuarioId: this.usuarioActual.id,
-        nombreUsuario: this.usuarioActual.nombre || this.usuarioActual.email,
+        puntosInteres: Array.isArray(this.rutaPuntosInteres) ? this.rutaPuntosInteres : [],
+        usuarioId: currentUser.id,
+        nombreUsuario: currentUser.nombre || currentUser.email || 'Usuario',
         fecha: new Date()
       };
-      
-      // Guardar en Firebase
+
       await this.buscarGrupoService.crearPublicacion(publicacion);
-      
-      // Mostrar mensaje de éxito
-      this.mostrarToast('¡Publicación creada con éxito! Ahora otros usuarios podrán ver tu búsqueda de grupo.');
-      
-      // Navegar a la página de grupos
-      this.router.navigate(['/grupos']);
+      await this.showAlert('Éxito', 'Publicación creada correctamente');
+      this.router.navigate(['/buscar-grupo']);
     } catch (error) {
-      console.error('Error al crear publicación de búsqueda de grupo:', error);
-      if (error instanceof Error && error.message.includes('No hay un usuario logueado')) {
-        this.mostrarToast('Debes iniciar sesión para buscar grupo. Por favor, inicia sesión e intenta nuevamente.');
-        this.router.navigate(['/login']);
-      } else {
-        this.mostrarToast('Ocurrió un error al crear la publicación. Por favor, intenta nuevamente.');
-      }
+      console.error('Error al crear la publicación:', error);
+      await this.showAlert('Error', 'No se pudo crear la publicación');
     }
+  }
+
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 }

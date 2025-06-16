@@ -13,7 +13,11 @@ export interface Rutas {
         mejorEpoca?: string;
         recomendaciones?: string;
     };
-    puntosInteres?: string;        // Añadido para la vista de detalles
+    puntosInteres?: {              // Cambiado de string a array de objetos
+        nombre: string;
+        descripcion: string;
+        imagenes: string[];
+    }[];
     creador?: {                    // Cambiado a opcional ya que no siempre se necesita
         id: string;
         nombre: string;

@@ -15,7 +15,11 @@ export interface PublicacionGrupo {
     mejorEpoca: string;
     recomendaciones: string;
   };
-  puntosInteres: string;
+  puntosInteres: {
+    nombre: string;
+    descripcion: string;
+    imagenes: string[];
+  }[];
   usuarioId: string;
   nombreUsuario: string;
   fecha: Date;
