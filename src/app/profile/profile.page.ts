@@ -287,4 +287,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   Gotorutas() {
     this.router.navigate(['/agenda']);
   }
+  goToInformacion() {
+    this.router.navigate(['/informaciones']);
+  }
 }

@@ -1,0 +1,38 @@
+<div class="header-container">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" (click)="volver()"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="titulo-header">Informaciones</ion-title>
+  </ion-toolbar>
+</div>
+
+<ion-content class="Informaciones-main-container">
+
+  <div class="menu-container">
+
+    <button class="menu-button" (click)="toggleInfo(1)">¿Quiénes somos?</button>
+    <div class="menu-info" *ngIf="selectedInfo === 1">
+      <p>Somos una empresa que se dedica a desarrollar rutas de trekking.</p>
+    </div>
+
+    <button class="menu-button" (click)="toggleInfo(2)">¿Qué ofrecemos?</button>
+    <div class="menu-info" *ngIf="selectedInfo === 2">
+      <p>Ofrecemos rutas seguras, mapas, alertas SOS y comunidad para aventureros.</p>
+    </div>
+
+    <button class="menu-button" (click)="toggleInfo(3)">¿Dónde operamos?</button>
+    <div class="menu-info" *ngIf="selectedInfo === 3">
+      <p>Trabajamos en diversas zonas cordilleranas y parques naturales de Chile.</p>
+    </div>
+
+    <button class="menu-button" (click)="toggleInfo(4)">¿Cómo comenzar?</button>
+    <div class="menu-info" *ngIf="selectedInfo === 4">
+      <p>Regístrate en la app, elige una ruta y prepárate para la aventura.</p>
+    </div>
+
+  </div>
+
+</ion-content>
+
+<app-footer></app-footer>

@@ -80,6 +80,10 @@ export const routes: Routes = [
     path: 'grupos',
     loadComponent: () => import('./grupos/grupos.page').then( m => m.GruposPage)
   },
+  {
+    path: 'informaciones',
+    loadComponent: () => import('./informaciones/informaciones.page').then( m => m.InformacionesPage)
+  },
 
   {path: '',
   redirectTo: 'home',
@@ -88,6 +92,7 @@ export const routes: Routes = [
   {path: '**',
     redirectTo: 'home',
     pathMatch: 'full',},
+
   
 
   
