@@ -7,8 +7,8 @@
                     <img alt="Avatar" src="assets/default-avatar.jpg">
                 </ion-avatar>
                 <div class="welcome-text">
-                    <h2>Panel de Autoridad</h2>
-                    <h3>{{autoridadActual?.nombre || "Autoridad"}} {{autoridadActual?.apellido || ""}}</h3>
+                    <h2>Panel de Operador</h2>
+                    <h3>{{autoridadActual?.nombre || "Operador"}} {{autoridadActual?.apellido || ""}}</h3>
                 </div>
                 <div class="header-buttons">
                     <ion-button *ngIf="puedeCrearAutoridades()" (click)="crearAutoridad()" class="action-button">
