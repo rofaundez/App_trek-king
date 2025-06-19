@@ -481,7 +481,7 @@ export class RutaDetallesPage implements OnInit {
         imagen: this.rutaImagen,
         descripcion: this.rutaDescripcion,
         caracteristicas: this.rutaCaracteristicas,
-        puntosInteres: Array.isArray(this.rutaPuntosInteres) ? this.rutaPuntosInteres : [],
+        puntosInteres: Array.isArray(this.rutaPuntosInteres) ? this.rutaPuntosInteres : [], 
         usuarioId: currentUser.id,
         nombreUsuario: currentUser.nombre || currentUser.email || 'Usuario',
         fecha: new Date()

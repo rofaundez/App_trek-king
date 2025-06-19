@@ -16,6 +16,7 @@ export interface Alerta {
   descripcion: string;
   ubicacion: Ubicacion;
   fecha: Date;
+  rutUsuario: string;
   estado: 'pendiente' | 'en proceso' | 'solucionado';
   instrucciones?: string;
 }

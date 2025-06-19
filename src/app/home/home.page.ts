@@ -111,6 +111,8 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    // Esperar a que la base de datos esté lista
+    await this.dbService.dbReady;
     // Obtenemos el estado inicial del usuario
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {

@@ -46,7 +46,7 @@ export class PerfilPage implements OnInit {
       this.router.navigate(['/autoridad-login']);
       return;
     }
-
+    
     this.nombre = this.autoridadActual.nombre;
     this.email = this.autoridadActual.email;
     this.fotoPerfil = this.autoridadActual.fotoPerfil || '';

@@ -34,6 +34,7 @@ export class SosPage implements OnInit, OnDestroy {
   userPhoto: string = 'assets/img/userLogo.png';
   userName: string = 'Invitado';
   userLastName: string = '';
+  userRut: string = '';
   private userSubscription?: Subscription;
 
   popupVisible: boolean = false;
@@ -71,6 +72,7 @@ export class SosPage implements OnInit, OnDestroy {
         this.userName = user.nombre;
         this.userLastName = user.apellido;
         this.userPhoto = user.photo || 'assets/img/userLogo.png';
+        this.userRut = user.rut;
       } else {
         this.userName = 'Invitado';
         this.userLastName = '';
@@ -196,6 +198,7 @@ export class SosPage implements OnInit, OnDestroy {
             ? `${currentUser.nombre} ${currentUser.apellido}`
             : currentUser.nombre || currentUser.email || 'Usuario',
           fotoUsuario: currentUser.photo || '',
+          rutUsuario: currentUser.rut || '',
           titulo: 'Alerta SOS',
           descripcion: mensaje,
           ubicacion: ubicacion,

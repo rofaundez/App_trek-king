@@ -9,8 +9,11 @@ import { Autoridad } from '../models/autoridad.model';
 export class DatabaseService {
   private dbName = 'TrekKingDB';
   private db: IDBDatabase | null = null;
+  public dbReady: Promise<void>;
+  private dbReadyResolve!: () => void;
 
   constructor() {
+    this.dbReady = new Promise(resolve => this.dbReadyResolve = resolve);
     this.initDB();
   }
 
@@ -45,6 +48,7 @@ export class DatabaseService {
     request.onsuccess = async (event) => {
       this.db = (event.target as IDBOpenDBRequest).result;
       console.log('Database opened successfully');
+      this.dbReadyResolve();
       
       // Check if default user exists
       try {
@@ -55,7 +59,8 @@ export class DatabaseService {
             email: 'jeremiasramos@gmail.com',
             password: '12344321',
             nombre: 'Jeremias',
-            apellido: 'Ramos'  // Changed from apellido to userLastName
+            apellido: 'Ramos',
+            rut: "20886551-K"  // Changed from apellido to userLastName
           };
           await this.addUser(defaultUser);
           console.log('Default user added');
@@ -122,6 +127,7 @@ export class DatabaseService {
 
   // Get user by email
   async getUserByEmail(email: string): Promise<User | null> {
+    await this.initDB;
     return new Promise((resolve, reject) => {
       if (!this.db) {
         console.error('Database not initialized');
@@ -396,7 +402,7 @@ export class DatabaseService {
           const updateRequest = store2.put(saveData);
           
           updateRequest.onsuccess = () => {
-            // Después de guardar, aseguramos que el ID se mantenga como string para Firebase
+            // Después de guardar, aseguramos que el ID se mantenga como string para
             resolve();
           };
           

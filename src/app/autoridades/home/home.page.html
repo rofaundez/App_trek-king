@@ -151,10 +151,14 @@
                         </div>
                     </div>
                     <div class="alertas-actions" style="text-align:right; margin-bottom: 1rem;">
-                        <ion-button color="primary" (click)="descargarUltimasAlertas()">
+                        <ion-button color="primary" (click)="mostrarCampoDescarga = !mostrarCampoDescarga">
                             <ion-icon name="download-outline" slot="start"></ion-icon>
                             Descargar alertas
                         </ion-button>
+                        <div *ngIf="mostrarCampoDescarga" class="campo-descarga-alertas">
+                            <ion-input type="number" min="1" [max]="alertas.length" [(ngModel)]="cantidadAlertasDescarga" placeholder="Cantidad de alertas a descargar"></ion-input>
+                            <ion-button color="success" (click)="descargarUltimasAlertas()">Confirmar</ion-button>
+                        </div>
                     </div>
                     <div class="alertas-list" *ngIf="!loading">
                         <div class="alerta-card" *ngFor="let alerta of alertas">
@@ -179,6 +183,10 @@
                                 <p>
                                     <ion-icon name="time-outline"></ion-icon>
                                     {{alerta.fecha | timeAgo}}
+                                </p>
+                                <p>
+                                    <ion-icon name="person-outline"></ion-icon>
+                                    {{alerta.rutUsuario}}
                                 </p>
                             </div>
                             <div class="alerta-acciones">

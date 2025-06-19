@@ -49,7 +49,7 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home.page').then(m => m.HomePage)
   },
   {
-    path: 'autoridad-home',
+    path: 'autoridades/home',
     loadComponent: () => import('./autoridades/home/home.page').then( m => m.HomePage)
   },
   {

@@ -6,6 +6,7 @@ import { Firestore,collection,query,where,getDocs } from '@angular/fire/firestor
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HeaderComponent } from 'src/app/components/header/header.component';
+import { DatabaseService } from 'src/app/services/database.service';
 
 @Component({
   selector: 'app-autoridad-login',
@@ -21,6 +22,7 @@ export class AutoridadLoginPage implements OnInit {
 
   // Add to constructor
   constructor(
+    private dbService: DatabaseService,
     private authService: AuthService,
     private firestore : Firestore,
     private toastController: ToastController,
@@ -28,6 +30,7 @@ export class AutoridadLoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.dbService.initDB();
     this.email = 'je.ramos@duocuc.cl';
     this.password = '12344321';
   }
@@ -59,14 +62,13 @@ export class AutoridadLoginPage implements OnInit {
       if (autoridadesData && autoridadesData['password'] === this.password) {
         console.log('Inicio de sesión exitoso');
         this.authService.loginAutoridad({
-          id: parseInt(autoridadesDoc.id) || 0,
+          id: autoridadesData['id'],
           email: autoridadesData['email'],
           nombre: autoridadesData['nombre'],
           img: autoridadesData['img'],
           cargo: autoridadesData['cargo'],
           password: autoridadesData['password']
         });
-        this.goToHome();
         const toast = await this.toastController.create({
           message: '¡Inicio de sesión exitoso!',
           duration: 2000,
@@ -74,6 +76,8 @@ export class AutoridadLoginPage implements OnInit {
           color: 'success'
         });
         await toast.present();
+        this.casita(); 
+        this.goToHome();
         
       } else {
         console.log('Inicio de sesión fallido - credenciales inválidas');
@@ -97,9 +101,11 @@ export class AutoridadLoginPage implements OnInit {
     }
   }
 
-
+  casita(){
+    this.router.navigate(['/home']);
+  };
   goToHome(){
-    this.router.navigate(['/autoridad-home'])
+    this.router.navigate(['/autoridades/home']);
   };
   forgotAutoridadPassword() {
     this.router.navigate(['/recover-autoridad']);
@@ -111,3 +117,4 @@ export class AutoridadLoginPage implements OnInit {
     this.router.navigate(['/autoridad-registro']);
   }
 }
+

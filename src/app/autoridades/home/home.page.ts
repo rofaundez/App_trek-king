@@ -10,14 +10,15 @@ import { trashOutline, createOutline, eyeOutline, personAddOutline, personCircle
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { DatePipe } from '@angular/common';
 import { AlertController } from '@ionic/angular/standalone';
-import { collection, query, orderBy, getDocs } from '@angular/fire/firestore';
+import { collection, query, orderBy, getDocs, getDoc, doc } from '@angular/fire/firestore';
 import { Firestore } from '@angular/fire/firestore';
-import { updateDoc, doc } from '@angular/fire/firestore';
+import { updateDoc } from '@angular/fire/firestore';
 import { TimeAgoPipe } from '../pipes/time-ago.pipe';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { ModalController } from '@ionic/angular';
 import { DetalleRutaModalComponent } from '../../components/detalle-ruta-modal/detalle-ruta-modal.component';
+import { DatabaseService } from 'src/app/services/database.service';
 
 @Component({
   selector: 'app-home',
@@ -65,9 +66,12 @@ export class HomePage implements OnInit {
   alertas: any[] = [];
   rutasSolicitadas: any[] = [];
   loading = false;
+  mostrarCampoDescarga: boolean = false;
+  cantidadAlertasDescarga: number = 5;
 
   constructor(
     private authService: AuthService,
+    private dbService: DatabaseService,
     private rutasGuardadasService: RutasGuardadasService,
     private router: Router,
     private alertController: AlertController,
@@ -77,7 +81,8 @@ export class HomePage implements OnInit {
     addIcons({personAddOutline,logOutOutline,mapOutline,warningOutline,mailOutline,closeOutline,todayOutline,calendarOutline,calendarNumberOutline,infiniteOutline,informationCircleOutline,timeOutline,personOutline,downloadOutline,locationOutline,checkmarkCircleOutline,hourglassOutline,alertCircleOutline,closeCircleOutline,trashOutline,createOutline,eyeOutline,personCircleOutline});
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.dbService.dbReady;
     // Verificar si hay una autoridad autenticada
     this.autoridadActual = this.authService.getCurrentAutoridad();
     if (!this.autoridadActual) {
@@ -143,26 +148,31 @@ export class HomePage implements OnInit {
         // Obtener información del usuario que agendó la ruta
         if (ruta.userId) {
           try {
-            const usuario = await this.rutasGuardadasService.obtenerInfoUsuario(ruta.userId);
-            if (usuario) {
-              // Agregar el nombre del usuario a la ruta
-              const nombre = usuario.nombre || '';
-              const apellido = usuario.apellido || '';
+            // Consultar directamente en Firebase usando el userId
+            const usersRef = collection(this.firestore, 'users');
+            const userDoc = doc(usersRef, ruta.userId);
+            const userSnap = await getDoc(userDoc);
+            
+            if (userSnap.exists()) {
+              const userData = userSnap.data();
+              const nombre = userData['nombre'] || '';
+              const apellido = userData['apellido'] || '';
               
               // Asignar el nombre completo o usar alternativas si no está disponible
               if (nombre || apellido) {
                 ruta.nombreUsuario = `${nombre} ${apellido}`.trim();
                 console.log(`Nombre de usuario obtenido para ${ruta.userId}: ${ruta.nombreUsuario}`);
-              } else if (usuario.email) {
-                ruta.nombreUsuario = usuario.email;
+              } else if (userData['email']) {
+                ruta.nombreUsuario = userData['email'];
                 console.log(`Email de usuario obtenido para ${ruta.userId}: ${ruta.nombreUsuario}`);
               }
-              // No asignar ID abreviado si no hay nombre ni email
+            } else {
+              console.warn(`Usuario con ID ${ruta.userId} no encontrado en Firebase`);
+              ruta.nombreUsuario = 'Usuario no encontrado';
             }
-            // No asignar ID abreviado si no se encuentra información del usuario
           } catch (error) {
             console.error(`Error al obtener información del usuario ${ruta.userId}:`, error);
-            // No asignar ID abreviado en caso de error
+            ruta.nombreUsuario = 'Error al obtener datos';
           }
         }
       }
@@ -547,23 +557,32 @@ export class HomePage implements OnInit {
   }
 
   descargarUltimasAlertas() {
-    // Tomar las 5 alertas más recientes
-    const ultimas = this.alertas.slice(0, 5);
+    // Determinar la cantidad de alertas a descargar
+    let cantidad = Number(this.cantidadAlertasDescarga) || 5;
+    if (cantidad > this.alertas.length) {
+      cantidad = this.alertas.length;
+    }
+    if (cantidad < 1) {
+      cantidad = 5;
+    }
+    const ultimas = this.alertas.slice(0, cantidad);
     const doc = new jsPDF();
     doc.setFontSize(16);
-    doc.text('Reporte de Últimas 5 Alertas SOS', 14, 18);
+    doc.text(`Reporte de las últimas ${cantidad} alertas SOS`, 14, 18);
     const rows = ultimas.map(alerta => [
       alerta.nombreUsuario || 'Desconocido',
+      alerta.rutUsuario || '',
       alerta.descripcion || '',
       alerta.ubicacion?.lat ?? '',
       alerta.ubicacion?.lng ?? ''
     ]);
     autoTable(doc, {
-      head: [['Nombre', 'Tipo de emergencia', 'Latitud', 'Longitud']],
+      head: [['Nombre','Rut del Usuario', 'Tipo de emergencia', 'Latitud', 'Longitud']],
       body: rows,
       startY: 24,
     });
     doc.save('ultimas_alertas.pdf');
+    this.mostrarCampoDescarga = false;
   }
 
   async abrirModalDetallesRuta(ruta: any) {

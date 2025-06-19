@@ -5,4 +5,5 @@ export interface User {
   nombre: string;
   apellido: string;  // Changed from apellido to userLastName
   photo?: string;  // Agregamos el campo photo
+  rut: string; // Agregamos el campo rut
 }

@@ -65,7 +65,8 @@ export class LoginPage implements OnInit {
           nombre: userData['nombre'],
           apellido: userData['apellido'],
           password: userData['password'],
-          photo: userData['photo'] || 'assets/img/userLogo.png'
+          photo: userData['photo'] || 'assets/img/userLogo.png',
+          rut: userData['rut']
         });
         this.goToHome();
         const toast = await this.toastController.create({

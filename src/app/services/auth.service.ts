@@ -24,6 +24,13 @@ export class AuthService {
       this.userSubject.next(this.currentUser);
       this.isAuthenticated.next(true);
     }
+    // Check for existing autoridad session
+    const savedAutoridad = localStorage.getItem('autoridadSession');
+    if (savedAutoridad) {
+      this.currentAutoridad = JSON.parse(savedAutoridad);
+      this.autoridadSubject.next(this.currentAutoridad);
+      this.isAuthenticated.next(true);
+    }
   }
 
   async login(user: User) {
@@ -48,20 +55,46 @@ export class AuthService {
   }
 
   async loginAutoridad(autoridad: Autoridad) {
+    // Asegurarnos de que el ID sea un string
+    if (autoridad.id && typeof autoridad.id === 'string') {
+      autoridad.id = autoridad.id;
+    }
+    if (!autoridad.id) {
+      console.error('Error: Intentando iniciar sesión con una autoridad sin ID');
+      return;
+    }
     this.currentAutoridad = autoridad;
     this.autoridadSubject.next(autoridad);
     localStorage.setItem('autoridadSession', JSON.stringify(autoridad));
+    localStorage.setItem('currentAutoridad', JSON.stringify(autoridad));
     this.isAuthenticated.next(true);
   }
 
   getCurrentAutoridad(): Autoridad | null {
-    return this.currentAutoridad;
+    // Intentar obtener de memoria, si no, de localStorage
+    if (this.currentAutoridad) {
+      return this.currentAutoridad;
+    }
+    const savedAutoridad = localStorage.getItem('autoridadSession');
+    if (savedAutoridad) {
+      this.currentAutoridad = JSON.parse(savedAutoridad);
+      return this.currentAutoridad;
+    }
+    return null;
   }
 
   updateCurrentAutoridad(autoridad: Autoridad) {
+    // Asegurarnos de que el ID sea un string
+    if (autoridad.id && typeof autoridad.id === 'string') {
+      autoridad.id = autoridad.id;
+    } else {
+      console.error('Error: Intentando actualizar una autoridad sin ID');
+      return;
+    }
     this.currentAutoridad = autoridad;
     this.autoridadSubject.next(autoridad);
     localStorage.setItem('currentAutoridad', JSON.stringify(autoridad));
+    localStorage.setItem('autoridadSession', JSON.stringify(autoridad));
   }
 
   logout() {
@@ -75,6 +108,7 @@ export class AuthService {
     this.currentAutoridad = null;
     this.autoridadSubject.next(null);
     localStorage.removeItem('autoridadSession');
+    localStorage.removeItem('currentAutoridad');
     this.isAuthenticated.next(false);
   }
 
@@ -88,8 +122,8 @@ export class AuthService {
 
   updateCurrentUser(user: User) {
     // Asegurarnos de que el ID sea un string
-    if (user.id) {
-      user.id = String(user.id);
+    if (user.id && typeof user.id === 'string') {
+      user.id = user.id;
     } else {
       console.error('Error: Intentando actualizar un usuario sin ID');
       return;

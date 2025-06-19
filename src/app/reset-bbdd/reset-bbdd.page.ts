@@ -44,7 +44,8 @@ export class ResetBbddPage implements OnInit {
                 nombre: 'Default',
                 apellido: 'User',
                 password: '12344321',
-                role: 'user'
+                role: 'user',
+                rut: "20886551-K"
               };
               await this.databaseService.addUser(defaultUser);
 
@@ -117,7 +118,8 @@ export class ResetBbddPage implements OnInit {
         nombre: 'Default',
         apellido: 'User',
         password: '1234',
-        role: 'user'
+        role: 'user',
+        rut: "20886551-K"
       };
       await this.databaseService.addUser(defaultUser);
 
