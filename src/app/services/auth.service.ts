@@ -55,31 +55,57 @@ export class AuthService {
   }
 
   async loginAutoridad(autoridad: Autoridad) {
-    // Asegurarnos de que el ID sea un string
-    if (autoridad.id && typeof autoridad.id === 'string') {
-      autoridad.id = autoridad.id;
+    try {
+      console.log('Iniciando login de autoridad:', autoridad);
+      
+      // Asegurarnos de que el ID sea un string
+      if (autoridad.id && typeof autoridad.id === 'string') {
+        autoridad.id = autoridad.id;
+      }
+      if (!autoridad.id) {
+        console.error('Error: Intentando iniciar sesión con una autoridad sin ID');
+        return;
+      }
+      
+      this.currentAutoridad = autoridad;
+      this.autoridadSubject.next(autoridad);
+      localStorage.setItem('autoridadSession', JSON.stringify(autoridad));
+      localStorage.setItem('currentAutoridad', JSON.stringify(autoridad));
+      this.isAuthenticated.next(true);
+      
+      console.log('Autoridad logueada exitosamente:', autoridad.nombre, 'ID:', autoridad.id);
+      console.log('Estado de autenticación:', this.isAuthenticated.value);
+      
+      return true;
+    } catch (error) {
+      console.error('Error en loginAutoridad:', error);
+      return false;
     }
-    if (!autoridad.id) {
-      console.error('Error: Intentando iniciar sesión con una autoridad sin ID');
-      return;
-    }
-    this.currentAutoridad = autoridad;
-    this.autoridadSubject.next(autoridad);
-    localStorage.setItem('autoridadSession', JSON.stringify(autoridad));
-    localStorage.setItem('currentAutoridad', JSON.stringify(autoridad));
-    this.isAuthenticated.next(true);
   }
 
   getCurrentAutoridad(): Autoridad | null {
+    console.log('Verificando autoridad actual...');
+    
     // Intentar obtener de memoria, si no, de localStorage
     if (this.currentAutoridad) {
+      console.log('Autoridad encontrada en memoria:', this.currentAutoridad.nombre);
       return this.currentAutoridad;
     }
+    
     const savedAutoridad = localStorage.getItem('autoridadSession');
     if (savedAutoridad) {
-      this.currentAutoridad = JSON.parse(savedAutoridad);
-      return this.currentAutoridad;
+      try {
+        this.currentAutoridad = JSON.parse(savedAutoridad);
+        console.log('Autoridad recuperada de localStorage:', this.currentAutoridad?.nombre);
+        return this.currentAutoridad;
+      } catch (error) {
+        console.error('Error al parsear autoridad de localStorage:', error);
+        localStorage.removeItem('autoridadSession');
+        localStorage.removeItem('currentAutoridad');
+      }
     }
+    
+    console.log('No se encontró autoridad autenticada');
     return null;
   }
 

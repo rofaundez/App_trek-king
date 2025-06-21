@@ -14,6 +14,18 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
+    // Verificar si es una ruta de autoridad
+    if (route.routeConfig?.path === 'autoridades/home') {
+      const currentAutoridad = this.authService.getCurrentAutoridad();
+      if (!currentAutoridad) {
+        console.log('No hay autoridad autenticada, redirigiendo a login');
+        this.router.navigate(['/autoridad-login']);
+        return false;
+      }
+      console.log('Autoridad autenticada:', currentAutoridad.nombre);
+      return true;
+    }
+
     // Verificar si es una autoridad para acceder a autoridad-registro
     if (route.routeConfig?.path === 'autoridad-registro') {
       const currentAutoridad = this.authService.getCurrentAutoridad();
@@ -24,7 +36,7 @@ export class AuthGuard implements CanActivate {
 
       // Verificar si la autoridad tiene el rango adecuado (jefe o encargado)
       if (currentAutoridad.cargo !== 'jefe' && currentAutoridad.cargo !== 'encargado') {
-        this.router.navigate(['/autoridad-home']);
+        this.router.navigate(['/autoridades/home']);
         return false;
       }
 

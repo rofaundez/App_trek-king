@@ -86,9 +86,12 @@ export class HomePage implements OnInit {
     // Verificar si hay una autoridad autenticada
     this.autoridadActual = this.authService.getCurrentAutoridad();
     if (!this.autoridadActual) {
-      this.router.navigate(['/autoridades/login']);
+      console.log('No hay autoridad autenticada, redirigiendo a login');
+      this.router.navigate(['/autoridad-login']);
       return;
     }
+
+    console.log('Autoridad autenticada encontrada:', this.autoridadActual.nombre);
 
     // Cargar las rutas
     this.cargarRutas();

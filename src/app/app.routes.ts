@@ -50,7 +50,8 @@ export const routes: Routes = [
   },
   {
     path: 'autoridades/home',
-    loadComponent: () => import('./autoridades/home/home.page').then( m => m.HomePage)
+    loadComponent: () => import('./autoridades/home/home.page').then( m => m.HomePage),
+    canActivate: [AuthGuard]
   },
   {
     path: 'autoridad-detalle-ruta',
