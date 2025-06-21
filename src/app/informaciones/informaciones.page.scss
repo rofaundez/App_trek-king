@@ -287,3 +287,44 @@ ion-item-sliding {
     border-radius: 8px;
     font-size: 15px;
 }
+
+// Estilos específicos para el contenido legal
+.legal-content {
+    background-color: #fff3e0;
+    border: 2px solid #ff9800;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 8px;
+    
+    h4 {
+        color: #e65100;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 16px;
+        text-align: center;
+        border-bottom: 2px solid #ff9800;
+        padding-bottom: 8px;
+    }
+    
+    p {
+        color: #3e2723;
+        line-height: 1.6;
+        margin-bottom: 12px;
+        text-align: justify;
+        
+        strong {
+            color: #d84315;
+            font-weight: bold;
+        }
+    }
+    
+    p:last-child {
+        margin-bottom: 0;
+        font-weight: bold;
+        background-color: #ffebee;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 4px solid #f44336;
+        color: #c62828;
+    }
+}

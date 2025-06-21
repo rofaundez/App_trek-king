@@ -30,6 +30,33 @@
     <div class="menu-info" *ngIf="selectedInfo === 4">
       <p>Regístrate en la app, elige una ruta y prepárate para la aventura.</p>
     </div>
+    
+    <button class="menu-button" (click)="toggleInfo(5)">Aspectos legales.</button>
+    <div class="menu-info" *ngIf="selectedInfo === 5">
+      <div class="legal-content">
+        <h4>Sistema de Alertas SOS - Uso y Responsabilidades Legales</h4>
+        
+        <p><strong>Propósito del Sistema:</strong></p>
+        <p>El sistema de alertas SOS de esta aplicación está diseñado exclusivamente para situaciones reales de emergencia durante actividades de trekking, tales como extravíos, accidentes, incendios forestales u otros riesgos que comprometan la integridad física de los usuarios o del entorno. Su uso indebido puede generar la movilización innecesaria de recursos públicos como personal de rescate, equipos especializados y vehículos de emergencia.</p>
+        
+        <p><strong>Uso Indebido y Consecuencias:</strong></p>
+        <p>El envío de una alerta falsa, ya sea de forma intencional o por negligencia, constituye una infracción grave, ya que implica costos logísticos y operacionales, y puede poner en riesgo la atención oportuna de emergencias reales.</p>
+        
+        <p><strong>Registro de Identidad:</strong></p>
+        <p>Al utilizar esta función, el usuario acepta que su identidad, incluyendo su RUT (Rol Único Tributario), queda registrada. Esta información podrá ser entregada a las autoridades competentes en caso de verificarse un uso malicioso del sistema, con el fin de iniciar las acciones legales correspondientes.</p>
+        
+        <p><strong>Marco Legal Aplicable:</strong></p>
+        <p>Según lo dispuesto en el <strong>Artículo 161 del Código Penal Chileno</strong>, quien dé aviso falso a la autoridad sobre un delito o emergencia inexistente podrá ser sancionado con penas de presidio menor en su grado mínimo a medio y multas, especialmente si su acción provocó la activación innecesaria de servicios públicos.</p>
+        
+        <p>Asimismo, conforme a la <strong>Ley N.º 20.393 sobre Responsabilidad Penal de las Personas Jurídicas</strong>, cualquier acción que implique obstrucción de servicios públicos o mal uso intencional de herramientas tecnológicas que afectan al orden y seguridad pública puede tener consecuencias legales y económicas.</p>
+        
+        <p><strong>Procedimientos de Verificación:</strong></p>
+        <p>Toda activación injustificada del sistema SOS será analizada por el equipo operador y, si corresponde, será derivada a Carabineros de Chile o a la entidad competente para iniciar procedimientos sancionatorios o judiciales.</p>
+        
+        <p><strong>Aceptación de Términos:</strong></p>
+        <p>Al presionar el botón SOS, usted acepta explícitamente estos términos y reconoce que puede ser responsable legalmente por cualquier uso indebido del sistema de emergencias.</p>
+      </div>
+    </div>
 
   </div>
 
