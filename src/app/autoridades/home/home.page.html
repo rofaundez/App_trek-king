@@ -57,33 +57,6 @@
         <ng-container [ngSwitch]="vistaActiva">
             <!-- Vista de Rutas Guardadas -->
             <ng-container *ngSwitchCase="'rutas'">
-                <!-- Filtros para rutas agendadas -->
-                <ng-container *ngIf="rutasFiltradas.length > 0; else SinRutas">
-                    <div class="filtros-container">
-                        <div class="contenedor_filtro" (mousedown)="isMouseDown($event)" (mousemove)="onMouseMove($event)" (mouseup)="isMouseUp($event)" (mouseleave)="isMouseUp($event)">
-
-                            <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Hoy'" (click)="filtrarPorFecha('Hoy')">
-                                <ion-icon name="today-outline" class="imagen_filtro"></ion-icon>
-                                <span class="nombre_filtro">Hoy</span>
-                            </ion-button>
-
-                            <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Semana'" (click)="filtrarPorFecha('Semana')">
-                                <ion-icon name="calendar-outline" class="imagen_filtro"></ion-icon>
-                                <span class="nombre_filtro">Esta semana</span>
-                            </ion-button>
-
-                            <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Mes'" (click)="filtrarPorFecha('Mes')">
-                                <ion-icon name="calendar-number-outline" class="imagen_filtro"></ion-icon>
-                                <span class="nombre_filtro">Este mes</span>
-                            </ion-button>
-
-                            <ion-button fill="clear" class="boton-filtro" [class.active-filter]="filtroActivo === 'Todas'" (click)="filtrarPorFecha('Todas')">
-                                <ion-icon name="infinite-outline" class="imagen_filtro"></ion-icon>
-                                <span class="nombre_filtro">Todas</span>
-                            </ion-button>
-                        </div>
-                    </div>
-                </ng-container>
                 <ng-template #SinRutas>
                     <div class="no-rutas-mensaje1">
                     </div>
